@@ -255,6 +255,7 @@ function script_load(settings)
     language_name = obs.obs_data_get_string(settings, "language_name")
     scene_name = obs.obs_data_get_string(settings, "scene_name")
     source_prefix = obs.obs_data_get_string(settings, "source_prefix")
+    temp_source_prefix = source_prefix
     spacing = obs.obs_data_get_int(settings, "spacing")
     margin = obs.obs_data_get_int(settings, "margin")
     x_offset = obs.obs_data_get_int(settings, "x_offset")
