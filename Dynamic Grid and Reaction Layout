@@ -574,10 +574,18 @@ end
 -- =============================================
 
 --- Processes all visible grid browsers and positions them according to settings
-local function process_grid_browsers()
-    if not state.script_active or not state.grid.enabled or state.grid.source_prefix == "" then return end
+local function process_grid_browsers(type, scene_name, source_prefix)
+    local scene_name = scene_name
+    local source_prefix = source_prefix
+    local status
 
-    local scene = obs.obs_get_scene_by_name(state.grid.scene_name)
+    if type == "grid" then status = state.grid.enabled end
+    if type == "reaction" then status = state.reaction.enabled end
+    if type == "highlight" then status = state.highlight.enabled end
+
+    if not state.script_active or not status or source_prefix == "" then return end
+
+    local scene = obs.obs_get_scene_by_name(scene_name)
     if not scene then
         obs.obs_scene_release(scene)
         return
@@ -597,7 +605,7 @@ local function process_grid_browsers()
         local source = obs.obs_sceneitem_get_source(scene_item)
         local source_name = obs.obs_source_get_name(source)
 
-        if string.match(source_name, "^" .. state.grid.source_prefix) then
+        if string.match(source_name, "^" .. source_prefix) then
             if obs.obs_sceneitem_visible(scene_item) then
                 table.insert(active_browsers, scene_item)
             else
@@ -925,6 +933,8 @@ local function handle_react_browsers_split(active_browsers, inactive_browsers, w
         obs.obs_sceneitem_set_crop(window_capture, crop)
         set_scale(window_capture, window_width / obs.obs_source_get_width(obs.obs_sceneitem_get_source(window_capture)), 
                                   window_height / obs.obs_source_get_height(obs.obs_sceneitem_get_source(window_capture)))
+    else
+        process_grid_browsers("reaction", state.reaction.scene_name, state.reaction.source_prefix)
     end
 end
 
@@ -1065,6 +1075,8 @@ local function handle_highlight_browsers_left(active_browsers, inactive_browsers
         obs.obs_sceneitem_set_pos(main_source, position)
         set_scale(main_source, main_source_width / obs.obs_source_get_width(obs.obs_sceneitem_get_source(main_source)), 
                                   main_source_height / obs.obs_source_get_height(obs.obs_sceneitem_get_source(main_source)))
+    else
+        process_grid_browsers("highlight", state.highlight.scene_name, state.highlight.source_prefix)
     end
 end
 
@@ -1198,6 +1210,8 @@ local function handle_highlight_browsers_split(active_browsers, inactive_browser
         obs.obs_sceneitem_set_crop(main_source, crop)
         set_scale(main_source, main_source_width / obs.obs_source_get_width(obs.obs_sceneitem_get_source(main_source)), 
                                   main_source_height / obs.obs_source_get_height(obs.obs_sceneitem_get_source(main_source)))
+    else
+        process_grid_browsers("highlight", state.highlight.scene_name, state.highlight.source_prefix)
     end
 end
 
@@ -1340,7 +1354,7 @@ end
 --- Callback when grid scene is changed
 local function on_grid_scene_changed(props, prop, settings)
     state.grid.scene_name = obs.obs_data_get_string(settings, "grid_scene")
-    process_grid_browsers()
+    process_grid_browsers("grid", state.grid.scene_name, state.grid.source_prefix)
 end
 
 --- Callback when reaction scene is changed
@@ -1385,7 +1399,7 @@ local function on_save_grid_prefix_clicked(props, prop)
     state.grid.source_prefix = state.ui.temp_grid_prefix:gsub("%s+", "")
 
     -- Refresh layout
-    if state.grid.source_prefix ~= "" then process_grid_browsers() end
+    if state.grid.source_prefix ~= "" then process_grid_browsers("grid", state.grid.scene_name, state.grid.source_prefix) end
 end
 
 --- Callback when save reaction prefix button is clicked
@@ -1409,31 +1423,31 @@ end
 --- Callback when grid spacing is changed
 local function on_grid_spacing_changed(props, prop, settings)
     state.grid.spacing = obs.obs_data_get_int(settings, "grid_spacing")
-    process_grid_browsers()
+    process_grid_browsers("grid", state.grid.scene_name, state.grid.source_prefix)
 end
 
 --- Callback when grid margin is changed
 local function on_grid_margin_changed(props, prop, settings)
     state.grid.margin = obs.obs_data_get_int(settings, "grid_margin")
-    process_grid_browsers()
+    process_grid_browsers("grid", state.grid.scene_name, state.grid.source_prefix)
 end
 
 --- Callback when grid X offset is changed
 local function on_grid_x_offset_changed(props, prop, settings)
     state.grid.x_offset = obs.obs_data_get_int(settings, "grid_x_offset")
-    process_grid_browsers()
+    process_grid_browsers("grid", state.grid.scene_name, state.grid.source_prefix)
 end
 
 --- Callback when grid Y offset is changed
 local function on_grid_y_offset_changed(props, prop, settings)
     state.grid.y_offset = obs.obs_data_get_int(settings, "grid_y_offset")
-    process_grid_browsers()
+    process_grid_browsers("grid", state.grid.scene_name, state.grid.source_prefix)
 end
 
 --- Callback when grid split screen is toggled
 local function on_grid_split_screen_changed(props, property, settings)
     state.grid.split_screen = obs.obs_data_get_bool(settings, "grid_split_screen")
-    process_grid_browsers()
+    process_grid_browsers("grid", state.grid.scene_name, state.grid.source_prefix)
 end
 
 --- Callback when reaction spacing is changed
@@ -1526,7 +1540,7 @@ end
 
 --- Main refresh function called by timer
 local function refresh_all()
-    if (state.grid.enabled and state.grid.source_prefix ~= "") then process_grid_browsers() end
+    if (state.grid.enabled and state.grid.source_prefix ~= "") then process_grid_browsers("grid", state.grid.scene_name, state.grid.source_prefix) end
     if (state.reaction.enabled and state.reaction.source_prefix ~= "" and state.reaction.window_prefix ~= "") then process_react_browsers() end
     if (state.highlight.enabled and state.highlight.source_prefix ~= "" and state.highlight.main_source_prefix ~= "") then process_highlight_browsers() end -- NEW
     if (state.tracking.enabled and state.tracking.source_prefix ~= "") then process_tracking() end
