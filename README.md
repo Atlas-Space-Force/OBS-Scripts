@@ -52,7 +52,7 @@ This script is a powerful solution for streamers, content creators, and anyone s
 * **WARNING:** In case you choose to use the VDO.Ninja OBS Controller, DON'T USE THIS FEATURE, as the controller already has the same feature and using both simultaneously might crash your OBS.
 
 * Required Prefixes for VDO.Ninja: If used with VDO.Ninja and the OBS controller mentioned, the required prefixes are:
-    * **Sources in general:** `VDO.`
+    * **Sources in general:** `VDO`
     * **Screen Captures:** `VDO.Screen_`
     * **Highlighted Source:** `VDO.Highlight_`
 
@@ -96,7 +96,7 @@ This modified OBS Controller is particularly effective when used with OBS Lua sc
 
 For seamless integration and dynamic layout adjustments within OBS (especially with highlight features), it is required to use the following prefixes for your VDO.Ninja sources in the `Advanced Scene Layouts` script settings, as they are the prefixes used by the `VDO.Ninja OBS Control Dock`:
 
-* **Sources in general:** `VDO.`
+* **Sources in general:** `VDO`
 * **Screen Captures:** `VDO.Screen_`
 * **Highlighted Source:** `VDO.Highlight_`
 
