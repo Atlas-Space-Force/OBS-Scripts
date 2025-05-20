@@ -4,7 +4,7 @@ This repository provides a powerful set of tools to dynamically manage and organ
 
 ---
 
-## OBS Lua Script: Advanced Scene Layouts for OBS Studio: Grid, Reaction, Highlight, and Source Tracking
+## OBS Lua Script - Advanced Scene Layouts for OBS Studio: Grid, Reaction, Highlight, and Source Tracking
 
 Overview:
 
