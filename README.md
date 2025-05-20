@@ -28,11 +28,6 @@ Dynamic Highlight Layout (NEW):
 * This layout is designed to highlight a specific source while other reaction cameras are positioned relative to it.
 * Same appeance as the Reaction Layout, but the highlighted camera is placed where the screen capture would be.
 * Flexible Settings: Define prefixes for the lateral cameras (Highlight Camera Prefix) and for the main source (Highlight Main Source Prefix).
-
-* *Sources in general:* `VDO.Ninja_`
-* *Screen Captures:* `VDO.Screen_`
-* *Highlighted Source:* `VDO.Highlight_`
-
 * Camera Distribution: Option to distribute highlight cameras on both sides of the screen.
 * Fine Adjustments: Control spacing and X/Y offsets for optimal positioning.
 
@@ -55,11 +50,11 @@ This script is a powerful solution for streamers, content creators, and anyone s
 
 * Recommended Integration: This functionality was developed for use with tools that allow dynamic renaming of sources with specific prefixes for highlighting, such as VDO.Ninja in conjunction with the modified OBS Controller page by Morse: [VDO.Ninja OBS Controller](https://morsethecode.github.io/vdo.ninja/obs). The original version of the controller can be found here, in case it interests you: [Original VDO.Ninja OBS Controller](https://vdo.ninja/obs)
 * **WARNING:** In case you choose to use the VDO.Ninja OBS Controller, DON'T USE THIS FEATURE, as the controller already has the same feature and using both simultaneously might crash your OBS.
-*
+
 * Required Prefixes for VDO.Ninja: If used with VDO.Ninja and the OBS controller mentioned, the required prefixes are:
-*     **Sources in general:** `VDO.Ninja_`
-*     **Screen Captures:** `VDO.Screen_`
-*     **Highlighted Source:** `VDO.Highlight_`
+    * **Sources in general:** `VDO.Ninja_`
+    * **Screen Captures:** `VDO.Screen_`
+    * **Highlighted Source:** `VDO.Highlight_`
 
 * When no screen share link or highlighted user is found, the Screen Share and the Highlight layouts fall back to the Grid Layout, so it's recommended that you configured spacing, margins and choose between normal or split screen mode in the Grid Section, even if you don't plan to use it.
 * The script is configured to treat your OBS and the sources as if they're 1920x1080, but you can always change the resolution in the script (line 301). Just remember to always give the browser sources the same base resolution defined in Settings > Video.
