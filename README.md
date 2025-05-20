@@ -51,7 +51,7 @@ This script is a powerful solution for streamers, content creators, and anyone s
 * Recommended Integration: This functionality was developed for use with tools that allow dynamic renaming of sources with specific prefixes for highlighting, such as VDO.Ninja in conjunction with the modified OBS Controller page by Morse: [VDO.Ninja OBS Controller](https://morsethecode.github.io/vdo.ninja/obs). The original version of the controller can be found here, in case it interests you: [Original VDO.Ninja OBS Controller](https://vdo.ninja/obs)
 * **WARNING:** In case you choose to use the VDO.Ninja OBS Controller, DON'T USE THIS FEATURE, as the controller already has the same feature and using both simultaneously might crash your OBS.
 
-* Required Prefixes for VDO.Ninja: If used with VDO.Ninja and the OBS controller mentioned, the required prefixes are:
+* Required Prefixes for VDO.Ninja - If used with VDO.Ninja and the OBS controller mentioned, the required prefixes are:
     * **Grid, Reaction and Highlight Camera Prefix:** `VDO`
     * **Reaction Window Prefix:** `VDO.Screen_`
     * **Highlight Main Source Prefix:** `VDO.Highlight_`
