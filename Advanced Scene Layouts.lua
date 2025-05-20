@@ -5,7 +5,7 @@ math = require("math")
 -- CONSTANTS AND CONFIGURATION
 -- =============================================
 
-local INTERVAL_MS = 200
+local INTERVAL_MS = 100
 local ASPECT_RATIO = 16 / 9
 local REACTION_CROP_RATIO = 1 -- Crop the width for reaction sources
 local HIGHLIGHT_CROP_RATIO = 1 -- Crop the width for highlight sources
