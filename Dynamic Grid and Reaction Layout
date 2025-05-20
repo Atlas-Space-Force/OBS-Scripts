@@ -8,6 +8,7 @@ math = require("math")
 local INTERVAL_MS = 200
 local ASPECT_RATIO = 16 / 9
 local REACTION_CROP_RATIO = 1 -- Crop the width for reaction sources
+local HIGHLIGHT_CROP_RATIO = 1 -- Crop the width for highlight sources
 
 -- Supported languages and translations
 local LANGUAGES = {
@@ -36,13 +37,24 @@ local LANGUAGES = {
         "Reaction X Offset",              -- 17
         "Reaction Y Offset",              -- 18
         "Distribute cameras between both sides", -- 19
+
+        -- Highlight Section (NEW)
+        "== Highlight Settings ==",       -- 20
+        "Enable Highlight Layout",        -- 21
+        "Highlight Scene",                -- 22
+        "Highlight Camera Prefix",        -- 23
+        "Highlight Main Source Prefix",   -- 24
+        "Highlight Spacing",              -- 25
+        "Highlight X Offset",             -- 26
+        "Highlight Y Offset",             -- 27
+        "Distribute cameras between both sides (Highlight)", -- 28
         
         -- Tracking Section
-        "== Source Tracking ==",          -- 20
-        "Enable Source Tracking",         -- 21
-        "Monitored Scene",                -- 22
-        "Target Scenes",                  -- 23
-        "Source Prefix"                   -- 24
+        "== Source Tracking ==",          -- 29
+        "Enable Source Tracking",         -- 30
+        "Monitored Scene",                -- 31
+        "Target Scenes",                  -- 32
+        "Source Prefix"                   -- 33
     },
     ["Português"] = {
         -- 1. Seletor de idioma
@@ -69,13 +81,24 @@ local LANGUAGES = {
         "Deslocamento X da Reação",       -- 17
         "Deslocamento Y da Reação",       -- 18
         "Distribuir câmeras entre os dois lados", -- 19
+
+        -- Seção Highlight (NOVO)
+        "== Configurações de Destaque ==", -- 20
+        "Ativar Layout de Destaque",      -- 21
+        "Cena de Destaque",               -- 22
+        "Prefixo Câmera Destaque",        -- 23
+        "Prefixo Fonte Principal Destaque", -- 24
+        "Espaçamento de Destaque",        -- 25
+        "Deslocamento X de Destaque",     -- 26
+        "Deslocamento Y de Destaque",     -- 27
+        "Distribuir câmeras entre os dois lados (Destaque)", -- 28
         
         -- Seção Tracking
-        "== Rastreamento de Fontes ==",   -- 20
-        "Ativar Rastreamento",            -- 21
-        "Cena Monitorada",                -- 22
-        "Cenas Destino",                  -- 23
-        "Prefixo das Fontes"              -- 24
+        "== Rastreamento de Fontes ==",   -- 29
+        "Ativar Rastreamento",            -- 30
+        "Cena Monitorada",                -- 31
+        "Cenas Destino",                  -- 32
+        "Prefixo das Fontes"              -- 33
     },
     ["Español"] = {
         -- 1. Selector de idioma
@@ -102,13 +125,24 @@ local LANGUAGES = {
         "Desplazamiento X de Reacción",   -- 17
         "Desplazamiento Y de Reacción",   -- 18
         "Distribuir cámaras entre ambos lados", -- 19
+
+        -- Sección Highlight (NUEVO)
+        "== Configuraciones de Destacado ==", -- 20
+        "Activar Diseño de Destacado",    -- 21
+        "Escena de Destacado",            -- 22
+        "Prefijo Cámara Destacado",       -- 23
+        "Prefijo Fuente Principal Destacado", -- 24
+        "Espaciado de Destacado",         -- 25
+        "Desplazamiento X de Destacado",  -- 26
+        "Desplazamiento Y de Destacado",  -- 27
+        "Distribuir cámaras entre ambos lados (Destacado)", -- 28
         
         -- Sección Tracking
-        "== Seguimiento de Fuentes ==",   -- 20
-        "Activar Seguimiento",            -- 21
-        "Escena Monitoreada",             -- 22
-        "Escenas Destino",                -- 23
-        "Prefijo de Fuentes"              -- 24
+        "== Seguimiento de Fuentes ==",   -- 29
+        "Activar Seguimiento",            -- 30
+        "Escena Monitoreada",             -- 31
+        "Escenas Destino",                -- 32
+        "Prefijo de Fuentes"              -- 33
     },
     ["中文"] = {
         -- 1. 语言选择
@@ -135,13 +169,24 @@ local LANGUAGES = {
         "反应X轴偏移",                    -- 17
         "反应Y轴偏移",                    -- 18
         "将摄像头分布在两侧",             -- 19
+
+        -- 亮点部分 (新增)
+        "== 亮点设置 ==",                 -- 20
+        "启用亮点布局",                   -- 21
+        "亮点场景",                       -- 22
+        "亮点摄像头前缀",                 -- 23
+        "亮点主源前缀",                   -- 24
+        "亮点间距",                       -- 25
+        "亮点X轴偏移",                    -- 26
+        "亮点Y轴偏移",                    -- 27
+        "将摄像头分布在两侧 (亮点)",      -- 28
         
         -- 跟踪部分
-        "== 源跟踪 ==",                   -- 20
-        "启用源跟踪",                     -- 21
-        "监视场景",                       -- 22
-        "目标场景",                       -- 23
-        "源前缀"                          -- 24
+        "== 源跟踪 ==",                   -- 29
+        "启用源跟踪",                     -- 30
+        "监视场景",                       -- 31
+        "目标场景",                       -- 32
+        "源前缀"                          -- 33
     },
     ["Русский"] = {
         -- 1. Выбор языка
@@ -168,13 +213,24 @@ local LANGUAGES = {
         "Смещение X реакции",             -- 17
         "Смещение Y реакции",             -- 18
         "Распределить камеры между обеими сторонами", -- 19
+
+        -- Выделение (НОВОЕ)
+        "== Настройки выделения ==",      -- 20
+        "Включить макет выделения",       -- 21
+        "Сцена выделения",                -- 22
+        "Префикс камеры выделения",       -- 23
+        "Префикс основного источника выделения", -- 24
+        "Расстояние выделения",           -- 25
+        "Смещение X выделения",           -- 26
+        "Смещение Y выделения",           -- 27
+        "Распределить камеры между обеими сторонами (выделение)", -- 28
         
         -- Трекинг
-        "== Отслеживание источников ==",  -- 20
-        "Включить отслеживание",          -- 21
-        "Мониторируемая сцена",           -- 22
-        "Целевые сцены",                  -- 23
-        "Префикс источника"               -- 24
+        "== Отслеживание источников ==",  -- 29
+        "Включить отслеживание",          -- 30
+        "Мониторируемая сцена",           -- 31
+        "Целевые сцены",                  -- 32
+        "Префикс источника"               -- 33
     },
     ["日本語"] = {
         -- 1. 言語選択
@@ -201,13 +257,24 @@ local LANGUAGES = {
         "リアクションX軸オフセット",      -- 17
         "リアクションY軸オフセット",      -- 18
         "両側にカメラを配置",             -- 19
+
+        -- ハイライトセクション (新規)
+        "== ハイライト設定 ==",           -- 20
+        "ハイライトレイアウトを有効にする", -- 21
+        "ハイライトシーン",               -- 22
+        "ハイライトカメラ接頭辞",         -- 23
+        "ハイライトメインソース接頭辞",   -- 24
+        "ハイライト間隔",                 -- 25
+        "ハイライトX軸オフセット",        -- 26
+        "ハイライトY軸オフセット",        -- 27
+        "両側にカメラを配置 (ハイライト)", -- 28
         
         -- トラッキングセクション
-        "== ソース追跡 ==",               -- 20
-        "ソース追跡を有効にする",         -- 21
-        "監視シーン",                     -- 22
-        "ターゲットシーン",               -- 23
-        "ソース接頭辞"                    -- 24
+        "== ソース追跡 ==",               -- 29
+        "ソース追跡を有効にする",         -- 30
+        "監視シーン",                     -- 31
+        "ターゲットシーン",               -- 32
+        "ソース接頭辞"                    -- 33
     },
     ["Deutsch"] = {
         -- 1. Sprachauswahl
@@ -234,13 +301,24 @@ local LANGUAGES = {
         "Reaktions-X-Versatz",            -- 17
         "Reaktions-Y-Versatz",            -- 18
         "Kameras auf beide Seiten verteilen", -- 19
+
+        -- Highlight Abschnitt (NEU)
+        "== Hervorhebungs-Einstellungen ==", -- 20
+        "Hervorhebungs-Layout aktivieren",-- 21
+        "Hervorhebungs-Szene",            -- 22
+        "Hervorhebungs-Kamera-Präfix",    -- 23
+        "Hervorhebungs-Hauptquellen-Präfix", -- 24
+        "Hervorhebungs-Abstand",          -- 25
+        "Hervorhebungs-X-Versatz",        -- 26
+        "Hervorhebungs-Y-Versatz",        -- 27
+        "Kameras auf beide Seiten verteilen (Hervorhebung)", -- 28
         
         -- Tracking Abschnitt
-        "== Quellenverfolgung ==",        -- 20
-        "Quellenverfolgung aktivieren",   -- 21
-        "Überwachte Szene",               -- 22
-        "Zielszenen",                     -- 23
-        "Quellenpräfix"                   -- 24
+        "== Quellenverfolgung ==",        -- 29
+        "Quellenverfolgung aktivieren",   -- 30
+        "Überwachte Szene",               -- 31
+        "Zielszenen",                     -- 32
+        "Quellenpräfix"                   -- 33
     }
 }
 
@@ -278,12 +356,24 @@ local state = {
         split_cameras = false,
         enabled = false
     },
+
+    -- Highlight settings (NEW)
+    highlight = {
+        scene_name = "",
+        source_prefix = "",
+        main_source_prefix = "", -- This replaces window_prefix
+        spacing = 30,
+        x_offset = 0,
+        y_offset = 0,
+        split_cameras = false,
+        enabled = false
+    },
     
     -- Source tracking settings
     tracking = {
         enabled = false,
         monitored_scene = "",
-        source_prefix = "VDO.Ninja_",
+        source_prefix = "",
         target_scenes = {},
         source_map = {},
         timer_interval = 1
@@ -294,6 +384,8 @@ local state = {
         temp_grid_prefix = "",
         temp_react_prefix = "",
         temp_window_prefix = "",
+        temp_highlight_camera_prefix = "", -- NEW
+        temp_highlight_main_prefix = "",   -- NEW
         temp_tracking_prefix = "",
         elements = {}  -- Will store references to UI elements
     },
@@ -434,7 +526,7 @@ end
 
 --- Processes the monitored scene for source tracking
 local function process_tracking()
-    if not state.tracking.enabled or state.tracking.monitored_scene == "" then return end
+    if not state.tracking.enabled or state.tracking.monitored_scene == "" or state.tracking.source_prefix == "" then return end
     
     local monitored_scene_source = obs.obs_get_scene_by_name(state.tracking.monitored_scene)
     if not monitored_scene_source then return end
@@ -483,7 +575,7 @@ end
 
 --- Processes all visible grid browsers and positions them according to settings
 local function process_grid_browsers()
-    if not state.script_active or not state.grid.enabled then return end
+    if not state.script_active or not state.grid.enabled or state.grid.source_prefix == "" then return end
 
     local scene = obs.obs_get_scene_by_name(state.grid.scene_name)
     if not scene then
@@ -588,20 +680,17 @@ local function process_grid_browsers()
                         local width = obs.obs_source_get_width(source)
                         local height = obs.obs_source_get_height(source)
 
-                        -- Calculate position with offsets
-                        local x = state.grid.margin + horizontal_padding + 
-                                 col * (browser_width + state.grid.spacing) + state.grid.x_offset
-                        local y = state.grid.margin + vertical_padding + 
-                                 row * (browser_height + state.grid.spacing) + state.grid.y_offset
-
                         -- Remove any existing crop
                         local crop = obs.obs_sceneitem_crop()
                         obs.obs_sceneitem_set_crop(browser, crop)
 
                         -- Set position and scale
                         local position = obs.vec2()
-                        position.x = x
-                        position.y = y
+                        position.x = state.grid.margin + horizontal_padding + 
+                                 col * (browser_width + state.grid.spacing) + state.grid.x_offset
+                        position.y = state.grid.margin + vertical_padding + 
+                                 row * (browser_height + state.grid.spacing) + state.grid.y_offset
+
                         obs.obs_sceneitem_set_pos(browser, position)
                         set_scale(browser, browser_width / width, browser_height / height)
                     end
@@ -650,8 +739,8 @@ local function handle_react_browsers_left(active_browsers, inactive_browsers, wi
 
         -- Apply crop to show only right 3/4 of the source
         local crop = obs.obs_sceneitem_crop()
-        crop.left = state.screen_width * (1 - REACTION_CROP_RATIO) / 2
-        crop.right = state.screen_width * (1 - REACTION_CROP_RATIO) / 2
+        crop.left = obs.obs_source_get_width(obs.obs_sceneitem_get_source(browser)) * (1 - REACTION_CROP_RATIO) / 2
+        crop.right = obs.obs_source_get_width(obs.obs_sceneitem_get_source(browser)) * (1 - REACTION_CROP_RATIO) / 2
         obs.obs_sceneitem_set_crop(browser, crop)
 
         -- Set position and scale
@@ -659,7 +748,9 @@ local function handle_react_browsers_left(active_browsers, inactive_browsers, wi
         position.x = x
         position.y = y
         obs.obs_sceneitem_set_pos(browser, position)
-        set_scale(browser, browser_width / state.screen_width, browser_height / state.screen_height)
+        -- Scale relative to the actual source size, not screen size for crop to work correctly
+        set_scale(browser, browser_width / obs.obs_source_get_width(obs.obs_sceneitem_get_source(browser)), 
+                           browser_height / obs.obs_source_get_height(obs.obs_sceneitem_get_source(browser)))
     end
 
     -- Hide inactive browsers
@@ -674,14 +765,11 @@ local function handle_react_browsers_left(active_browsers, inactive_browsers, wi
         
         if total_browsers == 0 then
             window_width = state.screen_width
-            window_height = window_width * (9/16)
+            window_height = window_width / ASPECT_RATIO
         else
             window_width = state.screen_width - (3 * state.reaction.spacing + browser_crop)
-            window_height = window_width * (9/16)
+            window_height = window_width / ASPECT_RATIO
         end
-
-        local scale_x = window_width / state.screen_width
-        local scale_y = window_height / state.screen_height
 
         -- Calculate window position
         local x_pos, y_pos
@@ -693,12 +781,17 @@ local function handle_react_browsers_left(active_browsers, inactive_browsers, wi
             y_pos = (state.screen_height - window_height) / 2 + state.reaction.y_offset
         end
 
+        -- Remove any existing crop from the main window source
+        local crop = obs.obs_sceneitem_crop()
+        obs.obs_sceneitem_set_crop(window_capture, crop)
+
         -- Position and scale window capture
         local position = obs.vec2()
         position.x = x_pos
         position.y = y_pos
         obs.obs_sceneitem_set_pos(window_capture, position)
-        set_scale(window_capture, scale_x, scale_y)
+        set_scale(window_capture, window_width / obs.obs_source_get_width(obs.obs_sceneitem_get_source(window_capture)), 
+                                  window_height / obs.obs_source_get_height(obs.obs_sceneitem_get_source(window_capture)))
     end
 end
 
@@ -708,9 +801,7 @@ local function handle_react_browsers_split(active_browsers, inactive_browsers, w
     if total_browsers == 0 then
         if window_capture then
             local window_width = state.screen_width
-            local window_height = window_width * (9/16)
-            local scale_x = window_width / state.screen_width
-            local scale_y = window_height / state.screen_height
+            local window_height = window_width / ASPECT_RATIO
             local x_pos = (state.screen_width - window_width) / 2 + state.reaction.x_offset
             local y_pos = (state.screen_height - window_height) / 2 + state.reaction.y_offset
             
@@ -718,7 +809,11 @@ local function handle_react_browsers_split(active_browsers, inactive_browsers, w
             position.x = x_pos
             position.y = y_pos
             obs.obs_sceneitem_set_pos(window_capture, position)
-            set_scale(window_capture, scale_x, scale_y)
+            -- Remove any existing crop from the main window source
+            local crop = obs.obs_sceneitem_crop()
+            obs.obs_sceneitem_set_crop(window_capture, crop)
+            set_scale(window_capture, window_width / obs.obs_source_get_width(obs.obs_sceneitem_get_source(window_capture)), 
+                                      window_height / obs.obs_source_get_height(obs.obs_sceneitem_get_source(window_capture)))
         end
         return
     end
@@ -747,8 +842,6 @@ local function handle_react_browsers_split(active_browsers, inactive_browsers, w
     local top_margin_left = (state.screen_height - adjusted_vertical_space_left) / 2
 
     -- Position browsers on left side
-    local width_scale = browser_width / state.screen_width
-    local height_scale = browser_height / state.screen_height
     for i = 1, left_count do
         local browser = active_browsers[i]
         if browser then
@@ -757,8 +850,8 @@ local function handle_react_browsers_split(active_browsers, inactive_browsers, w
 
             -- Apply crop
             local crop = obs.obs_sceneitem_crop()
-            crop.left = state.screen_width * (1 - REACTION_CROP_RATIO) / 2
-            crop.right = state.screen_width * (1 - REACTION_CROP_RATIO) / 2
+            crop.left = obs.obs_source_get_width(obs.obs_sceneitem_get_source(browser)) * (1 - REACTION_CROP_RATIO) / 2
+            crop.right = obs.obs_source_get_width(obs.obs_sceneitem_get_source(browser)) * (1 - REACTION_CROP_RATIO) / 2
             obs.obs_sceneitem_set_crop(browser, crop)
 
             -- Set position and scale
@@ -766,7 +859,8 @@ local function handle_react_browsers_split(active_browsers, inactive_browsers, w
             position.x = x
             position.y = y
             obs.obs_sceneitem_set_pos(browser, position)
-            set_scale(browser, width_scale, height_scale)
+            set_scale(browser, browser_width / obs.obs_source_get_width(obs.obs_sceneitem_get_source(browser)), 
+                               browser_height / obs.obs_source_get_height(obs.obs_sceneitem_get_source(browser)))
         end
     end
 
@@ -784,8 +878,8 @@ local function handle_react_browsers_split(active_browsers, inactive_browsers, w
 
             -- Apply crop
             local crop = obs.obs_sceneitem_crop()
-            crop.left = state.screen_width * (1 - REACTION_CROP_RATIO) / 2
-            crop.right = state.screen_width * (1 - REACTION_CROP_RATIO) / 2
+            crop.left = obs.obs_source_get_width(obs.obs_sceneitem_get_source(browser)) * (1 - REACTION_CROP_RATIO) / 2
+            crop.right = obs.obs_source_get_width(obs.obs_sceneitem_get_source(browser)) * (1 - REACTION_CROP_RATIO) / 2
             obs.obs_sceneitem_set_crop(browser, crop)
 
             -- Set position and scale
@@ -793,7 +887,8 @@ local function handle_react_browsers_split(active_browsers, inactive_browsers, w
             position.x = x
             position.y = y
             obs.obs_sceneitem_set_pos(browser, position)
-            set_scale(browser, width_scale, height_scale)
+            set_scale(browser, browser_width / obs.obs_source_get_width(obs.obs_sceneitem_get_source(browser)), 
+                               browser_height / obs.obs_source_get_height(obs.obs_sceneitem_get_source(browser)))
         end
     end
 
@@ -808,29 +903,34 @@ local function handle_react_browsers_split(active_browsers, inactive_browsers, w
         local x_pos = 0
         
         if columns == 1 then
-            window_width = state.screen_width - columns * (browser_crop + 3 * state.reaction.spacing)
-            x_pos = (state.screen_width - window_width) / columns + state.reaction.x_offset - state.reaction.spacing
+            window_width = state.screen_width - (browser_crop + 3 * state.reaction.spacing)
+            x_pos = browser_crop + 2 * state.reaction.spacing + state.reaction.x_offset
         elseif columns == 2 then
-            window_width = state.screen_width - columns * (browser_crop + 2 * state.reaction.spacing)
-            x_pos = (state.screen_width - window_width) / columns + state.reaction.x_offset
+            window_width = state.screen_width - (2 * (browser_crop + 2 * state.reaction.spacing))
+            x_pos = browser_crop + 2 * state.reaction.spacing + state.reaction.x_offset
+        else -- No cameras, fill screen
+            window_width = state.screen_width
+            x_pos = state.reaction.x_offset
         end
         
-        local window_height = window_width * (9/16)
-        local scale_x = window_width / state.screen_width
-        local scale_y = window_height / state.screen_height
+        local window_height = window_width / ASPECT_RATIO
         local y_pos = (state.screen_height - window_height) / 2 + state.reaction.y_offset
         
         local position = obs.vec2()
         position.x = x_pos
         position.y = y_pos
         obs.obs_sceneitem_set_pos(window_capture, position)
-        set_scale(window_capture, scale_x, scale_y)
+        -- Remove any existing crop from the main window source
+        local crop = obs.obs_sceneitem_crop()
+        obs.obs_sceneitem_set_crop(window_capture, crop)
+        set_scale(window_capture, window_width / obs.obs_source_get_width(obs.obs_sceneitem_get_source(window_capture)), 
+                                  window_height / obs.obs_source_get_height(obs.obs_sceneitem_get_source(window_capture)))
     end
 end
 
 --- Processes all visible reaction browsers and positions them according to settings
 local function process_react_browsers()
-    if not state.script_active or not state.reaction.enabled then return end
+    if not state.script_active or not state.reaction.enabled or state.reaction.source_prefix == "" or state.reaction.window_prefix == "" then return end
 
     local scene = obs.obs_get_scene_by_name(state.reaction.scene_name)
     if not scene then return end
@@ -884,6 +984,280 @@ local function process_react_browsers()
 end
 
 -- =============================================
+-- HIGHLIGHT LAYOUT FUNCTIONS (NEW)
+-- =============================================
+
+--- Handles highlight layout with cameras on left side only
+local function handle_highlight_browsers_left(active_browsers, inactive_browsers, main_source)
+    local total_browsers = #active_browsers
+
+    -- Calculate browser dimensions maintaining aspect ratio
+    local available_height = state.screen_height - state.highlight.spacing * (total_browsers + 1)
+    local browser_height = total_browsers > 0 and (available_height / total_browsers) or 0
+    local browser_width = browser_height * ASPECT_RATIO
+
+    -- Constrain maximum width
+    if browser_width > state.screen_width / 4 then
+        browser_width = state.screen_width / 4
+        browser_height = browser_width / ASPECT_RATIO
+    end
+
+    -- Center vertically
+    local adjusted_vertical_space = (browser_height + state.highlight.spacing) * total_browsers - state.highlight.spacing
+    local top_margin = (state.screen_height - adjusted_vertical_space) / 2
+
+    -- Position each browser on the left side
+    for index, browser in ipairs(active_browsers) do
+        local x = state.highlight.spacing + state.highlight.x_offset
+        local y = top_margin + (index - 1) * (browser_height + state.highlight.spacing) + state.highlight.y_offset
+
+        -- Apply crop to show only right 3/4 of the source
+        local crop = obs.obs_sceneitem_crop()
+        crop.left = obs.obs_source_get_width(obs.obs_sceneitem_get_source(browser)) * (1 - HIGHLIGHT_CROP_RATIO) / 2
+        crop.right = obs.obs_source_get_width(obs.obs_sceneitem_get_source(browser)) * (1 - HIGHLIGHT_CROP_RATIO) / 2
+        obs.obs_sceneitem_set_crop(browser, crop)
+
+        -- Set position and scale
+        local position = obs.vec2()
+        position.x = x
+        position.y = y
+        obs.obs_sceneitem_set_pos(browser, position)
+        set_scale(browser, browser_width / obs.obs_source_get_width(obs.obs_sceneitem_get_source(browser)), 
+                           browser_height / obs.obs_source_get_height(obs.obs_sceneitem_get_source(browser)))
+    end
+
+    -- Hide inactive browsers
+    for _, browser in ipairs(inactive_browsers) do
+        hide_browser(browser)
+    end
+
+    -- Position main source if present
+    if main_source then
+        local browser_crop = browser_width * HIGHLIGHT_CROP_RATIO
+        local main_source_width, main_source_height
+        
+        if total_browsers == 0 then
+            main_source_width = state.screen_width
+            main_source_height = main_source_width / ASPECT_RATIO -- Assuming 16:9 aspect ratio for main source
+        else
+            main_source_width = state.screen_width - (3 * state.highlight.spacing + browser_crop)
+            main_source_height = main_source_width / ASPECT_RATIO
+        end
+
+        -- Calculate main source position
+        local x_pos, y_pos
+        if total_browsers == 0 then
+            x_pos = (state.screen_width - main_source_width) / 2 + state.highlight.x_offset
+            y_pos = (state.screen_height - main_source_height) / 2 + state.highlight.y_offset
+        else
+            x_pos = browser_crop + state.highlight.x_offset + (2 * state.highlight.spacing)
+            y_pos = (state.screen_height - main_source_height) / 2 + state.highlight.y_offset
+        end
+
+        -- Remove any existing crop from the main source
+        local crop = obs.obs_sceneitem_crop()
+        obs.obs_sceneitem_set_crop(main_source, crop)
+
+        -- Position and scale main source
+        local position = obs.vec2()
+        position.x = x_pos
+        position.y = y_pos
+        obs.obs_sceneitem_set_pos(main_source, position)
+        set_scale(main_source, main_source_width / obs.obs_source_get_width(obs.obs_sceneitem_get_source(main_source)), 
+                                  main_source_height / obs.obs_source_get_height(obs.obs_sceneitem_get_source(main_source)))
+    end
+end
+
+--- Handles highlight layout with cameras split between both sides
+local function handle_highlight_browsers_split(active_browsers, inactive_browsers, main_source)
+    local total_browsers = #active_browsers
+    if total_browsers == 0 then
+        if main_source then
+            local main_source_width = state.screen_width
+            local main_source_height = main_source_width / ASPECT_RATIO
+            local x_pos = (state.screen_width - main_source_width) / 2 + state.highlight.x_offset
+            local y_pos = (state.screen_height - main_source_height) / 2 + state.highlight.y_offset
+            
+            local position = obs.vec2()
+            position.x = x_pos
+            position.y = y_pos
+            obs.obs_sceneitem_set_pos(main_source, position)
+            -- Remove any existing crop from the main source
+            local crop = obs.obs_sceneitem_crop()
+            obs.obs_sceneitem_set_crop(main_source, crop)
+            set_scale(main_source, main_source_width / obs.obs_source_get_width(obs.obs_sceneitem_get_source(main_source)), 
+                                      main_source_height / obs.obs_source_get_height(obs.obs_sceneitem_get_source(main_source)))
+        end
+        return
+    end
+
+    -- Calculate browser dimensions maintaining aspect ratio
+    local available_height = state.screen_height - state.highlight.spacing * (math.ceil(total_browsers/2) + 1)
+    local browser_height = available_height / math.ceil(total_browsers/2)
+    local browser_width = browser_height * ASPECT_RATIO
+
+    -- Constrain maximum width
+    if browser_width > state.screen_width / 4 then
+        browser_width = state.screen_width / 4
+        browser_height = browser_width / ASPECT_RATIO
+    end
+
+    -- Calculate how many cameras on each side
+    local left_count = math.ceil(total_browsers / 2)
+    local right_count = math.floor(total_browsers / 2)
+    local columns = 0
+
+    if left_count > 0 then columns = columns + 1 end
+    if right_count > 0 then columns = columns + 1 end
+
+    -- Calculate vertical space for left side
+    local adjusted_vertical_space_left = (browser_height + state.highlight.spacing) * left_count - state.highlight.spacing
+    local top_margin_left = (state.screen_height - adjusted_vertical_space_left) / 2
+
+    -- Position browsers on left side
+    for i = 1, left_count do
+        local browser = active_browsers[i]
+        if browser then
+            local x = state.highlight.spacing + state.highlight.x_offset
+            local y = top_margin_left + (i - 1) * (browser_height + state.highlight.spacing) + state.highlight.y_offset
+
+            -- Apply crop
+            local crop = obs.obs_sceneitem_crop()
+            crop.left = obs.obs_source_get_width(obs.obs_sceneitem_get_source(browser)) * (1 - HIGHLIGHT_CROP_RATIO) / 2
+            crop.right = obs.obs_source_get_width(obs.obs_sceneitem_get_source(browser)) * (1 - HIGHLIGHT_CROP_RATIO) / 2
+            obs.obs_sceneitem_set_crop(browser, crop)
+
+            -- Set position and scale
+            local position = obs.vec2()
+            position.x = x
+            position.y = y
+            obs.obs_sceneitem_set_pos(browser, position)
+            set_scale(browser, browser_width / obs.obs_source_get_width(obs.obs_sceneitem_get_source(browser)), 
+                               browser_height / obs.obs_source_get_height(obs.obs_sceneitem_get_source(browser)))
+        end
+    end
+
+    -- Calculate vertical space for right side
+    local adjusted_vertical_space_right = (browser_height + state.highlight.spacing) * right_count - state.highlight.spacing
+    local top_margin_right = (state.screen_height - adjusted_vertical_space_right) / 2
+    local browser_crop = browser_width * HIGHLIGHT_CROP_RATIO
+
+    -- Position browsers on right side
+    for i = 1, right_count do
+        local browser = active_browsers[left_count + i]
+        if browser then
+            local x = state.screen_width - browser_crop - state.highlight.spacing + state.highlight.x_offset
+            local y = top_margin_right + (i - 1) * (browser_height + state.highlight.spacing) + state.highlight.y_offset
+
+            -- Apply crop
+            local crop = obs.obs_sceneitem_crop()
+            crop.left = obs.obs_source_get_width(obs.obs_sceneitem_get_source(browser)) * (1 - HIGHLIGHT_CROP_RATIO) / 2
+            crop.right = obs.obs_source_get_width(obs.obs_sceneitem_get_source(browser)) * (1 - HIGHLIGHT_CROP_RATIO) / 2
+            obs.obs_sceneitem_set_crop(browser, crop)
+
+            -- Set position and scale
+            local position = obs.vec2()
+            position.x = x
+            position.y = y
+            obs.obs_sceneitem_set_pos(browser, position)
+            set_scale(browser, browser_width / obs.obs_source_get_width(obs.obs_sceneitem_get_source(browser)), 
+                               browser_height / obs.obs_source_get_height(obs.obs_sceneitem_get_source(browser)))
+        end
+    end
+
+    -- Hide inactive browsers
+    for _, browser in ipairs(inactive_browsers) do
+        hide_browser(browser)
+    end
+
+    -- Position main source in center if present
+    if main_source then
+        local main_source_width = state.screen_width
+        local x_pos = 0
+        
+        if columns == 1 then
+            main_source_width = state.screen_width - (browser_crop + 3 * state.highlight.spacing)
+            x_pos = browser_crop + 2 * state.highlight.spacing + state.highlight.x_offset
+        elseif columns == 2 then
+            main_source_width = state.screen_width - (2 * (browser_crop + 2 * state.highlight.spacing))
+            x_pos = browser_crop + 2 * state.highlight.spacing + state.highlight.x_offset
+        else -- No cameras, fill screen
+            main_source_width = state.screen_width
+            x_pos = state.highlight.x_offset
+        end
+        
+        local main_source_height = main_source_width / ASPECT_RATIO
+        local y_pos = (state.screen_height - main_source_height) / 2 + state.highlight.y_offset
+        
+        local position = obs.vec2()
+        position.x = x_pos
+        position.y = y_pos
+        obs.obs_sceneitem_set_pos(main_source, position)
+        -- Remove any existing crop from the main source
+        local crop = obs.obs_sceneitem_crop()
+        obs.obs_sceneitem_set_crop(main_source, crop)
+        set_scale(main_source, main_source_width / obs.obs_source_get_width(obs.obs_sceneitem_get_source(main_source)), 
+                                  main_source_height / obs.obs_source_get_height(obs.obs_sceneitem_get_source(main_source)))
+    end
+end
+
+--- Processes all visible highlight browsers and positions them according to settings (NEW)
+local function process_highlight_browsers()
+    if not state.script_active or not state.highlight.enabled or state.highlight.source_prefix == "" or state.highlight.main_source_prefix == "" then return end
+
+    local scene = obs.obs_get_scene_by_name(state.highlight.scene_name)
+    if not scene then return end
+
+    local scene_items = obs.obs_scene_enum_items(scene)
+    if not scene_items then
+        obs.obs_scene_release(scene)
+        return
+    end
+
+    local active_browsers = {}
+    local inactive_browsers = {}
+    local main_source = nil
+
+    -- Categorize items based on prefixes and visibility
+    for _, scene_item in ipairs(scene_items) do
+        local source = obs.obs_sceneitem_get_source(scene_item)
+        local source_name = obs.obs_source_get_name(source)
+
+        if string.match(source_name, "^" .. state.highlight.source_prefix) then
+            if obs.obs_sceneitem_visible(scene_item) then
+                table.insert(active_browsers, scene_item)
+            else
+                table.insert(inactive_browsers, scene_item)
+            end
+        elseif state.highlight.main_source_prefix ~= "" and 
+               string.match(source_name, "^" .. state.highlight.main_source_prefix) then
+            if obs.obs_sceneitem_visible(scene_item) then
+                main_source = scene_item
+            end
+        end
+    end
+
+    -- Sort browsers alphabetically
+    table.sort(active_browsers, function(a, b)
+        local name_a = obs.obs_source_get_name(obs.obs_sceneitem_get_source(a))
+        local name_b = obs.obs_source_get_name(obs.obs_sceneitem_get_source(b))
+        return name_a < name_b
+    end)
+
+    -- Handle layout based on split setting
+    if state.highlight.split_cameras then
+        handle_highlight_browsers_split(active_browsers, inactive_browsers, main_source)
+    else
+        handle_highlight_browsers_left(active_browsers, inactive_browsers, main_source)
+    end
+
+    -- Clean up
+    obs.sceneitem_list_release(scene_items)
+    obs.obs_scene_release(scene)
+end
+
+
+-- =============================================
 -- UI CALLBACK FUNCTIONS
 -- =============================================
 
@@ -919,12 +1293,29 @@ local function on_reaction_enabled_changed(props, property, settings)
     -- Update visibility of reaction settings
     obs.obs_property_set_visible(obs.obs_properties_get(props, "react_scene"), state.reaction.enabled)
     obs.obs_property_set_visible(obs.obs_properties_get(props, "react_prefix"), state.reaction.enabled)
-    obs.obs_property_set_visible(obs.obs_properties_get(props, "reaction_prefix"), state.reaction.enabled)
+    obs.obs_property_set_visible(obs.obs_properties_get(props, "reaction_window_prefix"), state.reaction.enabled) -- Corrected name
     obs.obs_property_set_visible(obs.obs_properties_get(props, "save_reaction_prefix"), state.reaction.enabled)
     obs.obs_property_set_visible(obs.obs_properties_get(props, "react_spacing"), state.reaction.enabled)
     obs.obs_property_set_visible(obs.obs_properties_get(props, "react_x_offset"), state.reaction.enabled)
     obs.obs_property_set_visible(obs.obs_properties_get(props, "react_y_offset"), state.reaction.enabled)
     obs.obs_property_set_visible(obs.obs_properties_get(props, "camera_split"), state.reaction.enabled)
+    
+    return true
+end
+
+--- Callback when highlight layout is toggled (NEW)
+local function on_highlight_enabled_changed(props, property, settings)
+    state.highlight.enabled = obs.obs_data_get_bool(settings, "highlight_enabled")
+    
+    -- Update visibility of highlight settings
+    obs.obs_property_set_visible(obs.obs_properties_get(props, "highlight_scene"), state.highlight.enabled)
+    obs.obs_property_set_visible(obs.obs_properties_get(props, "highlight_camera_prefix"), state.highlight.enabled)
+    obs.obs_property_set_visible(obs.obs_properties_get(props, "highlight_main_source_prefix"), state.highlight.enabled)
+    obs.obs_property_set_visible(obs.obs_properties_get(props, "save_highlight_prefix"), state.highlight.enabled)
+    obs.obs_property_set_visible(obs.obs_properties_get(props, "highlight_spacing"), state.highlight.enabled)
+    obs.obs_property_set_visible(obs.obs_properties_get(props, "highlight_x_offset"), state.highlight.enabled)
+    obs.obs_property_set_visible(obs.obs_properties_get(props, "highlight_y_offset"), state.highlight.enabled)
+    obs.obs_property_set_visible(obs.obs_properties_get(props, "highlight_camera_split"), state.highlight.enabled)
     
     return true
 end
@@ -958,6 +1349,12 @@ local function on_react_scene_changed(props, prop, settings)
     process_react_browsers()
 end
 
+--- Callback when highlight scene is changed (NEW)
+local function on_highlight_scene_changed(props, prop, settings)
+    state.highlight.scene_name = obs.obs_data_get_string(settings, "highlight_scene")
+    process_highlight_browsers()
+end
+
 --- Callback when grid prefix is changed in UI
 local function on_grid_prefix_changed(props, property, settings)
     state.ui.temp_grid_prefix = obs.obs_data_get_string(settings, "grid_prefix")
@@ -968,9 +1365,19 @@ local function on_react_prefix_changed(props, property, settings)
     state.ui.temp_react_prefix = obs.obs_data_get_string(settings, "react_prefix")
 end
 
---- Callback when window prefix is changed in UI
+--- Callback when window prefix is changed in UI (for Reaction)
 local function on_window_prefix_changed(props, property, settings)
-    state.ui.temp_window_prefix = obs.obs_data_get_string(settings, "reaction_prefix")
+    state.ui.temp_window_prefix = obs.obs_data_get_string(settings, "reaction_window_prefix") -- Corrected name
+end
+
+--- Callback when highlight camera prefix is changed in UI (NEW)
+local function on_highlight_camera_prefix_changed(props, property, settings)
+    state.ui.temp_highlight_camera_prefix = obs.obs_data_get_string(settings, "highlight_camera_prefix")
+end
+
+--- Callback when highlight main source prefix is changed in UI (NEW)
+local function on_highlight_main_prefix_changed(props, property, settings)
+    state.ui.temp_highlight_main_prefix = obs.obs_data_get_string(settings, "highlight_main_source_prefix")
 end
 
 --- Callback when save grid prefix button is clicked
@@ -988,6 +1395,15 @@ local function on_save_reaction_prefix_clicked(props, prop)
 
     -- Refresh layout
     if state.reaction.source_prefix ~= "" and state.reaction.window_prefix ~= "" then process_react_browsers() end
+end
+
+--- Callback when save highlight prefix button is clicked (NEW)
+local function on_save_highlight_prefix_clicked(props, prop)
+    state.highlight.source_prefix = state.ui.temp_highlight_camera_prefix:gsub("%s+", "")
+    state.highlight.main_source_prefix = state.ui.temp_highlight_main_prefix:gsub("%s+", "")
+
+    -- Refresh layout
+    if state.highlight.source_prefix ~= "" and state.highlight.main_source_prefix ~= "" then process_highlight_browsers() end
 end
 
 --- Callback when grid spacing is changed
@@ -1044,6 +1460,30 @@ local function on_camera_split_changed(props, property, settings)
     process_react_browsers()
 end
 
+--- Callback when highlight spacing is changed (NEW)
+local function on_highlight_spacing_changed(props, prop, settings)
+    state.highlight.spacing = obs.obs_data_get_int(settings, "highlight_spacing")
+    process_highlight_browsers()
+end
+
+--- Callback when highlight X offset is changed (NEW)
+local function on_highlight_x_offset_changed(props, prop, settings)
+    state.highlight.x_offset = obs.obs_data_get_int(settings, "highlight_x_offset")
+    process_highlight_browsers()
+end
+
+--- Callback when highlight Y offset is changed (NEW)
+local function on_highlight_y_offset_changed(props, prop, settings)
+    state.highlight.y_offset = obs.obs_data_get_int(settings, "highlight_y_offset")
+    process_highlight_browsers()
+end
+
+--- Callback when highlight camera split is toggled (NEW)
+local function on_highlight_camera_split_changed(props, property, settings)
+    state.highlight.split_cameras = obs.obs_data_get_bool(settings, "highlight_camera_split")
+    process_highlight_browsers()
+end
+
 --- Callback when tracking prefix is changed
 local function on_tracking_prefix_changed(props, property, settings)
     state.ui.temp_tracking_prefix = obs.obs_data_get_string(settings, "tracking_prefix")
@@ -1088,6 +1528,7 @@ end
 local function refresh_all()
     if (state.grid.enabled and state.grid.source_prefix ~= "") then process_grid_browsers() end
     if (state.reaction.enabled and state.reaction.source_prefix ~= "" and state.reaction.window_prefix ~= "") then process_react_browsers() end
+    if (state.highlight.enabled and state.highlight.source_prefix ~= "" and state.highlight.main_source_prefix ~= "") then process_highlight_browsers() end -- NEW
     if (state.tracking.enabled and state.tracking.source_prefix ~= "") then process_tracking() end
 end
 
@@ -1178,13 +1619,13 @@ function script_properties()
         end
         obs.obs_property_set_modified_callback(state.ui.elements[13], on_react_scene_changed)
         
-        -- 14. Reaction prefix
+        -- 14. Reaction camera prefix
         state.ui.elements[14] = obs.obs_properties_add_text(props, "react_prefix", 
             state.translations[14], obs.OBS_TEXT_DEFAULT)
         obs.obs_property_set_modified_callback(state.ui.elements[14], on_react_prefix_changed)
 
-        -- 15. Window prefix
-        state.ui.elements[15] = obs.obs_properties_add_text(props, "reaction_prefix", 
+        -- 15. Reaction Window prefix (for main content)
+        state.ui.elements[15] = obs.obs_properties_add_text(props, "reaction_window_prefix", -- Changed property name for clarity
             state.translations[15], obs.OBS_TEXT_DEFAULT)
         obs.obs_property_set_modified_callback(state.ui.elements[15], on_window_prefix_changed)
 
@@ -1210,30 +1651,81 @@ function script_properties()
         state.ui.elements[19] = obs.obs_properties_add_bool(props, "camera_split", 
             state.translations[19])
         obs.obs_property_set_modified_callback(state.ui.elements[19], on_camera_split_changed)
-        
-        -- === Tracking Section ===
-        -- 20. Tracking Settings header
-        state.ui.elements[20] = obs.obs_properties_add_text(props, "tracking_settings_label", 
+
+        -- === Highlight Section (NEW) ===
+        -- 20. Highlight Settings header
+        state.ui.elements[20] = obs.obs_properties_add_text(props, "highlight_settings_label", 
             state.translations[20], obs.OBS_TEXT_INFO)
         
-        -- 21. Tracking enable toggle
-        state.ui.elements[21] = obs.obs_properties_add_bool(props, "tracking_enabled", 
-            state.translations[21])
-        obs.obs_property_set_modified_callback(state.ui.elements[21], on_tracking_enabled_changed)
+        -- 21. Highlight enable toggle
+        state.ui.elements[21] = obs.obs_properties_add_bool(props, "highlight_enabled", state.translations[21])
+        obs.obs_property_set_modified_callback(state.ui.elements[21], on_highlight_enabled_changed)
         
-        -- 22. Monitored scene
-        state.ui.elements[22] = obs.obs_properties_add_list(props, "monitored_scene", 
+        -- 22. Highlight scene selection
+        state.ui.elements[22] = obs.obs_properties_add_list(props, "highlight_scene", 
             state.translations[22], obs.OBS_COMBO_TYPE_EDITABLE, obs.OBS_COMBO_FORMAT_STRING)
         for _, scene in ipairs(scenes) do
             local scene_name = obs.obs_source_get_name(scene)
             obs.obs_property_list_add_string(state.ui.elements[22], scene_name, scene_name)
         end
-        obs.obs_property_set_modified_callback(state.ui.elements[22], on_monitored_scene_changed)
+        obs.obs_property_set_modified_callback(state.ui.elements[22], on_highlight_scene_changed)
         
-        -- 23. Target scenes group
+        -- 23. Highlight Camera prefix
+        state.ui.elements[23] = obs.obs_properties_add_text(props, "highlight_camera_prefix", 
+            state.translations[23], obs.OBS_TEXT_DEFAULT)
+        obs.obs_property_set_modified_callback(state.ui.elements[23], on_highlight_camera_prefix_changed)
+
+        -- 24. Highlight Main Source prefix (for main content)
+        state.ui.elements[24] = obs.obs_properties_add_text(props, "highlight_main_source_prefix", 
+            state.translations[24], obs.OBS_TEXT_DEFAULT)
+        obs.obs_property_set_modified_callback(state.ui.elements[24], on_highlight_main_prefix_changed)
+
+        -- Save highlight prefix button (no translation needed)
+        obs.obs_properties_add_button(props, "save_highlight_prefix", "✔", on_save_highlight_prefix_clicked)
+        
+        -- 25. Highlight spacing
+        state.ui.elements[25] = obs.obs_properties_add_int_slider(props, "highlight_spacing", 
+            state.translations[25], 0, 100, 1)
+        obs.obs_property_set_modified_callback(state.ui.elements[25], on_highlight_spacing_changed)
+        
+        -- 26. Highlight X offset
+        state.ui.elements[26] = obs.obs_properties_add_int_slider(props, "highlight_x_offset", 
+            state.translations[26], -state.screen_width, state.screen_width, 1)
+        obs.obs_property_set_modified_callback(state.ui.elements[26], on_highlight_x_offset_changed)
+        
+        -- 27. Highlight Y offset
+        state.ui.elements[27] = obs.obs_properties_add_int_slider(props, "highlight_y_offset", 
+            state.translations[27], -state.screen_height, state.screen_height, 1)
+        obs.obs_property_set_modified_callback(state.ui.elements[27], on_highlight_y_offset_changed)
+        
+        -- 28. Highlight Camera split
+        state.ui.elements[28] = obs.obs_properties_add_bool(props, "highlight_camera_split", 
+            state.translations[28])
+        obs.obs_property_set_modified_callback(state.ui.elements[28], on_highlight_camera_split_changed)
+
+        -- === Tracking Section ===
+        -- 29. Tracking Settings header
+        state.ui.elements[29] = obs.obs_properties_add_text(props, "tracking_settings_label", 
+            state.translations[29], obs.OBS_TEXT_INFO)
+        
+        -- 30. Tracking enable toggle
+        state.ui.elements[30] = obs.obs_properties_add_bool(props, "tracking_enabled", 
+            state.translations[30])
+        obs.obs_property_set_modified_callback(state.ui.elements[30], on_tracking_enabled_changed)
+        
+        -- 31. Monitored scene
+        state.ui.elements[31] = obs.obs_properties_add_list(props, "monitored_scene", 
+            state.translations[31], obs.OBS_COMBO_TYPE_EDITABLE, obs.OBS_COMBO_FORMAT_STRING)
+        for _, scene in ipairs(scenes) do
+            local scene_name = obs.obs_source_get_name(scene)
+            obs.obs_property_list_add_string(state.ui.elements[31], scene_name, scene_name)
+        end
+        obs.obs_property_set_modified_callback(state.ui.elements[31], on_monitored_scene_changed)
+        
+        -- 32. Target scenes group
         local target_scenes_group = obs.obs_properties_create()
-        state.ui.elements[23] = obs.obs_properties_add_group(props, "target_scenes_group", 
-            state.translations[23], obs.OBS_GROUP_NORMAL, target_scenes_group)
+        state.ui.elements[32] = obs.obs_properties_add_group(props, "target_scenes_group", 
+            state.translations[32], obs.OBS_GROUP_NORMAL, target_scenes_group)
 
         for _, scene in ipairs(scenes) do
             local scene_name = obs.obs_source_get_name(scene)
@@ -1241,10 +1733,10 @@ function script_properties()
             obs.obs_property_set_modified_callback(prop, on_target_scenes_changed)
         end
 
-        -- 24. Tracking prefix
-        state.ui.elements[24] = obs.obs_properties_add_text(props, "tracking_prefix", 
-            state.translations[24], obs.OBS_TEXT_DEFAULT)
-        obs.obs_property_set_modified_callback(state.ui.elements[24], on_tracking_prefix_changed)
+        -- 33. Tracking prefix
+        state.ui.elements[33] = obs.obs_properties_add_text(props, "tracking_prefix", 
+            state.translations[33], obs.OBS_TEXT_DEFAULT)
+        obs.obs_property_set_modified_callback(state.ui.elements[33], on_tracking_prefix_changed)
         
         -- Save tracking button (no translation needed)
         obs.obs_properties_add_button(props, "save_tracking", "✔", on_save_tracking_clicked)
@@ -1256,11 +1748,13 @@ function script_properties()
     local settings_data = obs.obs_data_create()
     obs.obs_data_set_bool(settings_data, "grid_enabled", state.grid.enabled)
     obs.obs_data_set_bool(settings_data, "reaction_enabled", state.reaction.enabled)
+    obs.obs_data_set_bool(settings_data, "highlight_enabled", state.highlight.enabled) -- NEW
     obs.obs_data_set_bool(settings_data, "tracking_enabled", state.tracking.enabled)
     
     -- Force update visibility
     on_grid_enabled_changed(props, nil, settings_data)
     on_reaction_enabled_changed(props, nil, settings_data)
+    on_highlight_enabled_changed(props, nil, settings_data) -- NEW
     on_tracking_enabled_changed(props, nil, settings_data)
     
     obs.obs_data_release(settings_data)
@@ -1290,17 +1784,27 @@ function script_load(settings)
     -- Reaction settings
     state.reaction.scene_name = obs.obs_data_get_string(settings, "react_scene") or ""
     state.reaction.source_prefix = obs.obs_data_get_string(settings, "react_prefix") or ""
-    state.reaction.window_prefix = obs.obs_data_get_string(settings, "reaction_prefix") or ""
+    state.reaction.window_prefix = obs.obs_data_get_string(settings, "reaction_window_prefix") or "" -- Corrected name
     state.reaction.enabled = obs.obs_data_get_bool(settings, "reaction_enabled") or (state.reaction.source_prefix ~= "" or state.reaction.scene_name ~= "")
     state.reaction.spacing = obs.obs_data_get_int(settings, "react_spacing") or 30
     state.reaction.x_offset = obs.obs_data_get_int(settings, "react_x_offset") or 0
     state.reaction.y_offset = obs.obs_data_get_int(settings, "react_y_offset") or 0
     state.reaction.split_cameras = obs.obs_data_get_bool(settings, "camera_split") or false
+
+    -- Highlight settings (NEW)
+    state.highlight.scene_name = obs.obs_data_get_string(settings, "highlight_scene") or ""
+    state.highlight.source_prefix = obs.obs_data_get_string(settings, "highlight_camera_prefix") or ""
+    state.highlight.main_source_prefix = obs.obs_data_get_string(settings, "highlight_main_source_prefix") or ""
+    state.highlight.enabled = obs.obs_data_get_bool(settings, "highlight_enabled") or (state.highlight.source_prefix ~= "" or state.highlight.scene_name ~= "")
+    state.highlight.spacing = obs.obs_data_get_int(settings, "highlight_spacing") or 30
+    state.highlight.x_offset = obs.obs_data_get_int(settings, "highlight_x_offset") or 0
+    state.highlight.y_offset = obs.obs_data_get_int(settings, "highlight_y_offset") or 0
+    state.highlight.split_cameras = obs.obs_data_get_bool(settings, "highlight_camera_split") or false
     
     -- Source tracking settings
     state.tracking.enabled = obs.obs_data_get_bool(settings, "tracking_enabled") or false
     state.tracking.monitored_scene = obs.obs_data_get_string(settings, "monitored_scene") or ""
-    state.tracking.source_prefix = obs.obs_data_get_string(settings, "tracking_prefix") or "VDO.Ninja_"
+    state.tracking.source_prefix = obs.obs_data_get_string(settings, "tracking_prefix") or ""
     
     -- Load target scenes
     state.tracking.target_scenes = {}
@@ -1320,6 +1824,8 @@ function script_load(settings)
     state.ui.temp_grid_prefix = state.grid.source_prefix
     state.ui.temp_react_prefix = state.reaction.source_prefix
     state.ui.temp_window_prefix = state.reaction.window_prefix
+    state.ui.temp_highlight_camera_prefix = state.highlight.source_prefix -- NEW
+    state.ui.temp_highlight_main_prefix = state.highlight.main_source_prefix -- NEW
     state.ui.temp_tracking_prefix = state.tracking.source_prefix
     
     -- Start refresh timer
@@ -1329,6 +1835,7 @@ function script_load(settings)
     local temp_props = obs.obs_properties_create()
     on_grid_enabled_changed(temp_props, nil, settings)
     on_reaction_enabled_changed(temp_props, nil, settings)
+    on_highlight_enabled_changed(temp_props, nil, settings) -- NEW
     on_tracking_enabled_changed(temp_props, nil, settings)
     obs.obs_properties_destroy(temp_props)
 end
@@ -1357,12 +1864,22 @@ function script_save(settings)
     -- Save reaction settings
     obs.obs_data_set_string(settings, "react_scene", state.reaction.scene_name)
     obs.obs_data_set_string(settings, "react_prefix", state.reaction.source_prefix)
-    obs.obs_data_set_string(settings, "reaction_prefix", state.reaction.window_prefix)
+    obs.obs_data_set_string(settings, "reaction_window_prefix", state.reaction.window_prefix) -- Corrected name
     obs.obs_data_set_bool(settings, "reaction_enabled", state.reaction.enabled)
     obs.obs_data_set_int(settings, "react_spacing", state.reaction.spacing)
     obs.obs_data_set_int(settings, "react_x_offset", state.reaction.x_offset)
     obs.obs_data_set_int(settings, "react_y_offset", state.reaction.y_offset)
     obs.obs_data_set_bool(settings, "camera_split", state.reaction.split_cameras)
+
+    -- Save highlight settings (NEW)
+    obs.obs_data_set_string(settings, "highlight_scene", state.highlight.scene_name)
+    obs.obs_data_set_string(settings, "highlight_camera_prefix", state.highlight.source_prefix)
+    obs.obs_data_set_string(settings, "highlight_main_source_prefix", state.highlight.main_source_prefix)
+    obs.obs_data_set_bool(settings, "highlight_enabled", state.highlight.enabled)
+    obs.obs_data_set_int(settings, "highlight_spacing", state.highlight.spacing)
+    obs.obs_data_set_int(settings, "highlight_x_offset", state.highlight.x_offset)
+    obs.obs_data_set_int(settings, "highlight_y_offset", state.highlight.y_offset)
+    obs.obs_data_set_bool(settings, "highlight_camera_split", state.highlight.split_cameras)
     
     -- Save tracking settings
     obs.obs_data_set_bool(settings, "tracking_enabled", state.tracking.enabled)
@@ -1393,9 +1910,10 @@ function script_description()
 
 Features:
 1. Grid Layout - Organize sources in a grid pattern
-2. Reaction Layout - Side-by-side layout with main content
-3. Source Tracking - Automatically copy sources from one scene to others
-4. Individual Toggles - Enable/disable each feature independently
+2. Reaction Layout - Side-by-side layout with main content (window capture)
+3. Highlight Layout - Side-by-side layout with main content (browser source)
+4. Source Tracking - Automatically copy sources from one scene to others
+5. Individual Toggles - Enable/disable each feature independently
 
 Configure all settings in the script properties panel.]]
 end
