@@ -28,11 +28,11 @@ Dynamic Highlight Layout (NEW):
 * This layout is designed to highlight a specific source while other reaction cameras are positioned relative to it.
 * Same appeance as the Reaction Layout, but the highlighted camera is placed where the screen capture would be.
 * Flexible Settings: Define prefixes for the lateral cameras (Highlight Camera Prefix) and for the main source (Highlight Main Source Prefix).
-* 
+
 * *Sources in general:* `VDO.Ninja_`
 * *Screen Captures:* `VDO.Screen_`
 * *Highlighted Source:* `VDO.Highlight_`
-* 
+
 * Camera Distribution: Option to distribute highlight cameras on both sides of the screen.
 * Fine Adjustments: Control spacing and X/Y offsets for optimal positioning.
 
