@@ -2147,8 +2147,16 @@
       const screenShareSceneSelect = document.getElementById('screenShareSceneSelect');
 
       // Event handlers
-      obsSceneSelect.addEventListener('change', () => { obsSceneNameInput.value = obsSceneSelect.value; saveSettings(); updateOtherScenesList(); });
-      [obsWsUrlInput, obsWsPasswordInput, vdoNinjaRoomInput, vdoNinjaPasswordInput, vdoNinjaStreamIdsInput, autoAddSourcesCheckbox, autoRemoveSourcesCheckbox].forEach(el => el.addEventListener('change', saveSettings));
+      obsSceneSelect.addEventListener('change', () => {
+          obsSceneNameInput.value = obsSceneSelect.value; 
+          saveSettings();
+          updateOtherScenesList();
+          updateStreamList();
+      });
+      [obsWsUrlInput, obsWsPasswordInput, vdoNinjaRoomInput,
+          vdoNinjaPasswordInput, vdoNinjaStreamIdsInput, autoAddSourcesCheckbox,
+              autoRemoveSourcesCheckbox].forEach(el => el.addEventListener('change', saveSettings));
+
       sourceSizingSelect.addEventListener('change', () => {
           saveSettings();
           if (sourceSizingSelect.value === 'autoGrid') {
