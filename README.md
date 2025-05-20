@@ -4,7 +4,7 @@ This repository provides a powerful set of tools to dynamically manage and organ
 
 ---
 
-## OBS Lua Script: Advanced Scene Manager for OBS Studio: Grid, Reaction, Highlight, and Source Tracking
+## OBS Lua Script: Advanced Scene Layouts for OBS Studio: Grid, Reaction, Highlight, and Source Tracking
 
 Overview:
 
@@ -79,7 +79,7 @@ You can find the original OBS Controller page and more information about Steve S
 
 This modified VDO.Ninja OBS Control Dock allows for streamlined management of VDO.Ninja sources within your OBS Studio scenes. It leverages the OBS WebSocket plugin to communicate with OBS Studio, enabling dynamic actions directly from your browser.
 
-The page is designed to work in conjunction with the `Advanced Scene Manager: Grid, Reaction, Highlight, and Source Tracking` script. When used together, this controller can facilitate automated source naming and organization.
+The page is designed to work in conjunction with the `Advanced Scene Layouts: Grid, Reaction, Highlight, and Source Tracking` script. When used together, this controller can facilitate automated source naming and organization.
 
 ### Key Features (Includes Additions!)
 
@@ -89,17 +89,17 @@ The page is designed to work in conjunction with the `Advanced Scene Manager: Gr
 * **🆕 Screen Share Integration:** Dedicated features for managing and switching VDO.Ninja screen share sources within your OBS scenes, providing more refined control over shared content. (This feature is an inclusion not present in the original OBS Controller by Steve Seguin).
 * **🆕 Highlight Source Management:** Enhanced capabilities to designate and control a "highlighted" VDO.Ninja source, which is especially useful when paired with advanced OBS scripts that dynamically adjust layouts based on specific source prefixes. (This feature is an inclusion not present in the original OBS Controller by Steve Seguin).
 
-### Integration with `Advanced Scene Manager`
+### Integration with `Advanced Scene Layouts`
 
-This modified OBS Controller is particularly effective when used with OBS Lua scripts that process source names for dynamic layouts. For instance, if you're using a script like the `Advanced Scene Manager` (which includes Grid, Reaction, and Highlight Layouts), you can leverage this controller, as it automatically creates your VDO.Ninja sources with specific prefixes.
+This modified OBS Controller is particularly effective when used with OBS Lua scripts that process source names for dynamic layouts. For instance, if you're using a script like the `Advanced Scene Layouts` (which includes Grid, Reaction, and Highlight Layouts), you can leverage this controller, as it automatically creates your VDO.Ninja sources with specific prefixes.
 
-For seamless integration and dynamic layout adjustments within OBS (especially with highlight features), it is required to use the following prefixes for your VDO.Ninja sources in the `Advanced Scene Manager` settings, as they are the prefixes used by the `VDO.Ninja OBS Control Dock`:
+For seamless integration and dynamic layout adjustments within OBS (especially with highlight features), it is required to use the following prefixes for your VDO.Ninja sources in the `Advanced Scene Layouts` script settings, as they are the prefixes used by the `VDO.Ninja OBS Control Dock`:
 
 * **Sources in general:** `VDO.Ninja_`
 * **Screen Captures:** `VDO.Screen_`
 * **Highlighted Source:** `VDO.Highlight_`
 
-By setting these prefixes in the `Advanced Scene Manager` script, it can intelligently identify and position your VDO.Ninja sources within various layouts (e.g., placing the `VDO.Highlight_` source as the main focus with other `VDO.Ninja_` cameras arranged around it in a highlight layout).
+By setting these prefixes in the `Advanced Scene Layouts` script, it can intelligently identify and position your VDO.Ninja sources within various layouts (e.g., placing the `VDO.Highlight_` source as the main focus with other `VDO.Ninja_` cameras arranged around it in a highlight layout).
 
 ---
 
