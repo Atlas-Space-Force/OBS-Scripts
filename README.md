@@ -65,6 +65,7 @@ This script is a powerful solution for streamers, content creators, and anyone s
 
 * OBS Studio (version 27.0 or higher recommended).
 * Lua scripting support (included with OBS Studio).
+* [Click here](https://obsproject.com/forum/resources/advanced-scene-layouts-grid-reaction-highlight-and-source-tracking.2152/) to go to the OBS Forum page.
 
 ---
 
