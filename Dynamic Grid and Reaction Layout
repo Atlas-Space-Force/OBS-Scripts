@@ -6,7 +6,7 @@ math = require("math")
 -- =============================================
 
 local INTERVAL_MS = 200
-local ASPECT_RATIO = 3 / 4
+local ASPECT_RATIO = 16 / 9
 local REACTION_CROP_RATIO = 1 -- Crop the width for reaction sources
 
 -- Supported languages and translations
