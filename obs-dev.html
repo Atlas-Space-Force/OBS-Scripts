@@ -188,6 +188,19 @@
           padding: 2px 4px;
           font-size: 11px;
       }
+      .highlight-btn {
+          padding: 2px 4px;
+          color: white;
+          cursor: pointer;
+          font-size: 11px;
+          transition: background-color 0.2s;
+      }
+      .screen-share-btn {
+          background-color: #9C27B0;
+          color: white;
+          padding: 2px 4px;
+          font-size: 11px;
+      }
       .status-line {
           font-size: 12px;
           margin-top: 5px;
@@ -238,26 +251,9 @@
           margin-left: 5px;
           vertical-align: top;
       }
-      .screen-share-btn {
-          background-color: #9C27B0;
-          color: white;
-          padding: 2px 4px;
-          font-size: 11px;
-      }
-      .highlight-btn {
-          padding: 2px 4px;
-          color: white;
-          cursor: pointer;
-          font-size: 11px;
-          transition: background-color 0.2s;
-      }
-
-      .highlight-btn:hover:not(:disabled) {
-          opacity: 0.8;
-      }
       .container:nth-child(5) .collapsible-content {
-          max-height: none !important; /* Remove qualquer limitação de altura */
-          overflow: visible !important; /* Garante que o conteúdo não seja cortado */
+          max-height: none !important;s
+          overflow: visible !important;
       }
     </style>
   </head>
@@ -860,24 +856,25 @@
                       </small>
                       ${stream.sourceCreated ? '<span style="color:#4CAF50"> ✓ Added to OBS</span>' : ''}
                       <div style="margin-top: 5px;">
-                          <button class="add-stream-btn" data-stream-id="${streamId}" style="margin-right: 5px;">Add to OBS</button>
-                  `;
+                          <button class="add-stream-btn" data-stream-id="${streamId}"
+                              style="background-color: ${stream.sourceCreated ? '#F44336' : '#4C80AF'}; margin-right: 5px;">
+                                  ${stream.sourceCreated ? 'Remove from Obs' : 'Add to OBS'}
+                          </button>`;
 
                   // Highlight Button
                   if (stream.sourceCreated) { // Only show if the main stream source is in OBS
                       streamItemHTML += `
                           <button class="highlight-btn" data-stream-id="${streamId}"
-                                 style="background-color: ${isHighlighted ? '#f44336' : '#4CAF50'};">
-                              ${isHighlighted ? 'Unhighlight' : 'Highlight'}
+                              style="background-color: ${isHighlighted ? '#F44336' : '#4CAF50'};">
+                                  ${isHighlighted ? 'Unhighlight' : 'Highlight'}
                           </button>`;
                   }
 
                   // Screen Share Button
-                  // Shown if the main stream source is in OBS, for consistency.
                   if (stream.sourceCreated) {
                        streamItemHTML += `
                           <button class="screen-share-btn" data-stream-id="${streamId}"
-                                  style="background-color: ${isCurrentlyScreenSharingThisStream ? '#f44336' : '#9C27B0'}; margin-left: 5px;">
+                                  style="background-color: ${isCurrentlyScreenSharingThisStream ? '#F44336' : '#9C27B0'}; margin-left: 5px;">
                               ${isCurrentlyScreenSharingThisStream ? 'Stop stream' : 'Stream'}
                           </button>`;
                   }
@@ -888,12 +885,19 @@
 
                   // --- Adding Event Listeners for this stream item's buttons ---
 
-                  // Listener for the "Add to OBS" button
-                  const addBtn = streamDiv.querySelector('.add-stream-btn');
-                  if (addBtn) { // Check if the button exists before adding the listener
-                      addBtn.addEventListener('click', () => {
-                          // targetInfo was already calculated above for this specific stream
-                          addStreamToObs(streamId, stream.label, targetInfo);
+                  // Listener for the "Add to OBS" / "Remove from OBS" button
+                  const addRemoveBtn = streamDiv.querySelector('.add-stream-btn');
+                  if (addRemoveBtn) {
+                      addRemoveBtn.addEventListener('click', () => {
+                          // 'stream' is the current stream object from the loop
+                          if (stream.sourceCreated) {
+                              logMessage(`Button clicked to remove stream ${streamId} from OBS.`);
+                              removeStreamFromObs(streamId); // Call remove function
+                          } else {
+                              logMessage(`Button clicked to add stream ${streamId} to OBS.`);
+                              // 'targetInfo' was already calculated above for this specific stream
+                              addStreamToObs(streamId, stream.label, targetInfo); // Call add function
+                          }
                       });
                   }
 
@@ -927,7 +931,6 @@
                               if (currentActiveScreenShareGlobal) {
                                   // Another stream is sharing, stop it first.
                                   logMessage(`Stopping existing screen share for ${currentActiveScreenShareGlobal} before starting for ${clickedStreamIdForScreenShare}.`);
-                                  await removeScreenShareFromObs(currentActiveScreenShareGlobal);
                                   // screenShareId is now null (or should be, after the await).
                               }
                               // Now, add the new screen share.
@@ -1933,68 +1936,110 @@
       }
 
       async function removeStreamFromObs(streamId) {
-          if (!obsConnected || !obs) return;
+          if (!obsConnected || !obs) {
+              logMessage("Cannot remove stream: Not connected to OBS.");
+              return;
+          }
+          if (!activeStreams[streamId]) {
+              logMessage(`Stream ${streamId} not found in active streams. Cannot process removal.`);
+              return;
+          }
 
           const sourceName = `VDO.Ninja_${streamId}`;
           const highlightedSourceName = `VDO.Highlight_${streamId}`;
-          logMessage(`Attempting to remove source references for '${sourceName}' (and highlighted version) from OBS scenes.`);
+          logMessage(`User initiated: Remove stream '${streamId}' (sources: '${sourceName}', '${highlightedSourceName}') from OBS.`);
 
           const streamInfo = activeStreams[streamId];
-          const targetInfo = streamInfo ? getTargetSceneForStream(streamId, streamInfo.label) : getTargetSceneForStream(streamId, '');
+          const currentLabel = streamInfo ? streamInfo.label : '';
+          const targetInfo = getTargetSceneForStream(streamId, currentLabel);
 
-          const scenesToRemoveFrom = new Set();
-
-          if (targetInfo.scene) {
-              scenesToRemoveFrom.add(targetInfo.scene);
+          const scenesToClean = new Set();
+          // 1. Add the stream's specifically mapped scene (if any)
+          if (targetInfo && targetInfo.scene) {
+              scenesToClean.add(targetInfo.scene);
           }
 
+          // 2. Add the main default OBS scene (from dropdown)
           const globalMainScene = getTargetScene();
           if (globalMainScene) {
-              scenesToRemoveFrom.add(globalMainScene);
+              scenesToClean.add(globalMainScene);
           }
 
-          const otherSceneCheckboxes = document.querySelectorAll('.other-scene-checkbox:checked');
-          otherSceneCheckboxes.forEach(checkbox => {
-              if (checkbox.value) { 
-                   scenesToRemoveFrom.add(checkbox.value);
+          // 3. Add scenes selected in "Copy sources to other scenes(reference)"
+          document.querySelectorAll('.other-scene-checkbox:checked').forEach(checkbox => {
+              if (checkbox.value) {
+                  scenesToClean.add(checkbox.value);
               }
           });
-          let screenShareSourceName = null
-          let removedFromAnyScene = false;
-          for (const sceneName of scenesToRemoveFrom) {
-              if (sceneName) {
-                  if (highlightedStreamId == streamId) {
-                      if (await tryRemoveFromScene(highlightedSourceName, sceneName)) {
-                          removedFromAnyScene = true;
-                      }
-                      highlightedStreamId = null;
-                  }else{
+
+          let itemRemovedThisRun = false;
+
+          for (const sceneName of scenesToClean) {
+              if (!sceneName) continue; // Skip if scene name is empty
+
+              let nameToRemoveInScene = sourceName;
+              // If the stream is currently highlighted, its active name in OBS is the highlighted name
+              if (highlightedStreamId === streamId) {
+                  nameToRemoveInScene = highlightedSourceName;
+              }
+
+              if (await tryRemoveFromScene(nameToRemoveInScene, sceneName)) {
+                  logMessage(`Removed '${nameToRemoveInScene}' from scene '${sceneName}'.`);
+                  itemRemovedThisRun = true;
+              } else {
+                  // If removing the expected name (e.g., highlighted) failed,
+                  // also try removing the base name. This covers cases where OBS state and
+                  // our internal highlight state might be momentarily out of sync, or if the
+                  // source was never actually highlighted in this specific scene instance.
+                  if (nameToRemoveInScene === highlightedSourceName) {
                       if (await tryRemoveFromScene(sourceName, sceneName)) {
-                          removedFromAnyScene = true;
-                      }
-                      if (screenShareId == streamId) {
-                          screenShareSourceName = `VDO.Screen_${streamId}:s`;
-                          if (await tryRemoveFromScene(screenShareSourceName, sceneName)){
-                              screenShareId = null;
-                          }
+                          logMessage(`Removed base source '${sourceName}' from scene '${sceneName}' (fallback after highlighted check).`);
+                          itemRemovedThisRun = true;
                       }
                   }
               }
           }
 
-          if (!removedFromAnyScene) {
-              logMessage(`Reference to source '${sourceName}' not found or already removed from marked scenes.`);
+          // If the stream was the one globally highlighted, clear our internal highlight state.
+          // This should happen even if itemRemovedThisRun is false, to correct our state.
+          if (highlightedStreamId === streamId) {
+              logMessage(`Clearing internal highlight state for stream ${streamId} as part of removal.`);
+              highlightedStreamId = null;
           }
 
+          // If this stream was also being screen-shared, initiate the full screen share removal.
+          // The removeScreenShareFromObs function handles removing the VDO.Screen_ source item
+          // from all its scenes, removing the global VDO.Screen_ input, and resetting screenShareId.
+          if (screenShareId === streamId) {
+              logMessage(`Stream ${streamId} was actively screen sharing. Initiating full screen share removal process.`);
+              await removeScreenShareFromObs(streamId); // This function will also call updateStreamList
+          }
+
+          // Update the local state for this stream
+          if (activeStreams[streamId]) { // Ensure it still exists before modification
+              activeStreams[streamId].sourceCreated = false;
+          }
+
+          if (itemRemovedThisRun) {
+              logMessage(`Finished removing source items for stream ${streamId} from specified OBS scenes.`);
+          } else {
+              logMessage(`No active source items for stream ${streamId} (regular or highlighted) found in the specified OBS scenes during this removal pass.`);
+          }
+
+          // If auto-grid is enabled, rearrange all scenes that were processed for removal.
           if (sourceSizingSelect.value === 'autoGrid') {
-              const scenesToRearrange = new Set();
-              scenesToRemoveFrom.forEach(sceneName => {
-                  if (sceneName) scenesToRearrange.add(sceneName);
-              });
-              for (const sceneName of scenesToRearrange) {
-                  setTimeout(() => rearrangeAllStreamsInScene(sceneName), 200);
+              const uniqueScenesProcessed = new Set(Array.from(scenesToClean).filter(s => s)); // Filter out any null/empty scene names
+              for (const sceneName of uniqueScenesProcessed) {
+                  // Delay slightly to allow OBS to fully process removals before rearranging
+                  setTimeout(() => rearrangeAllStreamsInScene(sceneName), 250);
               }
           }
+
+          // Ensure the UI is updated.
+          // If removeScreenShareFromObs was called, it would have already updated the list.
+          // Calling it again is generally safe and ensures the state is reflected if no screen share was involved.
+          updateStreamList();
+          saveSettings(); // Persist changes (e.g., cleared highlightedStreamId)
       }
 
       async function removeScreenShareFromObs(streamIdToRemove) {
