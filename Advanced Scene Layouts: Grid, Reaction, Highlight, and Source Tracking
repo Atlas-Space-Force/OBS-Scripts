@@ -951,8 +951,8 @@ local function process_react_browsers()
         return
     end
 
-    local active_browsers = {}
-    local inactive_browsers = {}
+    local active_reaction_browsers = {}
+    local inactive_reaction_browsers = {}
     local window_capture = nil
 
     -- Categorize items based on prefixes and visibility
@@ -960,11 +960,11 @@ local function process_react_browsers()
         local source = obs.obs_sceneitem_get_source(scene_item)
         local source_name = obs.obs_source_get_name(source)
 
-        if string.match(source_name, "^" .. state.reaction.source_prefix) then
+        if string.match(source_name, "^" .. state.reaction.source_prefix) and not string.match(source_name, "^" .. state.reaction.window_prefix)then
             if obs.obs_sceneitem_visible(scene_item) then
-                table.insert(active_browsers, scene_item)
+                table.insert(active_reaction_browsers, scene_item)
             else
-                table.insert(inactive_browsers, scene_item)
+                table.insert(inactive_reaction_browsers, scene_item)
             end
         elseif state.reaction.window_prefix ~= "" and 
                string.match(source_name, "^" .. state.reaction.window_prefix) then
@@ -975,7 +975,7 @@ local function process_react_browsers()
     end
 
     -- Sort browsers alphabetically
-    table.sort(active_browsers, function(a, b)
+    table.sort(active_reaction_browsers, function(a, b)
         local name_a = obs.obs_source_get_name(obs.obs_sceneitem_get_source(a))
         local name_b = obs.obs_source_get_name(obs.obs_sceneitem_get_source(b))
         return name_a < name_b
@@ -983,9 +983,9 @@ local function process_react_browsers()
 
     -- Handle layout based on split setting
     if state.reaction.split_cameras then
-        handle_react_browsers_split(active_browsers, inactive_browsers, window_capture)
+        handle_react_browsers_split(active_reaction_browsers, inactive_reaction_browsers, window_capture)
     else
-        handle_react_browsers_left(active_browsers, inactive_browsers, window_capture)
+        handle_react_browsers_left(active_reaction_browsers, inactive_reaction_browsers, window_capture)
     end
 
     -- Clean up
@@ -1228,8 +1228,8 @@ local function process_highlight_browsers()
         return
     end
 
-    local active_browsers = {}
-    local inactive_browsers = {}
+    local active_highlight_browsers = {}
+    local inactive_highlight_browsers = {}
     local main_source = nil
 
     -- Categorize items based on prefixes and visibility
@@ -1237,13 +1237,13 @@ local function process_highlight_browsers()
         local source = obs.obs_sceneitem_get_source(scene_item)
         local source_name = obs.obs_source_get_name(source)
 
-        if string.match(source_name, "^" .. state.highlight.source_prefix) then
+        if string.match(source_name, "^" .. state.highlight.source_prefix) and not string.match(source_name, "^" .. state.highlight.main_source_prefix) then
             if obs.obs_sceneitem_visible(scene_item) then
-                table.insert(active_browsers, scene_item)
+                table.insert(active_highlight_browsers, scene_item)
             else
-                table.insert(inactive_browsers, scene_item)
+                table.insert(inactive_highlight_browsers, scene_item)
             end
-        elseif state.highlight.main_source_prefix ~= "" and 
+        elseif state.highlight.main_source_prefix ~= "" and
                string.match(source_name, "^" .. state.highlight.main_source_prefix) then
             if obs.obs_sceneitem_visible(scene_item) then
                 main_source = scene_item
@@ -1252,7 +1252,7 @@ local function process_highlight_browsers()
     end
 
     -- Sort browsers alphabetically
-    table.sort(active_browsers, function(a, b)
+    table.sort(active_highlight_browsers, function(a, b)
         local name_a = obs.obs_source_get_name(obs.obs_sceneitem_get_source(a))
         local name_b = obs.obs_source_get_name(obs.obs_sceneitem_get_source(b))
         return name_a < name_b
@@ -1260,9 +1260,9 @@ local function process_highlight_browsers()
 
     -- Handle layout based on split setting
     if state.highlight.split_cameras then
-        handle_highlight_browsers_split(active_browsers, inactive_browsers, main_source)
+        handle_highlight_browsers_split(active_highlight_browsers, inactive_highlight_browsers, main_source)
     else
-        handle_highlight_browsers_left(active_browsers, inactive_browsers, main_source)
+        handle_highlight_browsers_left(active_highlight_browsers, inactive_highlight_browsers, main_source)
     end
 
     -- Clean up
