@@ -29,9 +29,11 @@ Dynamic Highlight Layout (NEW):
 * Recommended Integration: This functionality was developed for use with tools that allow dynamic renaming of sources with specific prefixes for highlighting, such as VDO.Ninja in conjunction with the modified OBS Controller page by Morse: [VDO.Ninja OBS Controller](https://morsethecode.github.io/vdo.ninja/obs). The original version of the controller can be found here, in case it interests you: [Original VDO.Ninja OBS Controller](https://vdo.ninja/obs)
 * Flexible Settings: Define prefixes for the lateral cameras (Highlight Camera Prefix) and for the main source (Highlight Main Source Prefix).
 * Required Prefixes for VDO.Ninja: If used with VDO.Ninja and the OBS controller mentioned, the required prefixes are:
-    * General cameras: `VDO.Ninja_`
-    * Screen capture: `VDO.Screen_`
-    * Highlighted source: `VDO.Highlight_`
+
+* **Sources in general:** `VDO.Ninja_`
+* **Screen Captures:** `VDO.Screen_`
+* **Highlighted Source:** `VDO.Highlight_`
+
 * Camera Distribution: Option to distribute highlight cameras on both sides of the screen.
 * Fine Adjustments: Control spacing and X/Y offsets for optimal positioning.
 
