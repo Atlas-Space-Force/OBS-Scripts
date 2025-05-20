@@ -26,9 +26,8 @@ Immersive Reaction Layout:
 
 Dynamic Highlight Layout (NEW):
 * This layout is designed to highlight a specific source while other reaction cameras are positioned relative to it.
-* Recommended Integration: This functionality was developed for use with tools that allow dynamic renaming of sources with specific prefixes for highlighting, such as VDO.Ninja in conjunction with the modified OBS Controller page by Morse: [VDO.Ninja OBS Controller](https://morsethecode.github.io/vdo.ninja/obs). The original version of the controller can be found here, in case it interests you: [Original VDO.Ninja OBS Controller](https://vdo.ninja/obs)
+* Same appeance as the Reaction Layout, but the highlighted camera is placed where the screen capture would be.
 * Flexible Settings: Define prefixes for the lateral cameras (Highlight Camera Prefix) and for the main source (Highlight Main Source Prefix).
-* Required Prefixes for VDO.Ninja: If used with VDO.Ninja and the OBS controller mentioned, the required prefixes are:
 
 * **Sources in general:** `VDO.Ninja_`
 * **Screen Captures:** `VDO.Screen_`
@@ -41,7 +40,6 @@ Intelligent Source Tracking:
 * Keep your essential sources automatically updated and synchronized across different scenes.
 * Automatic Copying: Sources matching a defined prefix are automatically added to pre-selected target scenes as soon as they appear in a monitored scene.
 * Simplified Removal: If a monitored source is removed from the source scene, it will be automatically removed from the target scenes, ensuring consistency and cleanliness in your setups.
-* **WARNING:** In case you choose to use the VDO.Ninja OBS Controller, DON'T USE THIS FEATURE, as the controller already has the same feature and using both simultaneously might crash your OBS.
 
 Comprehensive Multi-Language Support:
 * The script provides support for several languages for a more accessible and intuitive user experience.
@@ -54,6 +52,14 @@ Integrated User Interface:
 This script is a powerful solution for streamers, content creators, and anyone seeking greater control and automation over their scene organization in OBS Studio.
 
 ### Technical Details:
+
+* Recommended Integration: This functionality was developed for use with tools that allow dynamic renaming of sources with specific prefixes for highlighting, such as VDO.Ninja in conjunction with the modified OBS Controller page by Morse: [VDO.Ninja OBS Controller](https://morsethecode.github.io/vdo.ninja/obs). The original version of the controller can be found here, in case it interests you: [Original VDO.Ninja OBS Controller](https://vdo.ninja/obs)
+* **WARNING:** In case you choose to use the VDO.Ninja OBS Controller, DON'T USE THIS FEATURE, as the controller already has the same feature and using both simultaneously might crash your OBS.
+*
+* Required Prefixes for VDO.Ninja: If used with VDO.Ninja and the OBS controller mentioned, the required prefixes are:
+*     **Sources in general:** `VDO.Ninja_`
+*     **Screen Captures:** `VDO.Screen_`
+*     **Highlighted Source:** `VDO.Highlight_`
 
 * When no screen share link or highlighted user is found, the Screen Share and the Highlight layouts fall back to the Grid Layout, so it's recommended that you configured spacing, margins and choose between normal or split screen mode in the Grid Section, even if you don't plan to use it.
 * The script is configured to treat your OBS and the sources as if they're 1920x1080, but you can always change the resolution in the script (line 301). Just remember to always give the browser sources the same base resolution defined in Settings > Video.
