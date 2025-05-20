@@ -153,10 +153,10 @@
           border-radius: 3px;
           padding: 5px;
           margin-top: 3px;
-          transition: max-height 0.3s ease; /* Adiciona transição suave */
+          transition: max-height 0.3s ease;
       }
       .stream-list:empty {
-          min-height: 30px; /* Altura mínima quando vazio */
+          min-height: 30px;
           display: flex;
           align-items: center;
           justify-content: center;
@@ -499,7 +499,7 @@
       let vdoNinjaConnectionCheckTimer = null;
 
       let screenShareId = null;
-      let highlightedStreamId = null; // Variável global para controlar qual stream está destacada
+      let highlightedStreamId = null;
 
       // Helper functions
       function logMessage(message) {
@@ -732,17 +732,14 @@
           const settingsJson = localStorage.getItem('obsNinjaSettings');
           if (settingsJson) {
               try {
-                  const settings = JSON.parse(settingsJson); // Tenta parsear as configurações salvas
-
-                  // Restaura as configurações de conexão do OBS
-                  if (typeof settings.obsWsUrl !== 'undefined') { // Adicionando verificação de tipo para consistência
+                  const settings = JSON.parse(settingsJson);
+                  if (typeof settings.obsWsUrl !== 'undefined') {
                       obsWsUrlInput.value = settings.obsWsUrl;
                   }
                   if (typeof settings.obsWsPassword !== 'undefined') {
                       obsWsPasswordInput.value = settings.obsWsPassword;
                   }
 
-                  // Restaura as configurações do VDO.Ninja
                   if (typeof settings.vdoNinjaRoom !== 'undefined') {
                       vdoNinjaRoomInput.value = settings.vdoNinjaRoom;
                   }
@@ -752,10 +749,6 @@
                   if (typeof settings.vdoNinjaStreamIds !== 'undefined') {
                       vdoNinjaStreamIdsInput.value = settings.vdoNinjaStreamIds;
                   }
-
-                  // Restaura a cena alvo principal do OBS
-                  // A restauração final e mais robusta desta seleção ocorre em fetchObsScenes(),
-                  // mas definir aqui ajuda se as cenas já estiverem populadas por algum motivo.
                   if (typeof settings.obsSceneName !== 'undefined') {
                        obsSceneSelect.value = settings.obsSceneName;
                   }
@@ -764,11 +757,9 @@
                   if (typeof settings.sourceSizing !== 'undefined') {
                       sourceSizingSelect.value = settings.sourceSizing;
                   } else {
-                      sourceSizingSelect.value = 'defaultSize'; // Valor padrão se não estiver salvo
+                      sourceSizingSelect.value = 'defaultSize';
                   }
 
-                  // Restaura as configurações de auto-add/remove
-                  // O '!== false' trata casos onde a propriedade pode ser undefined (considera true) ou explicitamente true/false.
                   autoAddSourcesCheckbox.checked = settings.autoAddSources !== false;
                   autoRemoveSourcesCheckbox.checked = settings.autoRemoveSources !== false;
 
@@ -784,35 +775,26 @@
                       screenShareHeightInput.value = settings.screenShareHeight;
                   }
 
-                  // CORREÇÃO APLICADA AQUI:
-                  // Verifica se a propriedade screenShareScene existe (incluindo string vazia),
-                  // em vez de checar apenas se é "truthy".
                   if (screenShareSelect && typeof settings.screenShareScene !== 'undefined') {
                       screenShareSelect.value = settings.screenShareScene;
                   }
 
               } catch (e) {
                   logMessage(`Error loading settings from localStorage: ${e.message}`);
-                  // Considerar se deve remover o item defeituoso para evitar erros repetidos.
-                  // localStorage.removeItem('obsNinjaSettings');
               }
           } else {
-              // Define um valor padrão para sourceSizing se não houver configurações salvas.
               sourceSizingSelect.value = 'defaultSize';
               logMessage("No saved settings found, using defaults for some fields.");
           }
-
-          // Carrega os mapeamentos de stream, que são salvos em um item separado do localStorage.
-          // A função setupStreamMappingUI() deve conter a lógica para ler 'obsNinjaStreamMappings'.
           setupStreamMappingUI();
       }
 
       function updateOtherScenesList() {
           const mainSceneName = obsSceneSelect.value;
-          otherScenesListDiv.innerHTML = ''; // Limpa a lista anterior
+          otherScenesListDiv.innerHTML = '';
 
           if (mainSceneName && obsScenes && obsScenes.length > 1) {
-              otherScenesContainer.style.display = 'block'; // Mostra o container
+              otherScenesContainer.style.display = 'block';
               Array.from(otherScenesContainer.children).forEach(child => child.remove());
               obsScenes.forEach(scene => {
                   if (scene.sceneName !== mainSceneName) {
@@ -824,7 +806,7 @@
                       checkbox.type = 'checkbox';
                       checkbox.id = checkboxId;
                       checkbox.value = scene.sceneName;
-                      checkbox.className = 'other-scene-checkbox'; // Classe para fácil seleção
+                      checkbox.className = 'other-scene-checkbox';
 
                       const label = document.createElement('label');
                       label.htmlFor = checkboxId;
@@ -836,15 +818,15 @@
                   }
               });
           } else {
-              otherScenesContainer.style.display = 'none'; // Esconde se não há cena principal ou cenas suficientes
+              otherScenesContainer.style.display = 'none';
           }
       }
 
       function updateStreamList() {
-          const container = document.querySelector('.container:nth-child(5)'); // Seleciona o container da lista de streams
+          const container = document.querySelector('.container:nth-child(5)');
           const collapsibleContent = container.querySelector('.collapsible-content');
 
-          // Remove qualquer altura máxima definida anteriormente
+
           collapsibleContent.style.maxHeight = 'none';
           console.log("Updating stream list with:", activeStreams);
           if (Object.keys(activeStreams).length === 0) {
@@ -862,7 +844,6 @@
               const targetSceneName = targetInfo.scene;
               const isDefaultScene = targetSceneName === getTargetScene();
 
-              // Determina se este stream está destacado
               const isHighlighted = highlightedStreamId === streamId;
 
               streamDiv.innerHTML = `
@@ -893,7 +874,6 @@
                   addStreamToObs(streamId, stream.label, targetInfo);
               });
 
-              // Adiciona o evento para o botão de highlight
               if (stream.sourceCreated) {
                   const highlightBtn = streamDiv.querySelector('.highlight-btn');
                   highlightBtn.addEventListener('click', () => {
@@ -1031,7 +1011,6 @@
           const isCurrentlyHighlighted = highlightedStreamId === streamId;
           const newHighlightState = !isCurrentlyHighlighted;
 
-          // Se tentando destacar outro stream enquanto um já está destacado
           if (newHighlightState && highlightedStreamId && highlightedStreamId !== streamId) {
               logMessage("Cannot highlight: Another stream is already highlighted.");
               return;
@@ -1043,11 +1022,9 @@
           const newSourceName = newHighlightState ? highlightedSourceName : sourceName;
 
           try {
-              // 1. Verifica se a fonte existe com o nome atual
               try {
                   await sendRequest('GetInputSettings', { inputName: currentSourceName });
               } catch (error) {
-                  // Se não encontrar, tenta com o outro nome
                   const altName = isCurrentlyHighlighted ? sourceName : highlightedSourceName;
                   try {
                       await sendRequest('GetInputSettings', { inputName: altName });
@@ -1059,19 +1036,16 @@
                   }
               }
 
-              // 2. Renomeia a fonte
               await sendRequest('SetInputName', {
                   inputName: currentSourceName,
                   newInputName: newSourceName
               });
 
-              // 3. Atualiza o estado global
               highlightedStreamId = newHighlightState ? streamId : null;
 
               logMessage(`Stream ${streamId} ${newHighlightState ? 'highlighted' : 'unhighlighted'}`);
               updateStreamList();
 
-              // 4. Reorganiza os streams se necessário
               if (!newHighlightState && sourceSizingSelect.value === 'autoGrid') {
                   await rearrangeAllStreamsInScene(targetInfo.scene);
                   if (targetInfo.mapping?.cloneToMain && getTargetScene() !== targetInfo.scene) {
@@ -1081,7 +1055,6 @@
 
           } catch (error) {
               logMessage(`Error toggling highlight for stream ${streamId}: ${error.message}`);
-              // Força a atualização da UI mesmo em caso de erro
               highlightedStreamId = null;
               updateStreamList();
           }
@@ -1383,10 +1356,7 @@
           try {
               const response = await sendRequest('GetSceneList');
               if (response && response.scenes) {
-                  obsScenes = response.scenes; // 1. Array de cenas é preenchido
-
-                  // 2. Popula todos os dropdowns de cena, incluindo screenShareSceneSelect.
-                  // A função populateSceneDropdown (usada por updateSceneDropdowns) tenta preservar o valor atual.
+                  obsScenes = response.scenes; 
                   updateSceneDropdowns();
 
                   let savedSettings = null;
@@ -1396,34 +1366,27 @@
                           savedSettings = JSON.parse(savedSettingsJson);
                       } catch (e) {
                           logMessage(`Error parsing saved settings in fetchObsScenes: ${e.message}`);
-                          // Não impede o resto da lógica de prosseguir sem settings salvos.
                       }
                   }
 
                   if (savedSettings) {
-                      // 3. Restaura explicitamente a seleção da cena principal salva.
                       if (savedSettings.obsSceneName && obsScenes.some(s => s.sceneName === savedSettings.obsSceneName)) {
                           obsSceneSelect.value = savedSettings.obsSceneName;
                       }
 
-                      // 4. RESTAURAÇÃO EXPLÍCITA para screenShareSceneSelect
                       const screenShareSelectElement = document.getElementById('screenShareSceneSelect');
                       if (screenShareSelectElement && typeof savedSettings.screenShareScene !== 'undefined') {
-                          // Verifica se a cena salva existe nas cenas atuais do OBS ou se é a opção "Same as main" ("")
                           if (savedSettings.screenShareScene === "" || obsScenes.some(s => s.sceneName === savedSettings.screenShareScene)) {
                               screenShareSelectElement.value = savedSettings.screenShareScene;
                           } else {
-                              // Se a cena salva não existe mais, pode-se logar e resetar para o padrão
                               logMessage(`Saved screen share scene "${savedSettings.screenShareScene}" not found or invalid. Resetting to "Same as main".`);
-                              screenShareSelectElement.value = ""; // Reseta para "Same as main"
+                              screenShareSelectElement.value = "";
                           }
                       }
                   }
 
-                  // 5. Atualiza a lista de "outras cenas" com checkboxes para a cena principal.
                   updateOtherScenesList();
 
-                  // 6. Restaura as seleções de cena para os mapeamentos de stream (usa localStorage separado).
                   const savedMappingsJson = localStorage.getItem('obsNinjaStreamMappings');
                   if (savedMappingsJson) {
                       try {
@@ -1572,7 +1535,7 @@
           if (!targetSceneName) { logMessage("Cannot add stream: Target OBS scene name is required."); return; }
 
           const sourceName = `VDO.Ninja_${streamId}`;
-          const mainDefaultScene = getTargetScene(); // Cena principal global
+          const mainDefaultScene = getTargetScene();
 
           let shouldCloneThisStreamToMain = false;
           if (mappingRule && mappingRule.sceneName !== mainDefaultScene && mappingRule.cloneToMain) {
@@ -1599,8 +1562,8 @@
 
           try {
               let sourceExistsGlobally = false;
-              let initialSceneItemId = null; // ID do item na cena alvo principal (targetSceneName)
-              let clonedSceneItemId = null;  // ID do item na cena principal global (mainDefaultScene), se clonado
+              let initialSceneItemId = null; //
+              let clonedSceneItemId = null;  //
 
               try {
                   const sources = await sendRequest('GetInputList');
@@ -1638,11 +1601,10 @@
                           logMessage(`Error cloning source to main scene '${mainDefaultScene}': ${error.message}`);
                       }
                   }
-              } else { // Source já existe globalmente
+              } else {
                   await sendRequest('SetInputSettings', { inputName: sourceName, inputSettings });
                   logMessage(`Settings updated for existing source '${sourceName}'.`);
 
-                  // Adiciona/Verifica na cena alvo (targetSceneName)
                   try {
                       const itemInfo = await sendRequest('GetSceneItemId', { sceneName: targetSceneName, sourceName: sourceName });
                       initialSceneItemId = itemInfo.sceneItemId;
@@ -1654,7 +1616,6 @@
                       } else { throw e; }
                   }
 
-                  // Adiciona/Verifica na cena principal global (mainDefaultScene), se clonagem mapeada
                   if (shouldCloneThisStreamToMain && mainDefaultScene && mainDefaultScene !== targetSceneName) {
                       try {
                           const existingItemInfo = await sendRequest('GetSceneItemId', { sceneName: mainDefaultScene, sourceName: sourceName });
@@ -1677,11 +1638,9 @@
 
               if (activeStreams[streamId]) activeStreams[streamId].sourceCreated = true;
 
-              // Aplicar transformações na cena alvo principal
               if (initialSceneItemId) {
                   await applyTransformAndGrid(targetSceneName, sourceName, canvasWidth, canvasHeight, initialSceneItemId);
               }
-              // Aplicar transformações na cena principal global (se clonado)
               if (clonedSceneItemId) {
                   await applyTransformAndGrid(mainDefaultScene, sourceName, canvasWidth, canvasHeight, clonedSceneItemId);
               }
@@ -1689,7 +1648,6 @@
               const otherSceneCheckboxes = document.querySelectorAll('.other-scene-checkbox:checked');
               for (const checkbox of otherSceneCheckboxes) {
                   const otherSceneName = checkbox.value;
-                  // Garante que não é a cena alvo principal (targetSceneName) nem a cena principal global (mainDefaultScene) se já foi clonada lá
                   if (otherSceneName && otherSceneName !== targetSceneName && (!shouldCloneThisStreamToMain || otherSceneName !== mainDefaultScene)) {
                       try {
                           let existingOtherSceneItemId = null;
@@ -1716,7 +1674,6 @@
                       }
                   }
               }
-              // *** FIM DO NOVO BLOCO ***
 
               if (shouldSwitchToThisScene) {
                   await sendRequest('SetCurrentProgramScene', { sceneName: targetSceneName });
@@ -1727,7 +1684,7 @@
               logMessage(`Error adding stream '${sourceName}' to OBS: ${error.message}`);
               if (activeStreams[streamId]) activeStreams[streamId].sourceCreated = false;
           } finally {
-              updateStreamList(); // Atualiza a UI no final
+              updateStreamList();
           }
       }
 
@@ -1884,7 +1841,7 @@
           }
 
           if (!removedFromAnyScene) {
-              logMessage(`Referências da fonte '${sourceName}' não encontradas nas cenas verificadas para remoção, ou já removidas.`);
+              logMessage(`Reference to source '${sourceName}' not found or already removed from marked scenes.`);
           }
 
           if (sourceSizingSelect.value === 'autoGrid') {
