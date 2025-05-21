@@ -587,9 +587,9 @@
           const reactionPrefix = getFullReactionPrefix();
           const highlightPrefix = getFullHighlightPrefix();
           // Update the labels to show the current full prefix being used
-          cameraSubPrefixLabelText.textContent = `Camera prefix: ${cameraPrefix || ''}${cameraPrefix ? '_' : ''}`; // Show (none) if empty
-          reactionSubPrefixLabelText.textContent = `Reaction prefix: ${cameraPrefix || ''}${cameraPrefix ? '.' : ''}${reactionSubPrefixInput.value.trim() || ''}${reactionSubPrefixInput.value.trim() ? '_' : ''}`;
-          highlightSubPrefixLabelText.textContent = `Highlight prefix: ${cameraPrefix || ''}${cameraPrefix ? '.' : ''}${highlightSubPrefixInput.value.trim() || ''}${highlightSubPrefixInput.value.trim() ? '_' : ''}`;
+          cameraSubPrefixLabelText.textContent = `Camera prefix: ${cameraPrefix || ''}`; // Show (none) if empty
+          reactionSubPrefixLabelText.textContent = `Reaction prefix: ${cameraPrefix || ''}${cameraPrefix ? '.' : ''}${reactionSubPrefixInput.value.trim() || ''}`;
+          highlightSubPrefixLabelText.textContent = `Highlight prefix: ${cameraPrefix || ''}${cameraPrefix ? '.' : ''}${highlightSubPrefixInput.value.trim() || ''}`;
       }
       // Add event listeners to prefix inputs to update labels and save settings on change
       cameraPrefixInput.addEventListener('input', () => {
