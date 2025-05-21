@@ -2446,7 +2446,7 @@
               const vdoNinjaSourcesInScene = sceneItemsResponse.sceneItems.filter(item => {
                   const isRegularCameraSource = item.sourceName.startsWith(camPrefixWithUnderscore);
                   const isHighlightedCameraSource = item.sourceName.startsWith(getFullHighlightPrefix() + "_");
-                  
+
                   // Check if the source (regular or highlighted) corresponds to an *active* stream
                   let streamIdFromSourceName = null;
                   if (isRegularCameraSource) {
@@ -2566,6 +2566,7 @@
           return transform;
       }
 
+
       /**
        * Removes a VDO.Ninja stream's source(s) from OBS scenes.
        * @param {string} streamId - The VDO.Ninja Stream ID to remove.
@@ -2575,93 +2576,79 @@
               logMessage(`Cannot remove stream ${streamId} from OBS: Not connected to OBS.`);
               return;
           }
-          if (!activeStreams[streamId] && streamId !== screenShareId && streamId !== highlightedStreamId) { // Allow removal even if not in activeStreams IF it's a current screenShare/highlight
+          if (!activeStreams[streamId] && streamId !== screenShareId && streamId !== highlightedStreamId) {
               logMessage(`Stream ${streamId} not found in active local streams list. Removal process may be incomplete if it was not a shared resource (screen/highlight).`);
-              // Continue, as it might be a leftover source in OBS or a shared resource.
           }
 
           const baseSourceName = `${getFullCameraPrefix()}_${streamId}`;
           const highlightedSourceName = `${getFullHighlightPrefix()}_${streamId}`;
           logMessage(`User or auto-triggered removal of stream '${streamId}' from OBS. Base source: '${baseSourceName}', Highlighted: '${highlightedSourceName}'.`);
 
-          const streamInfo = activeStreams[streamId]; // Might be undefined if stream already left VDO.Ninja
+          const streamInfo = activeStreams[streamId];
           const currentLabel = streamInfo ? streamInfo.label : `Stream ${streamId}`;
-          const targetInfo = getTargetSceneForStream(streamId, currentLabel); // Get its mapped/default scene
+          const targetInfo = getTargetSceneForStream(streamId, currentLabel);
+
+          // NEW: If this stream is currently highlighted, unhighlight it first
+          if (highlightedStreamId === streamId) {
+              logMessage(`Stream ${streamId} is currently highlighted. Unhighlighting before removal.`);
+              await toggleHighlight(streamId, currentLabel, targetInfo);
+          }
 
           // Collect all scenes where this stream's source item(s) might exist
           const scenesToClean = new Set();
-          if (targetInfo && targetInfo.scene) { // Mapped or default scene for this stream
+          if (targetInfo && targetInfo.scene) {
               scenesToClean.add(targetInfo.scene);
           }
-          const globalMainScene = getTargetScene(); // Current global default scene from dropdown
+          const globalMainScene = getTargetScene();
           if (globalMainScene) {
               scenesToClean.add(globalMainScene);
           }
-          // Add scenes selected in "Copy sources to other scenes(reference)"
           document.querySelectorAll('.other-scene-checkbox:checked').forEach(checkbox => {
               if (checkbox.value) scenesToClean.add(checkbox.value);
           });
 
           let itemRemovedThisRun = false;
 
-          // Attempt to remove the source item (regular or highlighted) from each relevant scene
+          // Attempt to remove the base source item from each relevant scene
           for (const sceneName of scenesToClean) {
-              if (!sceneName) continue; // Skip if scene name is empty
+              if (!sceneName) continue;
 
-              // Determine the name to look for (highlighted name takes precedence if this stream was highlighted)
-              let nameToRemoveInScene = (highlightedStreamId === streamId) ? highlightedSourceName : baseSourceName;
-              
-              if (await tryRemoveFromScene(nameToRemoveInScene, sceneName)) {
+              if (await tryRemoveFromScene(baseSourceName, sceneName)) {
                   itemRemovedThisRun = true;
-              } else {
-                  // If removing the expected name failed (e.g. highlighted name),
-                  // also try removing the base name, in case our state was out of sync or it was never highlighted in this instance.
-                  if (nameToRemoveInScene === highlightedSourceName) {
-                      if (await tryRemoveFromScene(baseSourceName, sceneName)) {
-                          itemRemovedThisRun = true;
-                      }
-                  }
               }
-          }
-
-          // If this stream was the one globally highlighted, clear our internal highlight state.
-          if (highlightedStreamId === streamId) {
-              logMessage(`Stream ${streamId} was highlighted. Clearing global highlight state.`);
-              highlightedStreamId = null;
           }
 
           // If this stream was also being screen-shared, initiate its removal.
           if (screenShareId === streamId) {
               logMessage(`Stream ${streamId} was actively screen sharing. Initiating screen share removal.`);
-              await removeScreenShareFromObs(streamId); // This function handles its own source removal and updates.
+              await removeScreenShareFromObs(streamId);
           }
 
           // Update the local state for this stream if it's still in our active list
           if (activeStreams[streamId]) { 
-              activeStreams[streamId].sourceCreated = false; // Mark as no longer in OBS
+              activeStreams[streamId].sourceCreated = false;
           }
 
           if (itemRemovedThisRun) {
               logMessage(`Finished removing source items for stream ${streamId} from specified OBS scenes.`);
           } else {
-              logMessage(`No active source items for stream ${streamId} (regular or highlighted) seemed to be present in the specified OBS scenes during this removal pass.`);
+              logMessage(`No active source items for stream ${streamId} were present in the specified OBS scenes during this removal pass.`);
           }
           
           // After removal, if auto-grid is enabled, rearrange streams in affected scenes.
           if (sourceSizingSelect.value === 'autoGrid') {
-              const uniqueScenesProcessed = new Set(Array.from(scenesToClean).filter(s => s)); // Valid scene names
+              const uniqueScenesProcessed = new Set(Array.from(scenesToClean).filter(s => s));
               for (const sceneName of uniqueScenesProcessed) {
                   logMessage(`Auto-grid: Triggering rearrange for scene '${sceneName}' after stream removal.`);
-                  // Delay slightly to allow OBS to fully process removals before rearranging
                   setTimeout(() => rearrangeAllStreamsInScene(sceneName), 250); 
               }
           }
           
           // Update UI list unless screen share removal already did it
-          if (screenShareId !== streamId) { // Avoid double update if removeScreenShareFromObs was called
+          if (screenShareId !== streamId) {
               updateStreamList();
           }
-          saveSettings(); // Persist any state changes (e.g., cleared highlightedStreamId)
+          saveSettings();
       }
 
       /**
