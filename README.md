@@ -4,11 +4,11 @@ This repository provides a powerful set of tools to dynamically manage and organ
 
 ---
 
-## OBS Lua Script - Advanced Scene Layouts for OBS Studio: Grid, Reaction, Highlight, and Source Tracking
+## OBS Lua Script - Advanced Scene Layouts for OBS Studio: Grid, Reaction and Highlight
 
 Overview:
 
-This robust Lua script offers a powerful set of tools to dynamically manage and organize your scenes within OBS Studio. It integrates four core functionalities: Grid Layout, Reaction Layout, Highlight Layout, and Source Tracking, all with multi-language support.
+This robust Lua script offers a powerful set of tools to dynamically manage and organize your scenes within OBS Studio. It integrates four core functionalities: Grid Layout, Reaction Layout and Highlight Layout, all with multi-language support.
 
 ### Key Features:
 
@@ -31,11 +31,6 @@ Dynamic Highlight Layout (NEW):
 * Camera Distribution: Option to distribute highlight cameras on both sides of the screen.
 * Fine Adjustments: Control spacing and X/Y offsets for optimal positioning.
 
-Intelligent Source Tracking:
-* Keep your essential sources automatically updated and synchronized across different scenes.
-* Automatic Copying: Sources matching a defined prefix are automatically added to pre-selected target scenes as soon as they appear in a monitored scene.
-* Simplified Removal: If a monitored source is removed from the source scene, it will be automatically removed from the target scenes, ensuring consistency and cleanliness in your setups.
-
 Comprehensive Multi-Language Support:
 * The script provides support for several languages for a more accessible and intuitive user experience.
 * Available Languages: English, Portuguese, Spanish, Chinese (中文), Russian (Русский), Japanese (日本語), and German (Deutsch).
@@ -48,11 +43,10 @@ This script is a powerful solution for streamers, content creators, and anyone s
 
 ### Technical Details:
 
-* Recommended Integration: This functionality was developed for use with tools that allow dynamic renaming of sources with specific prefixes for highlighting, such as VDO.Ninja in conjunction with the modified OBS Controller page by Morse: [VDO.Ninja OBS Controller](https://morsethecode.github.io/vdo.ninja/obs). The original version of the controller can be found here, in case it interests you: [Original VDO.Ninja OBS Controller](https://vdo.ninja/obs)
-* **WARNING:** In case you choose to use the VDO.Ninja OBS Controller, DON'T USE THIS FEATURE, as the controller already has the same feature and using both simultaneously might crash your OBS.
+* Recommended Integration: This functionality works best with tools that offer automatic creation, deletion and dynamically renaming of sources with specific prefixes, such as VDO.Ninja in conjunction with the modified OBS Controller page by Morse: [VDO.Ninja OBS Controller](https://morsethecode.github.io/vdo.ninja/obs). The original version of the controller can be found here, in case it interests you: [Original VDO.Ninja OBS Controller](https://vdo.ninja/obs)
 
 * When no screen share link or highlighted user is found, the Screen Share and the Highlight layouts fall back to the Grid Layout, so it's recommended that you configured spacing, margins and choose between normal or split screen mode in the Grid Section, even if you don't plan to use it.
-* The script is configured to treat your OBS and the sources as if they're 1920x1080, but you can always change the resolution in the script (line 301). Just remember to always give the browser sources the same base resolution defined in Settings > Video.
+* The script is configured to treat your OBS and the sources as if they're 1920x1080, but you can always change the resolution in the script (line 333). Just remember to always give the browser sources the same base resolution defined in Settings > Video.
 * Sources are cropped, scaled, and positioned dynamically to ensure they fit perfectly into the layout.
 * Inactive sources are hidden from view but can be re-enabled at any time.
 
@@ -60,7 +54,7 @@ This script is a powerful solution for streamers, content creators, and anyone s
 
 * OBS Studio (version 27.0 or higher recommended).
 * Lua scripting support (included with OBS Studio).
-* [Click here](https://obsproject.com/forum/resources/advanced-scene-layouts-grid-reaction-highlight-and-source-tracking.2152/) to go to the OBS Forum page.
+* [Click here](https://obsproject.com/forum/resources/advanced-scene-layouts-grid-reaction-and-highlight.2152/) to go to the OBS Forum page.
 
 ---
 
@@ -76,12 +70,12 @@ You can find the original OBS Controller page and more information about Steve S
 
 This modified VDO.Ninja OBS Control Dock allows for streamlined management of VDO.Ninja sources within your OBS Studio scenes. It leverages the OBS WebSocket plugin to communicate with OBS Studio, enabling dynamic actions directly from your browser.
 
-The page is designed to work in conjunction with the `Advanced Scene Layouts: Grid, Reaction, Highlight, and Source Tracking` script. When used together, this controller can facilitate automated source naming and organization.
+The page is designed to work in conjunction with the `Advanced Scene Layouts: Grid, Reaction and Highlight` script. When used together, this controller can facilitate automated source naming and organization.
 
 ### Key Features (Includes Additions!)
 
 * **VDO.Ninja Room Integration:** Connect to your VDO.Ninja room and manage participants.
-* **Dynamic Source Creation/Removal:** Automatically add and remove VDO.Ninja video/audio sources in your specified OBS scenes.
+* **Dynamic Source Creation/Deletion:** Automatically add and delete VDO.Ninja video sources in your specified OBS scenes.
 * **Source Sizing and Positioning:** While the page itself provides some controls, it's particularly powerful when combined with OBS scripts that handle complex layouts.
 * **🆕 Screen Share Integration:** Dedicated features for managing and switching VDO.Ninja screen share sources within your OBS scenes, providing more refined control over shared content. (This feature is an inclusion not present in the original OBS Controller by Steve Seguin).
 * **🆕 Highlight Source Management:** Enhanced capabilities to designate and control a "highlighted" VDO.Ninja source, which is especially useful when paired with advanced OBS scripts that dynamically adjust layouts based on specific source prefixes. (This feature is an inclusion not present in the original OBS Controller by Steve Seguin).
