@@ -354,33 +354,15 @@
           <button id="loadScenesBtn">Re-Fetch Scenes</button>
         </div>
 
-        <div style="display: flex; gap: 10px; align-items: flex-start; margin-top: 8px;">
-          <div>
-            <label for="sourceSizing">New Source Sizing:</label>
-            <select id="sourceSizing" style="width: 250px;">
-              <option value="defaultSize">Default (1920x1080 at 0,0)</option>
-              <option value="bestFit">Best Fit (Preserve Aspect)</option>
-              <option value="stretchToFill">Stretch to Fill Screen</option>
-              <option value="autoGrid">Auto Grid Layout</option>
-            </select>
-          </div>
-          <div>
-            <label for="sourceCodec" style="margin-right: 3px;">Codec:</label>
-            <select id="sourceCodec" style="width: 150px;">
-              <option value="">none</option>
-              <option value="h264">h264</option>
-              <option value="vp8">vp8</option>
-              <option value="vp9">vp9</option>
-              <option value="av1">av1</option>
-              <option value="h265">h265</option>
-              <option value="webp">webp</option>
-              <option value="hardware">hardware</option>
-            </select>
-            <a href="https://docs.vdo.ninja/advanced-settings/video-parameters/codec" target="_blank" title="Learn more about codec options" style="text-decoration: none; color: #c8c8c8; font-size: 10px; display: inline-block; border: 1px solid #c8c8c8; border-radius: 50%; width: 12px; height: 12px; text-align: center; line-height: 12px; font-weight: bold; vertical-align: middle; margin-left: 0px; margin-bottom: 5px;">?</a>
-          </div>
-        </div>
+        <label for="sourceSizing">New Source Sizing:</label>
+        <select id="sourceSizing" style="width: 300px;">
+          <option value="defaultSize">Default (1920x1080 at 0,0)</option>
+          <option value="bestFit">Best Fit (Preserve Aspect)</option>
+          <option value="stretchToFill">Stretch to Fill Screen</option>
+          <option value="autoGrid">Auto Grid Layout</option>
+        </select>
 
-        <div id="autoSourceOptions" style="display: flex; gap: 10px; margin-bottom: 8px; margin-top: 8px;">
+        <div id="autoSourceOptions" style="display: flex; gap: 10px; margin-bottom: 8px;">
           <label class="checkbox-label">
             <input type="checkbox" id="autoAddSources" checked />
             Auto-add new streams as sources
@@ -481,7 +463,6 @@
       const obsSceneNameInput = document.getElementById('obsSceneNameInput'); // Hidden input, mirrors obsSceneSelect
       const obsSceneSelect = document.getElementById('obsSceneSelect');
       const sourceSizingSelect = document.getElementById('sourceSizing');
-      const sourceCodecSelect = document.getElementById('sourceCodec');
       const autoAddSourcesCheckbox = document.getElementById('autoAddSources');
       const autoRemoveSourcesCheckbox = document.getElementById('autoRemoveSources');
       const streamListContainer = document.getElementById('streamList');
@@ -683,7 +664,6 @@
               obsSceneName: obsSceneSelect.value,
               selectedOtherScenes: selectedOtherScenes, // Save the list of additionally selected scenes
               sourceSizing: sourceSizingSelect.value,
-              sourceCodec: sourceCodecSelect.value, 
               autoAddSources: autoAddSourcesCheckbox.checked,
               autoRemoveSources: autoRemoveSourcesCheckbox.checked,
               // vdoNinjaConnected: vdoNinjaConnected, // Typically not saved, dock should start disconnected
@@ -916,7 +896,6 @@
                   loadedSelectedOtherScenes = settings.selectedOtherScenes || []; 
 
                   sourceSizingSelect.value = settings.sourceSizing || 'defaultSize';
-                  sourceCodecSelect.value = settings.sourceCodec || '';
                   autoAddSourcesCheckbox.checked = settings.autoAddSources !== false; // Default to true if undefined
                   autoRemoveSourcesCheckbox.checked = settings.autoRemoveSources !== false; // Default to true if undefined
 
@@ -940,7 +919,6 @@
                   updatePrefixLabels();
                   vdoNinjaBaseUrlInput.value = 'https://vdo.ninja';
                   sourceSizingSelect.value = 'defaultSize';
-                  sourceCodecSelect.value = '';
               }
           } else {
               // Apply defaults if no settings are found in localStorage
@@ -951,7 +929,6 @@
               updatePrefixLabels();
               vdoNinjaBaseUrlInput.value = 'https://vdo.ninja';
               sourceSizingSelect.value = 'defaultSize';
-              sourceCodecSelect.value = '';
           }
           setupStreamMappingUI(); // This also calls loadStreamMappings
       }
@@ -1145,17 +1122,7 @@
 
           const sourceName = `${getFullReactionPrefix()}_${streamId}:s`; // ":s" for screen share typically in VDO.Ninja
           const baseUrl = getVdoNinjaBaseUrl();
-          const selectedCodec = sourceCodecSelect.value;
-
-
-          let screenShareUrl = `${baseUrl}/?view=${encodeURIComponent(streamId)}:s&solo&room=${encodeURIComponent(room)}`;
-          if (selectedCodec && selectedCodec !== "") { 
-              screenShareUrl += `&codec=${encodeURIComponent(selectedCodec)}`;
-          } else {
-             screenShareUrl += `&codec=vp9`; // Default for screen share
-          }
-
-
+          let screenShareUrl = `${baseUrl}/?view=${encodeURIComponent(streamId)}:s&solo&room=${encodeURIComponent(room)}&codec=vp9`;
           if (vdoNinjaPasswordInput.value) {
               screenShareUrl += `&password=${encodeURIComponent(vdoNinjaPasswordInput.value)}`;
           }
@@ -1862,7 +1829,7 @@
               const response = await sendRequest('GetSceneList');
               if (response && response.scenes) {
                   obsScenes = response.scenes; 
-                  logMessage(`Workspaceed ${obsScenes.length} scenes from OBS.`);
+                  logMessage(`Fetched ${obsScenes.length} scenes from OBS.`);
                   
                   // Store current selections to try and reapply them
                   const previouslySelectedMainScene = obsSceneSelect.value;
@@ -1980,8 +1947,6 @@
           const room = vdoNinjaRoomInput.value.trim();
           const ninjaPassword = vdoNinjaPasswordInput.value;
           const baseUrl = getVdoNinjaBaseUrl(); // Use the potentially custom base URL
-          const selectedCodec = sourceCodecSelect.value; 
-
           let url = `${baseUrl}/?`;
 
           if (room) { // If a room name is provided, use room context
@@ -1993,11 +1958,8 @@
           if (ninjaPassword) { // Add password if provided
               url += `&password=${encodeURIComponent(ninjaPassword)}`;
           }
-          if (selectedCodec && selectedCodec !== "") { 
-              url += `&codec=${encodeURIComponent(selectedCodec)}`;
-          }
           if (includeCommonParams) { // Add common parameters for clean OBS source viewing
-              url += "&cleanoutput&proaudio&ab=160&transparent&autoplay&noheader&webcursor"; 
+              url += "&cleanoutput&proaudio&ab=160&transparent&autoplay&codec=vp9&noheader&webcursor"; 
           }
           return url;
       }
@@ -2415,7 +2377,7 @@
           // If sceneItemId is not provided, try to fetch it
           if (!itemIdToTransform) { 
               try {
-                  logMessage(`Workspaceing scene item ID for '${sourceName}' in '${sceneName}' to apply transform.`);
+                  logMessage(`Fetching scene item ID for '${sourceName}' in '${sceneName}' to apply transform.`);
                   const itemInfo = await sendRequest('GetSceneItemId', { sceneName, sourceName });
                   if (itemInfo && itemInfo.sceneItemId) {
                       itemIdToTransform = itemInfo.sceneItemId;
@@ -2853,8 +2815,6 @@
               });
           }
       });
-      sourceCodecSelect.addEventListener('change', saveSettings);
-
 
       loadScenesBtn.addEventListener('click', fetchObsScenes);
 
