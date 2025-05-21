@@ -347,13 +347,32 @@
       <h2 class="collapsible" data-state="expand">OBS Target Settings</h2>
       <div class="collapsible-content collapsed">
         <label for="obsSceneSelect">Target Scene:</label>
-        <div style="display: flex; align-items: center; gap: 5px;">
-          <select id="obsSceneSelect" style="flex: 1;">
+        <div style="display: flex; gap: 10px;">
+          <select id="obsSceneSelect" style="width: 300px;">
             <option value="">Select a scene...</option>
           </select>
           <button id="loadScenesBtn">Re-Fetch Scenes</button>
         </div>
-        
+
+        <label for="sourceSizing">New Source Sizing:</label>
+        <select id="sourceSizing" style="width: 300px;">
+          <option value="defaultSize">Default (1920x1080 at 0,0)</option>
+          <option value="bestFit">Best Fit (Preserve Aspect)</option>
+          <option value="stretchToFill">Stretch to Fill Screen</option>
+          <option value="autoGrid">Auto Grid Layout</option>
+        </select>
+
+        <div id="autoSourceOptions" style="display: flex; gap: 10px; margin-bottom: 8px;">
+          <label class="checkbox-label">
+            <input type="checkbox" id="autoAddSources" checked />
+            Auto-add new streams as sources
+          </label>
+          <label class="checkbox-label">
+            <input type="checkbox" id="autoRemoveSources" checked />
+            Auto-remove sources on disconnect
+          </label>
+        </div>
+
         <div
           id="otherScenesContainer"
           style="margin-top: 10px; border-top: 1px solid #3a3a48; padding-top: 10px; display: none;"
@@ -367,6 +386,12 @@
         >
           <label>Screen Sharing Settings:</label>
           <div style="display: flex; gap: 10px; margin-bottom: 8px;">
+            <div>
+              <label style="font-size: 11px;">Target Scene:</label>
+              <select id="screenShareSceneSelect" style="width: 300px;">
+                <option value="">Same as main</option>
+                </select>
+            </div>
             <div>
               <label style="font-size: 11px;">Width:</label>
               <input
@@ -385,32 +410,7 @@
                 style="width: 80px;"
               />
             </div>
-            <div>
-              <label style="font-size: 11px;">Target Scene:</label>
-              <select id="screenShareSceneSelect" style="width: 150px;">
-                <option value="">Same as main</option>
-                </select>
-            </div>
           </div>
-        </div>
-
-        <label for="sourceSizing">New Source Sizing:</label>
-        <select id="sourceSizing">
-          <option value="defaultSize">Default (1920x1080 at 0,0)</option>
-          <option value="bestFit">Best Fit (Preserve Aspect)</option>
-          <option value="stretchToFill">Stretch to Fill Screen</option>
-          <option value="autoGrid">Auto Grid Layout</option>
-        </select>
-
-        <div id="autoSourceOptions">
-          <label class="checkbox-label">
-            <input type="checkbox" id="autoAddSources" checked />
-            Auto-add new streams as sources
-          </label>
-          <label class="checkbox-label">
-            <input type="checkbox" id="autoRemoveSources" checked />
-            Auto-remove sources on disconnect
-          </label>
         </div>
       </div>
     </div>
