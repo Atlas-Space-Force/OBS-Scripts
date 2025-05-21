@@ -2853,7 +2853,80 @@
               });
           }
       });
-      sourceCodecSelect.addEventListener('change', saveSettings);
+      sourceCodecSelect.addEventListener('change', async () => { // Tornada async
+          saveSettings();
+          const newCodec = sourceCodecSelect.value;
+          logMessage(`Codec alterado para: ${newCodec || 'none'}. Atualizando fontes OBS...`);
+
+          if (!obsConnected) {
+              logMessage("OBS não está conectado. As fontes não serão atualizadas com o novo codec até a reconexão e uma nova ação (ex: re-adicionar fonte ou mudar codec novamente).");
+              return;
+          }
+
+          // Atualizar fontes de streams ativos (câmeras/convidados)
+          for (const streamId in activeStreams) {
+              if (Object.hasOwnProperty.call(activeStreams, streamId) && activeStreams[streamId].sourceCreated) {
+                  let effectiveSourceName = `${getFullCameraPrefix()}_${streamId}`;
+                  if (highlightedStreamId === streamId) {
+                      effectiveSourceName = `${getFullHighlightPrefix()}_${streamId}`;
+                  }
+
+                  try {
+                      const currentSettingsResponse = await sendRequest('GetInputSettings', { inputName: effectiveSourceName });
+                      if (currentSettingsResponse && currentSettingsResponse.inputSettings) {
+                          const newViewUrl = getVdoNinjaViewUrl(streamId); // Já pega o codec novo
+                          const updatedSettings = { ...currentSettingsResponse.inputSettings, url: newViewUrl };
+                          
+                          await sendRequest('SetInputSettings', {
+                              inputName: effectiveSourceName,
+                              inputSettings: updatedSettings
+                          });
+                          logMessage(`Fonte '${effectiveSourceName}' atualizada com URL: ${newViewUrl}`);
+                      } else {
+                          logMessage(`Não foi possível obter as configurações atuais da fonte '${effectiveSourceName}'.`);
+                      }
+                  } catch (error) {
+                      logMessage(`Erro ao atualizar codec da fonte '${effectiveSourceName}': ${error.message}`);
+                  }
+              }
+          }
+
+          // Atualizar fonte de compartilhamento de tela, se ativa
+          if (screenShareId) {
+              const screenShareSourceName = `${getFullReactionPrefix()}_${screenShareId}:s`;
+              try {
+                  const currentScreenShareSettingsResponse = await sendRequest('GetInputSettings', { inputName: screenShareSourceName });
+                  if (currentScreenShareSettingsResponse && currentScreenShareSettingsResponse.inputSettings) {
+                      const room = vdoNinjaRoomInput.value.trim();
+                      const baseUrl = getVdoNinjaBaseUrl();
+                      let newScreenShareUrl = `${baseUrl}/?view=${encodeURIComponent(screenShareId)}:s&solo&room=${encodeURIComponent(room)}`;
+                      
+                      if (newCodec && newCodec !== "") {
+                          newScreenShareUrl += `&codec=${encodeURIComponent(newCodec)}`;
+                      } else {
+                          newScreenShareUrl += `&codec=vp9`; // Default para screen share
+                      }
+                      if (vdoNinjaPasswordInput.value) {
+                          newScreenShareUrl += `&password=${encodeURIComponent(vdoNinjaPasswordInput.value)}`;
+                      }
+                      newScreenShareUrl += "&cleanoutput&transparent&proaudio";
+
+                      const updatedScreenShareSettings = { ...currentScreenShareSettingsResponse.inputSettings, url: newScreenShareUrl };
+
+                      await sendRequest('SetInputSettings', {
+                          inputName: screenShareSourceName,
+                          inputSettings: updatedScreenShareSettings
+                      });
+                      logMessage(`Fonte de screen share '${screenShareSourceName}' atualizada com URL: ${newScreenShareUrl}`);
+                  } else {
+                       logMessage(`Não foi possível obter as configurações atuais da fonte de screen share '${screenShareSourceName}'.`);
+                  }
+              } catch (error) {
+                  logMessage(`Erro ao atualizar codec da fonte de screen share '${screenShareSourceName}': ${error.message}`);
+              }
+          }
+          logMessage("Atualização de codec nas fontes OBS concluída.");
+      });
 
 
       loadScenesBtn.addEventListener('click', fetchObsScenes);
