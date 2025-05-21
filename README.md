@@ -75,7 +75,7 @@ The page is designed to work in conjunction with the `Advanced Scene Layouts: Gr
 ### Key Features (Includes Additions!)
 
 * **VDO.Ninja Room Integration:** Connect to your VDO.Ninja room and manage participants.
-* **Dynamic Source Creation/Removal:** Automatically add and remove VDO.Ninja video/audio sources in your specified OBS scenes.
+* **Dynamic Source Creation/Deletion:** Automatically add and delete VDO.Ninja video sources in your specified OBS scenes.
 * **Source Sizing and Positioning:** While the page itself provides some controls, it's particularly powerful when combined with OBS scripts that handle complex layouts.
 * **🆕 Screen Share Integration:** Dedicated features for managing and switching VDO.Ninja screen share sources within your OBS scenes, providing more refined control over shared content. (This feature is an inclusion not present in the original OBS Controller by Steve Seguin).
 * **🆕 Highlight Source Management:** Enhanced capabilities to designate and control a "highlighted" VDO.Ninja source, which is especially useful when paired with advanced OBS scripts that dynamically adjust layouts based on specific source prefixes. (This feature is an inclusion not present in the original OBS Controller by Steve Seguin).
