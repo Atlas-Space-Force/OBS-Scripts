@@ -51,11 +51,6 @@ This script is a powerful solution for streamers, content creators, and anyone s
 * Recommended Integration: This functionality was developed for use with tools that allow dynamic renaming of sources with specific prefixes for highlighting, such as VDO.Ninja in conjunction with the modified OBS Controller page by Morse: [VDO.Ninja OBS Controller](https://morsethecode.github.io/vdo.ninja/obs). The original version of the controller can be found here, in case it interests you: [Original VDO.Ninja OBS Controller](https://vdo.ninja/obs)
 * **WARNING:** In case you choose to use the VDO.Ninja OBS Controller, DON'T USE THIS FEATURE, as the controller already has the same feature and using both simultaneously might crash your OBS.
 
-* Required Prefixes for VDO.Ninja - If used with VDO.Ninja and the OBS controller mentioned, the required prefixes are:
-    * **Grid, Reaction and Highlight Camera Prefix:** `VDO`
-    * **Reaction Window Prefix:** `VDO.Screen_`
-    * **Highlight Main Source Prefix:** `VDO.Highlight_`
-
 * When no screen share link or highlighted user is found, the Screen Share and the Highlight layouts fall back to the Grid Layout, so it's recommended that you configured spacing, margins and choose between normal or split screen mode in the Grid Section, even if you don't plan to use it.
 * The script is configured to treat your OBS and the sources as if they're 1920x1080, but you can always change the resolution in the script (line 301). Just remember to always give the browser sources the same base resolution defined in Settings > Video.
 * Sources are cropped, scaled, and positioned dynamically to ensure they fit perfectly into the layout.
@@ -94,14 +89,6 @@ The page is designed to work in conjunction with the `Advanced Scene Layouts: Gr
 ### Integration with `Advanced Scene Layouts`
 
 This modified OBS Controller is particularly effective when used with OBS Lua scripts that process source names for dynamic layouts. For instance, if you're using a script like the `Advanced Scene Layouts` (which includes Grid, Reaction, and Highlight Layouts), you can leverage this controller, as it automatically creates your VDO.Ninja sources with specific prefixes.
-
-For seamless integration and dynamic layout adjustments within OBS (especially with highlight features), it is required to use the following prefixes for your VDO.Ninja sources in the `Advanced Scene Layouts` script settings, as they are the prefixes used by the `VDO.Ninja OBS Control Dock`:
-
-* **Grid, Reaction and Highlight Camera Prefix:** `VDO`
-* **Reaction Window Prefix:** `VDO.Screen_`
-* **Highlight Main Source Prefix:** `VDO.Highlight_`
-
-By setting these prefixes in the `Advanced Scene Layouts` script, it can intelligently identify and position your VDO.Ninja sources within various layouts (e.g., placing the `VDO.Highlight_` source as the main focus with other `VDO.Ninja_` cameras arranged around it in a highlight layout).
 
 ---
 
