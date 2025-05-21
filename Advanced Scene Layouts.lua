@@ -47,14 +47,7 @@ local LANGUAGES = {
         "Highlight Spacing",              -- 25
         "Highlight X Offset",             -- 26
         "Highlight Y Offset",             -- 27
-        "Distribute cameras between both sides (Highlight)", -- 28
-        
-        -- Tracking Section
-        "== Source Tracking ==",          -- 29
-        "Enable Source Tracking",         -- 30
-        "Monitored Scene",                -- 31
-        "Target Scenes",                  -- 32
-        "Source Prefix"                   -- 33
+        "Distribute cameras between both sides (Highlight)" -- 28
     },
     ["Português"] = {
         -- 1. Seletor de idioma
@@ -91,14 +84,7 @@ local LANGUAGES = {
         "Espaçamento de Destaque",        -- 25
         "Deslocamento X de Destaque",     -- 26
         "Deslocamento Y de Destaque",     -- 27
-        "Distribuir câmeras entre os dois lados (Destaque)", -- 28
-        
-        -- Seção Tracking
-        "== Rastreamento de Fontes ==",   -- 29
-        "Ativar Rastreamento",            -- 30
-        "Cena Monitorada",                -- 31
-        "Cenas Destino",                  -- 32
-        "Prefixo das Fontes"              -- 33
+        "Distribuir câmeras entre os dois lados (Destaque)" -- 28
     },
     ["Español"] = {
         -- 1. Selector de idioma
@@ -135,14 +121,7 @@ local LANGUAGES = {
         "Espaciado de Destacado",         -- 25
         "Desplazamiento X de Destacado",  -- 26
         "Desplazamiento Y de Destacado",  -- 27
-        "Distribuir cámaras entre ambos lados (Destacado)", -- 28
-        
-        -- Sección Tracking
-        "== Seguimiento de Fuentes ==",   -- 29
-        "Activar Seguimiento",            -- 30
-        "Escena Monitoreada",             -- 31
-        "Escenas Destino",                -- 32
-        "Prefijo de Fuentes"              -- 33
+        "Distribuir cámaras entre ambos lados (Destacado)" -- 28
     },
     ["中文"] = {
         -- 1. 语言选择
@@ -179,14 +158,7 @@ local LANGUAGES = {
         "亮点间距",                       -- 25
         "亮点X轴偏移",                    -- 26
         "亮点Y轴偏移",                    -- 27
-        "将摄像头分布在两侧 (亮点)",      -- 28
-        
-        -- 跟踪部分
-        "== 源跟踪 ==",                   -- 29
-        "启用源跟踪",                     -- 30
-        "监视场景",                       -- 31
-        "目标场景",                       -- 32
-        "源前缀"                          -- 33
+        "将摄像头分布在两侧 (亮点)"      -- 28
     },
     ["Русский"] = {
         -- 1. Выбор языка
@@ -223,14 +195,7 @@ local LANGUAGES = {
         "Расстояние выделения",           -- 25
         "Смещение X выделения",           -- 26
         "Смещение Y выделения",           -- 27
-        "Распределить камеры между обеими сторонами (выделение)", -- 28
-        
-        -- Трекинг
-        "== Отслеживание источников ==",  -- 29
-        "Включить отслеживание",          -- 30
-        "Мониторируемая сцена",           -- 31
-        "Целевые сцены",                  -- 32
-        "Префикс источника"               -- 33
+        "Распределить камеры между обеими сторонами (выделение)" -- 28
     },
     ["日本語"] = {
         -- 1. 言語選択
@@ -267,14 +232,7 @@ local LANGUAGES = {
         "ハイライト間隔",                 -- 25
         "ハイライトX軸オフセット",        -- 26
         "ハイライトY軸オフセット",        -- 27
-        "両側にカメラを配置 (ハイライト)", -- 28
-        
-        -- トラッキングセクション
-        "== ソース追跡 ==",               -- 29
-        "ソース追跡を有効にする",         -- 30
-        "監視シーン",                     -- 31
-        "ターゲットシーン",               -- 32
-        "ソース接頭辞"                    -- 33
+        "両側にカメラを配置 (ハイライト)" -- 28
     },
     ["Deutsch"] = {
         -- 1. Sprachauswahl
@@ -311,14 +269,7 @@ local LANGUAGES = {
         "Hervorhebungs-Abstand",          -- 25
         "Hervorhebungs-X-Versatz",        -- 26
         "Hervorhebungs-Y-Versatz",        -- 27
-        "Kameras auf beide Seiten verteilen (Hervorhebung)", -- 28
-        
-        -- Tracking Abschnitt
-        "== Quellenverfolgung ==",        -- 29
-        "Quellenverfolgung aktivieren",   -- 30
-        "Überwachte Szene",               -- 31
-        "Zielszenen",                     -- 32
-        "Quellenpräfix"                   -- 33
+        "Kameras auf beide Seiten verteilen (Hervorhebung)" -- 28
     }
 }
 
@@ -369,16 +320,6 @@ local state = {
         enabled = false
     },
 
-    -- Source tracking settings
-    tracking = {
-        enabled = false,
-        monitored_scene = "",
-        source_prefix = "",
-        target_scenes = {},
-        source_map = {},
-        timer_interval = 1
-    },
-
     -- Temporary UI state
     ui = {
         temp_grid_prefix = "",
@@ -386,7 +327,6 @@ local state = {
         temp_window_prefix = "",
         temp_highlight_camera_prefix = "", -- NEW
         temp_highlight_main_prefix = "",   -- NEW
-        temp_tracking_prefix = "",
         elements = {}  -- Will store references to UI elements
     },
     
@@ -445,128 +385,6 @@ local function update_ui_texts(props)
             obs.obs_property_set_description(state.ui.elements[i], state.translations[i])
         end
     end
-end
-
--- =============================================
--- SOURCE TRACKING FUNCTIONS (CORRECTED)
--- =============================================
-
---- Checks if a scene is in the target scenes list
---- @param scene_name string The scene name to check
---- @return boolean True if the scene is a target
-local function is_target_scene(scene_name)
-    for _, target in ipairs(state.tracking.target_scenes) do
-        if target == scene_name then
-            return true
-        end
-    end
-    return false
-end
-
---- Removes a source from all target scenes
---- @param source_name string The name of the source to remove
-local function remove_source_from_target_scenes(source_name)
-    local all_scenes = obs.obs_frontend_get_scenes()
-    
-    if all_scenes then
-        for _, scene_item in ipairs(all_scenes) do
-            local scene_name = obs.obs_source_get_name(scene_item)
-            
-            if is_target_scene(scene_name) then
-                local scene_ptr = obs.obs_scene_from_source(scene_item)
-                local scene_source = obs.obs_scene_find_source(scene_ptr, source_name)
-                if scene_source then
-                    obs.obs_sceneitem_remove(scene_source)
-                    obs.script_log(obs.LOG_INFO, "Removed reference from "..scene_name..": "..source_name)
-                end
-            end
-        end
-        obs.source_list_release(all_scenes)
-    end
-end
-
---- Completely removes a source from all tracking
---- @param source_name string The name of the source to remove
-local function completely_remove_source(source_name)
-    -- 1. Remove from target scenes
-    remove_source_from_target_scenes(source_name)
-    
-    -- 2. Remove from internal tracking
-    state.tracking.source_map[source_name] = nil
-    
-    obs.script_log(obs.LOG_INFO, "Completely removed tracking for: "..source_name)
-end
-
---- Adds a source to all target scenes
---- @param source any The source to add
-local function add_source_to_target_scenes(source)
-    local source_name = obs.obs_source_get_name(source)
-    local all_scenes = obs.obs_frontend_get_scenes()
-    
-    if all_scenes then
-        for _, scene_item in ipairs(all_scenes) do
-            local scene_name = obs.obs_source_get_name(scene_item)
-            
-            -- Check if scene is a target and not the monitored scene
-            if is_target_scene(scene_name) and scene_name ~= state.tracking.monitored_scene then
-                local scene_ptr = obs.obs_scene_from_source(scene_item)
-                local existing_source = obs.obs_scene_find_source(scene_ptr, source_name)
-                if not existing_source then
-                    -- Add source as reference
-                    local new_source = obs.obs_source_get_ref(source)
-                    obs.obs_scene_add(scene_ptr, new_source)
-                    obs.obs_source_release(new_source)
-                    obs.script_log(obs.LOG_INFO, "Added reference to "..scene_name..": "..source_name)
-                end
-            end
-        end
-        obs.source_list_release(all_scenes)
-    end
-end
-
---- Processes the monitored scene for source tracking
-local function process_tracking()
-    if not state.tracking.enabled or state.tracking.monitored_scene == "" or state.tracking.source_prefix == "" then return end
-    
-    local monitored_scene_source = obs.obs_get_scene_by_name(state.tracking.monitored_scene)
-    if not monitored_scene_source then return end
-    
-    local current_sources = {}
-    local scene_items = obs.obs_scene_enum_items(monitored_scene_source)
-    
-    if scene_items then
-        -- First check for removed sources
-        for source_name, _ in pairs(state.tracking.source_map) do
-            local found = false
-            for _, scene_item in ipairs(scene_items) do
-                local source = obs.obs_sceneitem_get_source(scene_item)
-                if obs.obs_source_get_name(source) == source_name then
-                    found = true
-                    break
-                end
-            end
-            if not found then
-                completely_remove_source(source_name)
-            end
-        end
-        
-        -- Then process current sources
-        for _, scene_item in ipairs(scene_items) do
-            local source = obs.obs_sceneitem_get_source(scene_item)
-            local source_name = obs.obs_source_get_name(source)
-            table.insert(current_sources, source)
-            
-            if string.find(source_name, "^"..state.tracking.source_prefix) then
-                if not state.tracking.source_map[source_name] then
-                    state.tracking.source_map[source_name] = true
-                    add_source_to_target_scenes(source)
-                end
-            end
-        end
-        
-        obs.sceneitem_list_release(scene_items)
-    end
-    obs.obs_scene_release(monitored_scene_source)
 end
 
 -- =============================================
@@ -1334,23 +1152,6 @@ local function on_highlight_enabled_changed(props, property, settings)
     return true
 end
 
---- Callback when tracking is toggled
-local function on_tracking_enabled_changed(props, property, settings)
-    state.tracking.enabled = obs.obs_data_get_bool(settings, "tracking_enabled")
-    
-    -- Update visibility of tracking settings
-    obs.obs_property_set_visible(obs.obs_properties_get(props, "monitored_scene"), state.tracking.enabled)
-    obs.obs_property_set_visible(obs.obs_properties_get(props, "target_scenes_group"), state.tracking.enabled)
-    obs.obs_property_set_visible(obs.obs_properties_get(props, "tracking_prefix"), state.tracking.enabled)
-    obs.obs_property_set_visible(obs.obs_properties_get(props, "save_tracking"), state.tracking.enabled)
-    
-    if state.tracking.enabled then
-        process_tracking()
-    end
-    
-    return true
-end
-
 --- Callback when grid scene is changed
 local function on_grid_scene_changed(props, prop, settings)
     state.grid.scene_name = obs.obs_data_get_string(settings, "grid_scene")
@@ -1498,42 +1299,6 @@ local function on_highlight_camera_split_changed(props, property, settings)
     process_highlight_browsers()
 end
 
---- Callback when tracking prefix is changed
-local function on_tracking_prefix_changed(props, property, settings)
-    state.ui.temp_tracking_prefix = obs.obs_data_get_string(settings, "tracking_prefix")
-end
-
---- Callback when monitored scene is changed
-local function on_monitored_scene_changed(props, prop, settings)
-    state.tracking.monitored_scene = obs.obs_data_get_string(settings, "monitored_scene")
-    process_tracking()
-end
-
---- Callback when target scenes are changed
-local function on_target_scenes_changed(props, prop, settings)
-    -- Clear current target scenes
-    state.tracking.target_scenes = {}
-    
-    -- Get all scene names
-    local all_scenes = obs.obs_frontend_get_scenes()
-    if all_scenes then
-        for _, scene_item in ipairs(all_scenes) do
-            local scene_name = obs.obs_source_get_name(scene_item)
-            local is_selected = obs.obs_data_get_bool(settings, "target_scene_"..scene_name)
-            if is_selected then
-                table.insert(state.tracking.target_scenes, scene_name)
-            end
-        end
-        obs.source_list_release(all_scenes)
-    end
-end
-
---- Callback when save tracking settings is clicked
-local function on_save_tracking_clicked(props, prop)
-    state.tracking.source_prefix = state.ui.temp_tracking_prefix:gsub("%s+", "")
-    if state.tracking.source_prefix ~= "" then process_tracking() end
-end
-
 -- =============================================
 -- MAIN REFRESH FUNCTION
 -- =============================================
@@ -1543,7 +1308,6 @@ local function refresh_all()
     if (state.grid.enabled and state.grid.source_prefix ~= "") then process_grid_browsers("grid", state.grid.scene_name, state.grid.source_prefix) end
     if (state.reaction.enabled and state.reaction.source_prefix ~= "" and state.reaction.window_prefix ~= "") then process_react_browsers() end
     if (state.highlight.enabled and state.highlight.source_prefix ~= "" and state.highlight.main_source_prefix ~= "") then process_highlight_browsers() end -- NEW
-    if (state.tracking.enabled and state.tracking.source_prefix ~= "") then process_tracking() end
 end
 
 -- =============================================
@@ -1717,44 +1481,6 @@ function script_properties()
             state.translations[28])
         obs.obs_property_set_modified_callback(state.ui.elements[28], on_highlight_camera_split_changed)
 
-        -- === Tracking Section ===
-        -- 29. Tracking Settings header
-        state.ui.elements[29] = obs.obs_properties_add_text(props, "tracking_settings_label", 
-            state.translations[29], obs.OBS_TEXT_INFO)
-        
-        -- 30. Tracking enable toggle
-        state.ui.elements[30] = obs.obs_properties_add_bool(props, "tracking_enabled", 
-            state.translations[30])
-        obs.obs_property_set_modified_callback(state.ui.elements[30], on_tracking_enabled_changed)
-        
-        -- 31. Monitored scene
-        state.ui.elements[31] = obs.obs_properties_add_list(props, "monitored_scene", 
-            state.translations[31], obs.OBS_COMBO_TYPE_EDITABLE, obs.OBS_COMBO_FORMAT_STRING)
-        for _, scene in ipairs(scenes) do
-            local scene_name = obs.obs_source_get_name(scene)
-            obs.obs_property_list_add_string(state.ui.elements[31], scene_name, scene_name)
-        end
-        obs.obs_property_set_modified_callback(state.ui.elements[31], on_monitored_scene_changed)
-        
-        -- 32. Target scenes group
-        local target_scenes_group = obs.obs_properties_create()
-        state.ui.elements[32] = obs.obs_properties_add_group(props, "target_scenes_group", 
-            state.translations[32], obs.OBS_GROUP_NORMAL, target_scenes_group)
-
-        for _, scene in ipairs(scenes) do
-            local scene_name = obs.obs_source_get_name(scene)
-            local prop = obs.obs_properties_add_bool(target_scenes_group, "target_scene_"..scene_name, scene_name)
-            obs.obs_property_set_modified_callback(prop, on_target_scenes_changed)
-        end
-
-        -- 33. Tracking prefix
-        state.ui.elements[33] = obs.obs_properties_add_text(props, "tracking_prefix", 
-            state.translations[33], obs.OBS_TEXT_DEFAULT)
-        obs.obs_property_set_modified_callback(state.ui.elements[33], on_tracking_prefix_changed)
-        
-        -- Save tracking button (no translation needed)
-        obs.obs_properties_add_button(props, "save_tracking", "✔", on_save_tracking_clicked)
-        
         obs.source_list_release(scenes)
     end
     
@@ -1763,13 +1489,11 @@ function script_properties()
     obs.obs_data_set_bool(settings_data, "grid_enabled", state.grid.enabled)
     obs.obs_data_set_bool(settings_data, "reaction_enabled", state.reaction.enabled)
     obs.obs_data_set_bool(settings_data, "highlight_enabled", state.highlight.enabled) -- NEW
-    obs.obs_data_set_bool(settings_data, "tracking_enabled", state.tracking.enabled)
     
     -- Force update visibility
     on_grid_enabled_changed(props, nil, settings_data)
     on_reaction_enabled_changed(props, nil, settings_data)
     on_highlight_enabled_changed(props, nil, settings_data) -- NEW
-    on_tracking_enabled_changed(props, nil, settings_data)
     
     obs.obs_data_release(settings_data)
     
@@ -1814,25 +1538,6 @@ function script_load(settings)
     state.highlight.x_offset = obs.obs_data_get_int(settings, "highlight_x_offset") or 0
     state.highlight.y_offset = obs.obs_data_get_int(settings, "highlight_y_offset") or 0
     state.highlight.split_cameras = obs.obs_data_get_bool(settings, "highlight_camera_split") or false
-    
-    -- Source tracking settings
-    state.tracking.enabled = obs.obs_data_get_bool(settings, "tracking_enabled") or false
-    state.tracking.monitored_scene = obs.obs_data_get_string(settings, "monitored_scene") or ""
-    state.tracking.source_prefix = obs.obs_data_get_string(settings, "tracking_prefix") or ""
-    
-    -- Load target scenes
-    state.tracking.target_scenes = {}
-    local all_scenes = obs.obs_frontend_get_scenes()
-    if all_scenes then
-        for _, scene in ipairs(all_scenes) do
-            local scene_name = obs.obs_source_get_name(scene)
-            local is_selected = obs.obs_data_get_bool(settings, "target_scene_"..scene_name)
-            if is_selected then
-                table.insert(state.tracking.target_scenes, scene_name)
-            end
-        end
-        obs.source_list_release(all_scenes)
-    end
 
     -- Initialize temporary UI state
     state.ui.temp_grid_prefix = state.grid.source_prefix
@@ -1840,7 +1545,6 @@ function script_load(settings)
     state.ui.temp_window_prefix = state.reaction.window_prefix
     state.ui.temp_highlight_camera_prefix = state.highlight.source_prefix -- NEW
     state.ui.temp_highlight_main_prefix = state.highlight.main_source_prefix -- NEW
-    state.ui.temp_tracking_prefix = state.tracking.source_prefix
     
     -- Start refresh timer
     obs.timer_add(refresh_all, INTERVAL_MS)
@@ -1850,7 +1554,6 @@ function script_load(settings)
     on_grid_enabled_changed(temp_props, nil, settings)
     on_reaction_enabled_changed(temp_props, nil, settings)
     on_highlight_enabled_changed(temp_props, nil, settings) -- NEW
-    on_tracking_enabled_changed(temp_props, nil, settings)
     obs.obs_properties_destroy(temp_props)
 end
 
@@ -1894,39 +1597,17 @@ function script_save(settings)
     obs.obs_data_set_int(settings, "highlight_x_offset", state.highlight.x_offset)
     obs.obs_data_set_int(settings, "highlight_y_offset", state.highlight.y_offset)
     obs.obs_data_set_bool(settings, "highlight_camera_split", state.highlight.split_cameras)
-    
-    -- Save tracking settings
-    obs.obs_data_set_bool(settings, "tracking_enabled", state.tracking.enabled)
-    obs.obs_data_set_string(settings, "monitored_scene", state.tracking.monitored_scene)
-    obs.obs_data_set_string(settings, "tracking_prefix", state.tracking.source_prefix)
-    
-    -- Save target scenes
-    local all_scenes = obs.obs_frontend_get_scenes()
-    if all_scenes then
-        for _, scene in ipairs(all_scenes) do
-            local scene_name = obs.obs_source_get_name(scene)
-            local is_selected = false
-            for _, target in ipairs(state.tracking.target_scenes) do
-                if target == scene_name then
-                    is_selected = true
-                    break
-                end
-            end
-            obs.obs_data_set_bool(settings, "target_scene_"..scene_name, is_selected)
-        end
-        obs.source_list_release(all_scenes)
-    end
+
 end
 
 --- Returns the script description
 function script_description()
-    return [[Advanced Scene Manager with Grid Layout, Reaction Layout, and Source Tracking
+    return [[Advanced Scene Manager with Grid Layout and Reaction Layout
 
 Features:
 1. Grid Layout - Organize sources in a grid pattern
 2. Reaction Layout - Side-by-side layout with main content (window capture)
 3. Highlight Layout - Side-by-side layout with main content (browser source)
-4. Source Tracking - Automatically copy sources from one scene to others
 5. Individual Toggles - Enable/disable each feature independently
 
 Configure all settings in the script properties panel.]]
