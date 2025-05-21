@@ -332,11 +332,11 @@ local state = {
     -- Language settings
     current_language = "English",
     translations = LANGUAGES["English"],
-    
+
     -- Grid settings
     grid = {
         scene_name = "",
-        source_prefix = "",
+        source_prefix = "VDO_",
         spacing = 20,
         margin = 0,
         x_offset = 0,
@@ -344,10 +344,10 @@ local state = {
         split_screen = false,
         enabled = false
     },
-    
+
     -- Reaction settings
     reaction = {
-        scene_name = "",
+        scene_name = "VDO.Screen_",
         source_prefix = "",
         window_prefix = "",
         spacing = 30,
@@ -359,7 +359,7 @@ local state = {
 
     -- Highlight settings (NEW)
     highlight = {
-        scene_name = "",
+        scene_name = "VDO.Highlight_",
         source_prefix = "",
         main_source_prefix = "", -- This replaces window_prefix
         spacing = 30,
@@ -368,17 +368,17 @@ local state = {
         split_cameras = false,
         enabled = false
     },
-    
+
     -- Source tracking settings
     tracking = {
         enabled = false,
         monitored_scene = "",
-        source_prefix = "",
+        source_prefix = "VDO",
         target_scenes = {},
         source_map = {},
         timer_interval = 1
     },
-    
+
     -- Temporary UI state
     ui = {
         temp_grid_prefix = "",
