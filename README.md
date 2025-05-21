@@ -43,7 +43,7 @@ This script is a powerful solution for streamers, content creators, and anyone s
 
 ### Technical Details:
 
-* Recommended Integration: This functionality was developed for use with tools that allow dynamic renaming of sources with specific prefixes for highlighting, such as VDO.Ninja in conjunction with the modified OBS Controller page by Morse: [VDO.Ninja OBS Controller](https://morsethecode.github.io/vdo.ninja/obs). The original version of the controller can be found here, in case it interests you: [Original VDO.Ninja OBS Controller](https://vdo.ninja/obs)
+* Recommended Integration: This functionality works best with tools that offer automatic creation, deletion and dynamically renaming of sources with specific prefixes for highlighting, such as VDO.Ninja in conjunction with the modified OBS Controller page by Morse: [VDO.Ninja OBS Controller](https://morsethecode.github.io/vdo.ninja/obs). The original version of the controller can be found here, in case it interests you: [Original VDO.Ninja OBS Controller](https://vdo.ninja/obs)
 
 * When no screen share link or highlighted user is found, the Screen Share and the Highlight layouts fall back to the Grid Layout, so it's recommended that you configured spacing, margins and choose between normal or split screen mode in the Grid Section, even if you don't plan to use it.
 * The script is configured to treat your OBS and the sources as if they're 1920x1080, but you can always change the resolution in the script (line 301). Just remember to always give the browser sources the same base resolution defined in Settings > Video.
