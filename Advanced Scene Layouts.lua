@@ -347,9 +347,9 @@ local state = {
 
     -- Reaction settings
     reaction = {
-        scene_name = "VDO.Screen_",
-        source_prefix = "",
-        window_prefix = "",
+        scene_name = "",
+        source_prefix = "VDO_",
+        window_prefix = "VDO.Screen_",
         spacing = 30,
         x_offset = 0,
         y_offset = 0,
@@ -359,9 +359,9 @@ local state = {
 
     -- Highlight settings (NEW)
     highlight = {
-        scene_name = "VDO.Highlight_",
-        source_prefix = "",
-        main_source_prefix = "", -- This replaces window_prefix
+        scene_name = "",
+        source_prefix = "VDO",
+        main_source_prefix = "VDO.Highlight_", -- This replaces window_prefix
         spacing = 30,
         x_offset = 0,
         y_offset = 0,
