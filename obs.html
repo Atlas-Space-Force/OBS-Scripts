@@ -1827,7 +1827,7 @@
               const response = await sendRequest('GetSceneList');
               if (response && response.scenes) {
                   obsScenes = response.scenes; 
-                  logMessage(`Workspaceed ${obsScenes.length} scenes from OBS.`);
+                  logMessage(`Fetched ${obsScenes.length} scenes from OBS.`);
                   
                   // Store current selections to try and reapply them
                   const previouslySelectedMainScene = obsSceneSelect.value;
@@ -2375,7 +2375,7 @@
           // If sceneItemId is not provided, try to fetch it
           if (!itemIdToTransform) { 
               try {
-                  logMessage(`Workspaceing scene item ID for '${sourceName}' in '${sceneName}' to apply transform.`);
+                  logMessage(`Fetching scene item ID for '${sourceName}' in '${sceneName}' to apply transform.`);
                   const itemInfo = await sendRequest('GetSceneItemId', { sceneName, sourceName });
                   if (itemInfo && itemInfo.sceneItemId) {
                       itemIdToTransform = itemInfo.sceneItemId;
