@@ -1271,7 +1271,7 @@
                       }
                   }
               } catch (e) {
-                  if ((!e.message.toLowerCase().includes("not found") && !e.message.toLowerCase().includes("does not exist")) || !e.message.toLowerCase().includes("no source")) {
+                  if (!e.message.toLowerCase().includes("not found") || !e.message.toLowerCase().includes("does not exist") || !e.message.toLowerCase().includes("no source")) {
                       logMessage(`Source ${oldHighlightedSourceName} for previous highlight ${previouslyGlobalHighlightedStreamId} not found. Assuming it was already ${oldOriginalSourceName} or removed.`);
                   } else {
                       logMessage(`Error unhighlighting previous stream ${previouslyGlobalHighlightedStreamId} (from ${oldHighlightedSourceName}): ${e.message}`);
@@ -1303,7 +1303,7 @@
                       }
                   }
               } catch (e) {
-                  if ((!e.message.toLowerCase().includes("not found") && !e.message.toLowerCase().includes("does not exist")) || !e.message.toLowerCase().includes("no source")) {
+                  if (!e.message.toLowerCase().includes("not found") || !e.message.toLowerCase().includes("does not exist") || !e.message.toLowerCase().includes("no source")) {
                       logMessage(`Cannot unhighlight ${clickedStreamId}: Source ${clickedNewHighlightedSourceName} not found. Assuming it's already ${clickedOriginalSourceName}.`);
                   } else {
                       logMessage(`Error unhighlighting ${clickedStreamId} (from ${clickedNewHighlightedSourceName}): ${e.message}`);
@@ -1330,7 +1330,7 @@
                        }
                    }
               } catch (e) {
-                  if ((!e.message.toLowerCase().includes("not found") && !e.message.toLowerCase().includes("does not exist")) || !e.message.toLowerCase().includes("no source")) {
+                  if (!e.message.toLowerCase().includes("not found") || !e.message.toLowerCase().includes("does not exist") || !e.message.toLowerCase().includes("no source")) {
                       logMessage(`Cannot highlight ${clickedStreamId}: Original source ${clickedOriginalSourceName} not found. Checking if already highlighted.`);
                        try {
                           // It might be that original is gone, but highlighted one exists due to prior issue.
@@ -2174,7 +2174,7 @@
               highlightedStreamId = streamId; // Set global state if highlighted version is found
           } catch (e) {
               // Highlighted source doesn't exist or error checking it.
-              if ((!e.message.toLowerCase().includes("not found") && !e.message.toLowerCase().includes("does not exist")) || !e.message.toLowerCase().includes("no source")) {
+              if (!e.message.toLowerCase().includes("not found") || !e.message.toLowerCase().includes("does not exist") || !e.message.toLowerCase().includes("no source")) {
                   logMessage(`Error checking for highlighted source '${highlightedSourceName}': ${e.message}. Will check for base source.`);
               }
               // Now check for base version
@@ -2340,7 +2340,7 @@
                   screenShareId = streamId; // Update global screenShareId
               } catch (e) {
                   // Screen share source doesn't exist, or error checking it. No action needed if not found.
-                  if ((!e.message.toLowerCase().includes("not found") && !e.message.toLowerCase().includes("does not exist")) || !e.message.toLowerCase().includes("no source")) {
+                  if (!e.message.toLowerCase().includes("not found") || !e.message.toLowerCase().includes("does not exist") || !e.message.toLowerCase().includes("no source")) {
                       logMessage(`Error checking for existing screen share source '${screenShareSourceNameToCheck}': ${e.message}`);
                   }
                   // If the screen share was for this streamId and is now not found,
@@ -2704,7 +2704,7 @@
                   await sendRequest('RemoveInput', { inputName: sourceName });
                   logMessage(`Successfully removed input '${sourceName}'.`);
               } catch (e) {
-                  if ((!e.message.toLowerCase().includes("not found") && !e.message.toLowerCase().includes("does not exist")) || !e.message.toLowerCase().includes("no source")) {
+                  if (!e.message.toLowerCase().includes("not found") || !e.message.toLowerCase().includes("does not exist") || !e.message.toLowerCase().includes("no source")) {
                       logMessage(`Input '${sourceName}' did not exist globally for removal (already gone or never created).`);
                   } else if (itemRemovedFromAnyScene) { 
                       // If items were removed from scenes but global input removal failed
