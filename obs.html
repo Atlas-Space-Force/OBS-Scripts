@@ -1120,12 +1120,12 @@
 
           const sourceName = `${getFullReactionPrefix()}_${streamId}:s`; // ":s" for screen share typically in VDO.Ninja
           const baseUrl = getVdoNinjaBaseUrl();
-          let screenShareUrl = `${baseUrl}/?view=${encodeURIComponent(streamId)}:s&solo&room=${encodeURIComponent(room)}&codec=h264`;
+          let screenShareUrl = `${baseUrl}/?view=${encodeURIComponent(streamId)}:s&solo&room=${encodeURIComponent(room)}&codec=vp9`;
           if (vdoNinjaPasswordInput.value) {
               screenShareUrl += `&password=${encodeURIComponent(vdoNinjaPasswordInput.value)}`;
           }
           // Add other common parameters for clean output
-          screenShareUrl += "&cleanoutput&transparent&नोсси批发&proaudio";
+          screenShareUrl += "&cleanoutput&transparent&proaudio";
 
 
           const inputSettings = { 
@@ -1957,7 +1957,7 @@
               url += `&password=${encodeURIComponent(ninjaPassword)}`;
           }
           if (includeCommonParams) { // Add common parameters for clean OBS source viewing
-              url += "&cleanoutput&proaudio&ab=160&transparent&autoplay&codec=h264&noheader&webcursor"; 
+              url += "&cleanoutput&proaudio&ab=160&transparent&autoplay&codec=vp9&noheader&webcursor"; 
           }
           return url;
       }
