@@ -279,13 +279,13 @@
         <input type="password" id="obsWsPassword" value="" />
 
         <label for="cameraPrefix" id="cameraSubPrefixLabelText" class="prefix-input-label">Camera prefix:</label>
-        <input type="text" id="cameraPrefix" value="VDO_">
+        <input type="text" id="cameraPrefix" value="VDO">
 
         <label for="reactionSubPrefix" id="reactionSubPrefixLabelText" class="prefix-input-label">Reaction prefix: VDO.</label>
-        <input type="text" id="reactionSubPrefix" value="Screen_">
+        <input type="text" id="reactionSubPrefix" value="Screen">
 
         <label for="highlightSubPrefix" id="highlightSubPrefixLabelText" class="prefix-input-label">Highlight prefix: VDO.</label>
-        <input type="text" id="highlightSubPrefix" value="Highlight_">
+        <input type="text" id="highlightSubPrefix" value="Highlight">
 
         <div class="status-line">
           <button id="obsConnectBtn">Connect to OBS</button>
@@ -385,13 +385,15 @@
           style="margin-top: 10px; border-top: 1px solid #3a3a48; padding-top: 10px;"
         >
           <label>Screen Sharing Settings:</label>
-          <div style="display: flex; gap: 10px; margin-bottom: 8px;">
+          <div style="display: flex; gap: 10px;">
             <div>
               <label style="font-size: 11px;">Target Scene:</label>
               <select id="screenShareSceneSelect" style="width: 300px;">
                 <option value="">Same as main</option>
                 </select>
             </div>
+          </div>
+          <div style="display: block; gap: 10px; margin-bottom: 8px;">
             <div>
               <label style="font-size: 11px;">Width:</label>
               <input
