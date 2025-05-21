@@ -1608,7 +1608,7 @@ Features:
 1. Grid Layout - Organize sources in a grid pattern
 2. Reaction Layout - Side-by-side layout with main content (window capture)
 3. Highlight Layout - Side-by-side layout with main content (browser source)
-5. Individual Toggles - Enable/disable each feature independently
+4. Individual Toggles - Enable/disable each feature independently
 
 Configure all settings in the script properties panel.]]
 end
