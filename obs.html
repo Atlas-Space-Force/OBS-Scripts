@@ -331,7 +331,7 @@
         <small>Room Name or Stream ID(s) needed</small>
         </div>
     </div>
-    
+
     <div class="container">
       <h2 class="collapsible" data-state="expand">Stream ID Mappings</h2>
       <div class="collapsible-content collapsed">
@@ -452,8 +452,7 @@
     <div class="container">
       <h2 class="collapsible" data-state="expand">Log</h2>
       <div class="collapsible-content collapsed">
-        <div id="logArea" class="log-area">
-          </div>
+        <div id="logArea" class="log-area"></div>
       </div>
     </div>
 
@@ -487,7 +486,7 @@
       const streamListContainer = document.getElementById('streamList');
       const logArea = document.getElementById('logArea');
       const loadScenesBtn = document.getElementById('loadScenesBtn');
-      
+
       // State variables
       let obs = null; // WebSocket connection object for OBS
       let obsConnected = false; // Flag for OBS connection status
@@ -605,12 +604,12 @@
        */
       function updatePrefixLabels() {
           const cameraPrefix = getFullCameraPrefix();
-          const reactionPrefix = getFullReactionPrefix();
-          const highlightPrefix = getFullHighlightPrefix();
+          // const reactionPrefix = getFullReactionPrefix(); // Not directly used in label text
+          // const highlightPrefix = getFullHighlightPrefix(); // Not directly used in label text
           // Update the labels to show the current full prefix being used
-          cameraSubPrefixLabelText.textContent = `Camera prefix: ${cameraPrefix || ''}`; // Show (none) if empty
-          reactionSubPrefixLabelText.textContent = `Reaction prefix: ${cameraPrefix || ''}${cameraPrefix ? '.' : ''}${reactionSubPrefixInput.value.trim() || ''}`;
-          highlightSubPrefixLabelText.textContent = `Highlight prefix: ${cameraPrefix || ''}${cameraPrefix ? '.' : ''}${highlightSubPrefixInput.value.trim() || ''}`;
+          cameraSubPrefixLabelText.textContent = `Camera prefix: ${cameraPrefix || '(none)'}`;
+          reactionSubPrefixLabelText.textContent = `Reaction prefix: ${cameraPrefix || '(none)'}${cameraPrefix ? '.' : ''}${reactionSubPrefixInput.value.trim() || '(none)'}`;
+          highlightSubPrefixLabelText.textContent = `Highlight prefix: ${cameraPrefix || '(none)'}${cameraPrefix ? '.' : ''}${highlightSubPrefixInput.value.trim() || '(none)'}`;
       }
       // Add event listeners to prefix inputs to update labels and save settings on change
       cameraPrefixInput.addEventListener('input', () => {
@@ -683,7 +682,7 @@
               obsSceneName: obsSceneSelect.value,
               selectedOtherScenes: selectedOtherScenes, // Save the list of additionally selected scenes
               sourceSizing: sourceSizingSelect.value,
-              sourceCodec: sourceCodecSelect.value, 
+              sourceCodec: sourceCodecSelect.value,
               autoAddSources: autoAddSourcesCheckbox.checked,
               autoRemoveSources: autoRemoveSourcesCheckbox.checked,
               // vdoNinjaConnected: vdoNinjaConnected, // Typically not saved, dock should start disconnected
@@ -774,7 +773,7 @@
               logMessage("VDO.Ninja Error: Room Name or Stream ID(s) must be provided.");
               return;
           }
-    
+
           initializeVdoNinjaIframe(); // Sets up the iframe src
           vdoNinjaConnectionStatus.textContent = 'Status: Connecting...';
           vdoNinjaConnectBtn.textContent = 'Cancel'; // Allow user to cancel connection attempt
@@ -787,7 +786,7 @@
           vdoNinjaConnectionCheckTimer = setTimeout(() => {
               // Check if connection is still not established (vdoNinjaConnected is false)
               // and if there hasn't been any activity (vdoNinjaLastActivityTime is old)
-              if (!vdoNinjaConnected && (Date.now() - vdoNinjaLastActivityTime > 10000)) { 
+              if (!vdoNinjaConnected && (Date.now() - vdoNinjaLastActivityTime > 10000)) {
                   logMessage("VDO.Ninja connection timed out. No activity received from iframe.");
                   vdoNinjaConnectionStatus.textContent = 'Status: Connection Failed';
                   vdoNinjaStatusIndicator.classList.add('error');
@@ -859,9 +858,9 @@
 
           streamMappingsDiv.appendChild(mappingDiv);
           const sceneDropdown = mappingDiv.querySelector('.mapping-scene-name');
-          
+
           // Populate the scene dropdown for this new mapping
-          populateSceneDropdown(obsScenes, sceneDropdown); 
+          populateSceneDropdown(obsScenes, sceneDropdown);
           // Set the selected scene if a valid one was provided
           if (sceneName && obsScenes.some(scene => scene.sceneName === sceneName)) {
               sceneDropdown.value = sceneName;
@@ -902,18 +901,18 @@
                   const settings = JSON.parse(settingsJson);
                   obsWsUrlInput.value = settings.obsWsUrl || 'ws://localhost:4455';
                   obsWsPasswordInput.value = settings.obsWsPassword || '';
-                  
+
                   cameraPrefixInput.value = settings.cameraPrefix || 'VDO';
                   reactionSubPrefixInput.value = settings.reactionSubPrefix || 'Screen';
                   highlightSubPrefixInput.value = settings.highlightSubPrefix || 'Highlight';
-                  
+
                   vdoNinjaBaseUrlInput.value = settings.vdoNinjaBaseUrl || 'https://vdo.ninja';
                   vdoNinjaRoomInput.value = settings.vdoNinjaRoom || '';
                   vdoNinjaPasswordInput.value = settings.vdoNinjaPassword || '';
                   vdoNinjaStreamIdsInput.value = settings.vdoNinjaStreamIds || '';
-                  
+
                   // OBS scene related settings will be validated/set after scenes are fetched
-                  loadedSelectedOtherScenes = settings.selectedOtherScenes || []; 
+                  loadedSelectedOtherScenes = settings.selectedOtherScenes || [];
 
                   sourceSizingSelect.value = settings.sourceSizing || 'defaultSize';
                   sourceCodecSelect.value = settings.sourceCodec || '';
@@ -922,10 +921,10 @@
 
                   const screenShareWidthInput = document.getElementById('screenShareWidth');
                   const screenShareHeightInput = document.getElementById('screenShareHeight');
-                  
+
                   if (screenShareWidthInput) screenShareWidthInput.value = settings.screenShareWidth || '1920';
                   if (screenShareHeightInput) screenShareHeightInput.value = settings.screenShareHeight || '1080';
-                  
+
                   // Actual selection for obsSceneSelect and screenShareSceneSelect happens in fetchObsScenes after scenes are loaded
 
                   updatePrefixLabels(); // Update prefix display labels based on loaded values
@@ -961,7 +960,7 @@
        */
       function updateOtherScenesList() {
           const mainSceneName = obsSceneSelect.value;
-          const otherScenesListDiv = document.getElementById('otherScenesList'); 
+          const otherScenesListDiv = document.getElementById('otherScenesList');
           const container = document.getElementById('otherScenesContainer');
 
           otherScenesListDiv.innerHTML = ''; // Clear previous list of checkboxes
@@ -979,7 +978,7 @@
                       checkbox.id = checkboxId;
                       checkbox.value = scene.sceneName;
                       checkbox.className = 'other-scene-checkbox';
-                      
+
                       // Check if this scene was previously selected (from loaded settings)
                       if (loadedSelectedOtherScenes.includes(scene.sceneName)) {
                           checkbox.checked = true;
@@ -1006,12 +1005,12 @@
       function updateStreamList() {
           // The container for active streams is the 5th .container element (index 4)
           // This was previously hardcoded and might need adjustment if layout changes.
-          // const activeStreamsContainer = document.querySelectorAll('.container')[4]; 
+          // const activeStreamsContainer = document.querySelectorAll('.container')[4];
           // if (activeStreamsContainer) {
           //     const collapsibleContent = activeStreamsContainer.querySelector('.collapsible-content');
           //     // The CSS rule `.container:nth-child(6) .collapsible-content` handles expansion.
           // }
-          
+
           if (Object.keys(activeStreams).length === 0) {
               streamListContainer.innerHTML = '<div class="stream-item">No active streams</div>';
               return;
@@ -1039,7 +1038,7 @@
                       <div style="font-weight: bold;">${stream.label || streamId}</div>
                       <small>ID: ${streamId}${stream.label ? ` | Label: ${stream.label}` : ''}</small>
                       <small style="display: block; color: #8a8a9a;">
-                          → Target Scene: ${targetSceneName || 'Not Set'} 
+                          → Target Scene: ${targetSceneName || 'Not Set'}
                           ${isDefaultScene && targetSceneName ? '(default)' : targetSceneName ? '(mapped)' : ''}
                       </small>
                       ${stream.sourceCreated ? '<span style="color:#4CAF50"> ✓ Added to OBS</span>' : '<span style="color:#FFA000"> ✗ Not in OBS</span>'}
@@ -1048,7 +1047,7 @@
                               style="background-color: ${stream.sourceCreated ? '#F44336' : '#4C80AF'}; margin-right: 5px;">
                                   ${stream.sourceCreated ? 'Remove from OBS' : 'Add to OBS'}
                           </button>`;
-                  
+
                   // Add Highlight button if source is in OBS
                   if (stream.sourceCreated) {
                       streamItemHTML += `
@@ -1057,7 +1056,7 @@
                                   ${isHighlighted ? 'Unhighlight' : 'Highlight'}
                           </button>`;
                   }
-                  
+
                   // Add Screen Share button if source is in OBS
                   if (stream.sourceCreated) { // Only show if the main stream source is in OBS
                        streamItemHTML += `
@@ -1093,7 +1092,7 @@
                   if (screenShareBtn) {
                       screenShareBtn.addEventListener('click', async () => {
                           const clickedStreamIdForScreenShare = streamId; // Closure captures this
-                          const currentActiveScreenShareGlobal = screenShareId; 
+                          const currentActiveScreenShareGlobal = screenShareId;
                           if (currentActiveScreenShareGlobal === clickedStreamIdForScreenShare) {
                               await removeScreenShareFromObs(clickedStreamIdForScreenShare);
                           } else {
@@ -1114,7 +1113,7 @@
        */
       async function addScreenShareToObs(streamId, streamLabel) {
           const previousGlobalScreenShareId = screenShareId; // Store current screen share ID
-          
+
           if (!obsConnected || !obs) {
               logMessage("Cannot add screen share: Not connected to OBS.");
               updateStreamList(); // Revert UI if screenShareId was tentatively set
@@ -1127,9 +1126,9 @@
               updateStreamList();
               return;
           }
-          
+
           // Set the new active screen share ID (globally)
-          screenShareId = streamId; 
+          screenShareId = streamId;
 
           const width = parseInt(document.getElementById('screenShareWidth').value) || 1920;
           const height = parseInt(document.getElementById('screenShareHeight').value) || 1080;
@@ -1149,7 +1148,7 @@
 
 
           let screenShareUrl = `${baseUrl}/?view=${encodeURIComponent(streamId)}:s&solo&room=${encodeURIComponent(room)}`;
-          if (selectedCodec && selectedCodec !== "") { 
+          if (selectedCodec && selectedCodec !== "") {
               screenShareUrl += `&codec=${encodeURIComponent(selectedCodec)}`;
           } else {
              screenShareUrl += `&codec=vp9`; // Default for screen share
@@ -1163,20 +1162,20 @@
           screenShareUrl += "&cleanoutput&transparent&proaudio";
 
 
-          const inputSettings = { 
-              url: screenShareUrl, 
-              width: width, 
-              height: height, 
-              fps: 30, 
+          const inputSettings = {
+              url: screenShareUrl,
+              width: width,
+              height: height,
+              fps: 30,
               reroute_audio: true, // Important for capturing audio from the share
-              restart_when_active: false, 
+              restart_when_active: false,
               shutdown: false // Don't shut down when not visible
           };
 
           logMessage(`Adding/Updating screen share source '${sourceName}' (URL: ${screenShareUrl}) to scene '${targetSceneName}'`);
 
           try {
-              const sourcesResponse = await sendRequest('GetInputList');
+              const sourcesResponse = await sendRequest('GetInputList', {}, { suppressNotFound: true }); // Suppress for this specific check if needed, though GetInputList usually doesn't fail for "not found"
               const existingSourceWithSamePrefix = sourcesResponse.inputs.find(input =>
                   input.inputName.startsWith(getFullReactionPrefix() + '_') && // Belongs to this tool's screen shares
                   input.inputName.endsWith(':s') &&
@@ -1187,14 +1186,14 @@
               // If an old screen share source from this tool exists (different streamId), reconfigure and rename it.
               if (existingSourceWithSamePrefix) {
                   logMessage(`Reconfiguring existing screen share source '${existingSourceWithSamePrefix.inputName}' to be '${sourceName}'.`);
-                  await sendRequest('SetInputSettings', { 
-                      inputName: existingSourceWithSamePrefix.inputName, 
+                  await sendRequest('SetInputSettings', {
+                      inputName: existingSourceWithSamePrefix.inputName,
                       inputSettings: inputSettings // Update URL, dimensions, etc.
                   });
                   if (existingSourceWithSamePrefix.inputName !== sourceName) {
-                      await sendRequest('SetInputName', { 
-                          inputName: existingSourceWithSamePrefix.inputName, 
-                          newInputName: sourceName 
+                      await sendRequest('SetInputName', {
+                          inputName: existingSourceWithSamePrefix.inputName,
+                          newInputName: sourceName
                       });
                   }
                   logMessage(`Reconfigured and renamed existing screen share source to '${sourceName}'.`);
@@ -1203,17 +1202,17 @@
                   const exactSourceExists = sourcesResponse.inputs.find(input => input.inputName === sourceName && input.inputKind === 'browser_source');
                   if (exactSourceExists) {
                        logMessage(`Screen share source '${sourceName}' already exists. Updating its settings.`);
-                       await sendRequest('SetInputSettings', { 
-                           inputName: sourceName, 
-                           inputSettings: inputSettings 
+                       await sendRequest('SetInputSettings', {
+                           inputName: sourceName,
+                           inputSettings: inputSettings
                        });
                   } else {
                       logMessage(`Creating new screen share source '${sourceName}'.`);
-                      await sendRequest('CreateInput', { 
+                      await sendRequest('CreateInput', {
                           sceneName: targetSceneName, // Add to scene directly
-                          inputName: sourceName, 
-                          inputKind: 'browser_source', 
-                          inputSettings, 
+                          inputName: sourceName,
+                          inputKind: 'browser_source',
+                          inputSettings,
                           sceneItemEnabled: true // Make it visible by default
                       });
                   }
@@ -1222,13 +1221,13 @@
               // Ensure the source is a scene item in the target scene and get its ID
               let sceneItemId;
               try {
-                  const itemInfo = await sendRequest('GetSceneItemId', { sceneName: targetSceneName, sourceName: sourceName });
+                  const itemInfo = await sendRequest('GetSceneItemId', { sceneName: targetSceneName, sourceName: sourceName }, { suppressNotFound: true });
                   sceneItemId = itemInfo.sceneItemId;
                   logMessage(`Source '${sourceName}' found in scene '${targetSceneName}', item ID: ${sceneItemId}. Ensuring it's enabled.`);
                   // Ensure it's visible
                   await sendRequest('SetSceneItemEnabled', { sceneName: targetSceneName, sceneItemId: sceneItemId, sceneItemEnabled: true });
               } catch (e) {
-                  if (e.message.toLowerCase().includes("not found")) {
+                  if (e.message.toLowerCase().includes("not found") || e.message.toLowerCase().includes("600")) { // Check for code 600 as well
                       logMessage(`Source '${sourceName}' not found as an item in scene '${targetSceneName}'. Creating scene item.`);
                       const createItemResponse = await sendRequest('CreateSceneItem', { sceneName: targetSceneName, sourceName: sourceName });
                       sceneItemId = createItemResponse.sceneItemId;
@@ -1241,11 +1240,11 @@
               // Apply transform if we have a scene item ID
               if (sceneItemId) {
                   // Using 'defaultSize' for screen share, but could be configurable
-                  const transform = calculateTransform('defaultSize', width, height, width, height); 
-                  await sendRequest('SetSceneItemTransform', { 
-                      sceneName: targetSceneName, 
-                      sceneItemId: sceneItemId, 
-                      sceneItemTransform: transform 
+                  const transform = calculateTransform('defaultSize', width, height, width, height);
+                  await sendRequest('SetSceneItemTransform', {
+                      sceneName: targetSceneName,
+                      sceneItemId: sceneItemId,
+                      sceneItemTransform: transform
                   });
                   logMessage(`Applied transform to screen share source '${sourceName}' in '${targetSceneName}'.`);
               }
@@ -1282,14 +1281,14 @@
               const oldStreamDetails = activeStreams[previouslyGlobalHighlightedStreamId]; // Get details of the old stream
               const oldStreamLabel = oldStreamDetails ? oldStreamDetails.label : '';
               // Fetch target info for the stream being unhighlighted (it might differ from the clicked one's target)
-              const oldTargetInfo = getTargetSceneForStream(previouslyGlobalHighlightedStreamId, oldStreamLabel); 
+              const oldTargetInfo = getTargetSceneForStream(previouslyGlobalHighlightedStreamId, oldStreamLabel);
 
               const oldHighlightedSourceName = `${hlPrefix}_${previouslyGlobalHighlightedStreamId}`;
               const oldOriginalSourceName = `${camPrefix}_${previouslyGlobalHighlightedStreamId}`;
 
               try {
                   // Check if the source to unhighlight actually exists in its highlighted form
-                  await sendRequest('GetInputSettings', { inputName: oldHighlightedSourceName });
+                  await sendRequest('GetInputSettings', { inputName: oldHighlightedSourceName }, { suppressNotFound: true });
                   // If it exists, rename it back to its original (non-highlighted) name
                   await sendRequest('SetInputName', {
                       inputName: oldHighlightedSourceName,
@@ -1306,10 +1305,16 @@
                       }
                   }
               } catch (e) {
-                  if (!e.message.toLowerCase().includes("not found") || !e.message.toLowerCase().includes("does not exist") || !e.message.toLowerCase().includes("no source")) {
-                      logMessage(`Source ${oldHighlightedSourceName} for previous highlight ${previouslyGlobalHighlightedStreamId} not found. Assuming it was already ${oldOriginalSourceName} or removed.`);
+                  // If GetInputSettings failed (e.g. source not found, which is OK if it was already unhighlighted or removed)
+                  // only log if it's an unexpected error.
+                  const isNotFoundOrDoesNotExist = e.message.toLowerCase().includes("not found") ||
+                                                   e.message.toLowerCase().includes("does not exist") ||
+                                                   e.message.toLowerCase().includes("no source") ||
+                                                   (e.message.toLowerCase().includes("code") && e.message.toLowerCase().includes("600"));
+                  if (!isNotFoundOrDoesNotExist) {
+                       logMessage(`Error unhighlighting previous stream ${previouslyGlobalHighlightedStreamId} (from ${oldHighlightedSourceName}): ${e.message}`);
                   } else {
-                      logMessage(`Error unhighlighting previous stream ${previouslyGlobalHighlightedStreamId} (from ${oldHighlightedSourceName}): ${e.message}`);
+                      // logMessage(`Source ${oldHighlightedSourceName} for previous highlight ${previouslyGlobalHighlightedStreamId} not found during unhighlight. Assuming it was already ${oldOriginalSourceName} or removed.`);
                   }
               }
           }
@@ -1323,7 +1328,7 @@
               logMessage(`Unhighlighting clicked stream ${clickedStreamId}.`);
               try {
                   // Check if it's in highlighted form before trying to rename
-                  await sendRequest('GetInputSettings', { inputName: clickedNewHighlightedSourceName });
+                  await sendRequest('GetInputSettings', { inputName: clickedNewHighlightedSourceName }, { suppressNotFound: true });
                   await sendRequest('SetInputName', {
                       inputName: clickedNewHighlightedSourceName,
                       newInputName: clickedOriginalSourceName
@@ -1338,10 +1343,14 @@
                       }
                   }
               } catch (e) {
-                  if (!e.message.toLowerCase().includes("not found") || !e.message.toLowerCase().includes("does not exist") || !e.message.toLowerCase().includes("no source")) {
-                      logMessage(`Cannot unhighlight ${clickedStreamId}: Source ${clickedNewHighlightedSourceName} not found. Assuming it's already ${clickedOriginalSourceName}.`);
-                  } else {
+                  const isNotFoundOrDoesNotExist = e.message.toLowerCase().includes("not found") ||
+                                                 e.message.toLowerCase().includes("does not exist") ||
+                                                 e.message.toLowerCase().includes("no source") ||
+                                                 (e.message.toLowerCase().includes("code") && e.message.toLowerCase().includes("600"));
+                  if (!isNotFoundOrDoesNotExist) {
                       logMessage(`Error unhighlighting ${clickedStreamId} (from ${clickedNewHighlightedSourceName}): ${e.message}`);
+                  } else {
+                      // logMessage(`Cannot unhighlight ${clickedStreamId}: Source ${clickedNewHighlightedSourceName} not found. Assuming it's already ${clickedOriginalSourceName}.`);
                   }
                   highlightedStreamId = null; // Ensure state is cleared on error too
               }
@@ -1350,7 +1359,7 @@
               logMessage(`Highlighting clicked stream ${clickedStreamId}.`);
               try {
                   // Check if it's in its original form before trying to rename
-                  await sendRequest('GetInputSettings', { inputName: clickedOriginalSourceName });
+                  await sendRequest('GetInputSettings', { inputName: clickedOriginalSourceName }, { suppressNotFound: true });
                   await sendRequest('SetInputName', {
                       inputName: clickedOriginalSourceName,
                       newInputName: clickedNewHighlightedSourceName
@@ -1365,21 +1374,26 @@
                        }
                    }
               } catch (e) {
-                  if (!e.message.toLowerCase().includes("not found") || !e.message.toLowerCase().includes("does not exist") || !e.message.toLowerCase().includes("no source")) {
-                      logMessage(`Cannot highlight ${clickedStreamId}: Original source ${clickedOriginalSourceName} not found. Checking if already highlighted.`);
+                  const isNotFoundOrDoesNotExist = e.message.toLowerCase().includes("not found") ||
+                                                 e.message.toLowerCase().includes("does not exist") ||
+                                                 e.message.toLowerCase().includes("no source") ||
+                                                 (e.message.toLowerCase().includes("code") && e.message.toLowerCase().includes("600"));
+                  if (!isNotFoundOrDoesNotExist) {
+                      logMessage(`Error highlighting ${clickedStreamId} (from ${clickedOriginalSourceName}): ${e.message}`);
+                  } else {
+                      // logMessage(`Cannot highlight ${clickedStreamId}: Original source ${clickedOriginalSourceName} not found. Checking if already highlighted.`);
                        try {
                           // It might be that original is gone, but highlighted one exists due to prior issue.
-                          await sendRequest('GetInputSettings', { inputName: clickedNewHighlightedSourceName });
-                          logMessage(`Stream ${clickedStreamId} appears to be already named ${clickedNewHighlightedSourceName}. Setting as highlighted.`);
+                          await sendRequest('GetInputSettings', { inputName: clickedNewHighlightedSourceName }, { suppressNotFound: true });
+                          // logMessage(`Stream ${clickedStreamId} appears to be already named ${clickedNewHighlightedSourceName}. Setting as highlighted.`);
                           highlightedStreamId = clickedStreamId; // Correct internal state
                       } catch (e2) {
-                           logMessage(`Failed to highlight ${clickedStreamId}: Neither ${clickedOriginalSourceName} nor ${clickedNewHighlightedSourceName} found. Source may be missing.`);
+                           // logMessage(`Failed to highlight ${clickedStreamId}: Neither ${clickedOriginalSourceName} nor ${clickedNewHighlightedSourceName} found. Source may be missing.`);
                            if (highlightedStreamId === clickedStreamId) highlightedStreamId = null; // Clear if it was this one
                       }
-                  } else {
-                      logMessage(`Error highlighting ${clickedStreamId} (from ${clickedOriginalSourceName}): ${e.message}`);
-                      if (highlightedStreamId === clickedStreamId) highlightedStreamId = null; // Clear if error occurred for this one
                   }
+                  if (highlightedStreamId === clickedStreamId && isNotFoundOrDoesNotExist) { /* No-op if already handled by inner try-catch */ }
+                  else if (highlightedStreamId === clickedStreamId) { highlightedStreamId = null; }
               }
           }
           updateStreamList(); // Refresh UI to reflect new highlight state
@@ -1390,13 +1404,13 @@
       obsConnectBtn.addEventListener('click', () => {
           if (obsConnected && obs) {
               logMessage("Disconnecting from OBS WebSocket...");
-              if (obs) { 
+              if (obs) {
                   obs.onclose = null; // Prevent onObsDisconnected from firing again if already closing
-                  obs.close(); 
-                  obs = null; 
+                  obs.close();
+                  obs = null;
               }
               // Manually trigger disconnected state if obs.close() doesn't fire onclose immediately or reliably
-              onObsDisconnected(); 
+              onObsDisconnected();
           } else {
               connectToOBS();
           }
@@ -1426,7 +1440,7 @@
               }
           }
           // If no mapping rule matches, or matched rule has no scene, use the default target scene
-          return { scene: defaultTargetScene, mapping: null }; 
+          return { scene: defaultTargetScene, mapping: null };
       }
 
       /**
@@ -1444,7 +1458,7 @@
           populateSceneDropdown(obsScenes, obsSceneSelect);
           // Populate the screen share target scene dropdown
           populateSceneDropdown(obsScenes, document.getElementById('screenShareSceneSelect'));
-          
+
           // Restore main scene selection if it's still a valid scene
           if (currentMainSceneValue && obsScenes.some(scene => scene.sceneName === currentMainSceneValue)) {
               obsSceneSelect.value = currentMainSceneValue;
@@ -1476,9 +1490,9 @@
                   const mappings = JSON.parse(mappingsJson);
                   mappings.forEach(mapping => {
                       addNewStreamMapping(
-                          mapping.streamId, 
-                          mapping.label, 
-                          mapping.sceneName, 
+                          mapping.streamId,
+                          mapping.label,
+                          mapping.sceneName,
                           mapping.matchType,
                           mapping.cloneToMain !== undefined ? mapping.cloneToMain : true, // Default to true
                           mapping.switchToScene !== undefined ? mapping.switchToScene : false // Default to false
@@ -1489,8 +1503,8 @@
                       updateSceneDropdowns(); // This will repopulate and try to restore selections
                   }
                   logMessage(`Loaded ${mappings.length} stream mappings.`);
-              } catch (e) { 
-                logMessage(`Error loading stream mappings from localStorage: ${e.message}`); 
+              } catch (e) {
+                logMessage(`Error loading stream mappings from localStorage: ${e.message}`);
               }
           }
       }
@@ -1516,7 +1530,7 @@
                   const sceneName = sceneNameSelect.value.trim();
                   const cloneToMain = cloneToMainCheckbox.checked;
                   const switchToScene = switchToSceneCheckbox.checked;
-                  
+
                   // A mapping rule is valid if it has a target scene and at least one identifier (ID or label)
                   if (sceneName && (streamId || label)) {
                       mappings.push({ streamId, label, matchType, sceneName, cloneToMain, switchToScene });
@@ -1543,18 +1557,18 @@
           let url = obsWsUrlInput.value.trim();
           const password = obsWsPasswordInput.value; // Password can be empty
 
-          if (!url) { 
-              logMessage("Error: OBS WebSocket URL is required."); 
+          if (!url) {
+              logMessage("Error: OBS WebSocket URL is required.");
               obsStatusIndicator.classList.add('error');
               obsConnectionStatus.textContent = 'Status: Error - URL missing';
-              return; 
+              return;
           }
           // Prepend ws:// if no protocol is specified
-          if (!url.startsWith('ws://') && !url.startsWith('wss://')) { 
-              url = 'ws://' + url; 
+          if (!url.startsWith('ws://') && !url.startsWith('wss://')) {
+              url = 'ws://' + url;
               obsWsUrlInput.value = url; // Update the input field
           }
-          
+
           obsConnectionStatus.textContent = 'Status: Connecting...';
           obsStatusIndicator.classList.remove('connected', 'error');
           logMessage(`Attempting to connect to OBS WebSocket at ${url}...`);
@@ -1587,65 +1601,74 @@
 
                       if (message.op === 0) { // OpCode 0: Hello from server
                           logMessage("Received Hello from OBS. Sending Identify...");
-                          const identifyPayload = { 
+                          const identifyPayload = {
                               op: 1, // OpCode 1: Identify
-                              d: { 
+                              d: {
                                   rpcVersion: 1,
-                                  // Subscribe to events (e.g., SceneListChanged, InputCreated, etc.)
-                                  // Bitmask: (1<<0) General, (1<<1) Config, (1<<2) Scenes, (1<<3) Inputs, etc.
                                   eventSubscriptions: (1 << 0) | (1 << 1) | (1 << 2) | (1 << 3) | (1 << 6) | (1 << 7) | (1 << 8) | (1 << 9) // Common subscriptions
-                              } 
+                              }
                           };
-                          // Handle authentication if required by the server
                           if (message.d && message.d.authentication) {
                               const { challenge, salt } = message.d.authentication;
                               if (password) {
                                   identifyPayload.d.authentication = await generateAuthResponse(password, salt, challenge);
                                   logMessage("Authentication data prepared for Identify message.");
-                              } else { 
+                              } else {
                                   logMessage("Warning: OBS server requires authentication, but no password provided.");
-                                  // Connection will likely fail at Identified stage or close with auth error
                               }
                           }
                           obs.send(JSON.stringify(identifyPayload));
-                      } else if (message.op === 2) { // OpCode 2: Identified (successfully connected and authenticated)
-                          clearTimeout(connectionTimeoutId); // Connection successful, clear timeout
+                      } else if (message.op === 2) { // OpCode 2: Identified
+                          clearTimeout(connectionTimeoutId);
                           logMessage("OBS WebSocket Authentication successful! Connection established.");
                           obsConnected = true;
                           obsConnectBtn.textContent = 'Disconnect';
-                          obsConnectBtn.classList.add('connected'); 
+                          obsConnectBtn.classList.add('connected');
                           obsConnectBtn.classList.remove('disconnected');
                           obsConnectionStatus.textContent = 'Status: Connected';
                           obsStatusIndicator.classList.add('connected');
                           obsStatusIndicator.classList.remove('error');
-                          onObsConnected(); // Perform actions after successful connection
+                          onObsConnected();
                       } else if (message.op === 7) { // OpCode 7: RequestResponse
-                          if (message.d && message.d.requestId && requestCallbacks[message.d.requestId]) {
-                              requestCallbacks[message.d.requestId](message.d); // Call the stored callback
-                              delete requestCallbacks[message.d.requestId]; // Clean up callback
-                          }
-                          // Log errors from requests if not successful
-                          if (message.d && message.d.requestStatus && message.d.requestStatus.code !== 100) {
-                              logMessage(`OBS Request Error (Type: ${message.d.requestType || 'Unknown'}, ID: ${message.d.requestId}): ${message.d.requestStatus.comment || 'Unknown error'}`);
+                          const entry = message.d && message.d.requestId ? requestCallbacks[message.d.requestId] : null;
+
+                          if (entry) {
+                              const responseData = message.d;
+                              const requestStatus = responseData.requestStatus;
+                              // Use requestType from entry if not in responseData (some OBS responses might omit it)
+                              const requestType = responseData.requestType || entry.requestType;
+
+
+                              if (requestStatus && requestStatus.code === 100) { // Success
+                                  entry.resolve(responseData.responseData || {});
+                              } else { // Failure or error
+                                  const errorMessage = requestStatus ? requestStatus.comment : "Unknown error";
+                                  const errorCode = requestStatus ? requestStatus.code : 'N/A';
+
+                                  const suppressLog = entry.suppressNotFound && errorCode === 600;
+
+                                  if (!suppressLog) {
+                                      logMessage(`OBS Request Error (Type: ${requestType}, ID: ${responseData.requestId}): ${errorMessage} (Code: ${errorCode})`);
+                                  }
+                                  entry.reject(new Error(`Request ${requestType} failed: ${errorMessage} (Code: ${errorCode})`));
+                              }
+                              delete requestCallbacks[responseData.requestId];
+                          } else if (message.d && message.d.requestId) {
+                              // logMessage(`Received response for unknown or timed-out request ID: ${message.d.requestId}`);
                           }
                       } else if (message.op === 5) { // OpCode 5: Event
-                          // logMessage(`OBS Event: ${message.d ? message.d.eventType : 'Unknown'} - ${JSON.stringify(message.d.eventData)}`);
-                          // Handle specific events if needed, e.g., scene changes, input creation/removal
                            if (message.d && message.d.eventType === 'SceneListChanged') {
                                logMessage("OBS Event: Scene list changed. Re-fetching scenes.");
                                fetchObsScenes();
                            }
-                      } else {
-                         // logMessage(`Received unhandled OBS message op ${message.op}: ${JSON.stringify(message)}`);
                       }
-                  } catch (error) { 
-                      logMessage(`Error processing OBS WebSocket message: ${error.message}. Data: ${event.data}`); 
+                  } catch (error) {
+                      logMessage(`Error processing OBS WebSocket message: ${error.message}. Data: ${event.data}`);
                   }
               };
 
               obs.onerror = (errorEvent) => {
                   clearTimeout(connectionTimeoutId);
-                  // Try to get more details from the error event if possible
                   let errorMsg = 'Unknown WebSocket error';
                   if (errorEvent && errorEvent.message) {
                       errorMsg = errorEvent.message;
@@ -1655,17 +1678,16 @@
                   logMessage(`OBS WebSocket Error: ${errorMsg}`);
                   obsStatusIndicator.classList.add('error');
                   obsConnectionStatus.textContent = 'Status: Error';
-                  // Ensure button is in connect state if an error occurs before connection
                   obsConnectBtn.textContent = 'Connect to OBS';
                   obsConnectBtn.classList.remove('connected');
                   obsConnectBtn.classList.add('disconnected');
-                  obsConnected = false; // Ensure connection state is false
+                  obsConnected = false;
               };
 
               obs.onclose = (event) => {
                   clearTimeout(connectionTimeoutId);
                   let reason = '';
-                  if (event.code === 4009) { // Authentication failed specifically
+                  if (event.code === 4009) {
                      reason = 'Authentication Failed - incorrect password or auth required and not provided.';
                   } else if (event.reason) {
                      reason = event.reason;
@@ -1673,9 +1695,9 @@
                      reason = `Code: ${event.code || 'Unknown'}${event.wasClean ? "" : " (Unclean disconnection)"}`;
                   }
                   logMessage(`OBS WebSocket Connection Closed. Reason: ${reason}`);
-                  onObsDisconnected(); // Handle UI and state changes for disconnection
+                  onObsDisconnected();
               };
-          } catch (error) { // Catch errors from `new WebSocket()` itself (e.g., invalid URL format)
+          } catch (error) {
               clearTimeout(connectionTimeoutId);
               logMessage(`Error creating OBS WebSocket connection: ${error.message}`);
               obsConnectionStatus.textContent = 'Status: Error';
@@ -1697,100 +1719,95 @@
       async function generateAuthResponse(password, salt, challenge) {
           const encoder = new TextEncoder();
           try {
-              // Step 1: Concatenate password and salt, then SHA256 hash
               const secretString = password + salt;
               const secretData = encoder.encode(secretString);
-              let secretHash; // Uint8Array
+              let secretHash;
 
-              if (window.crypto && window.crypto.subtle) { // Prefer modern Web Crypto API
+              if (window.crypto && window.crypto.subtle) {
                   const hashBuffer = await window.crypto.subtle.digest('SHA-256', secretData);
                   secretHash = new Uint8Array(hashBuffer);
-              } else { // Fallback to jsSHA library
-                  await loadJsShaLibrary(); // Ensure jsSHA is loaded
+              } else {
+                  await loadJsShaLibrary();
                   const shaObj = new jsSHA("SHA-256", "TEXT", { encoding: "UTF8" });
                   shaObj.update(secretString);
                   const hashHex = shaObj.getHash("HEX");
-                  // Convert hex string to Uint8Array
                   secretHash = new Uint8Array(hashHex.match(/.{1,2}/g).map(byte => parseInt(byte, 16)));
               }
-              
-              // Step 2: Base64 encode the hashed secret
-              const secretBase64 = btoa(String.fromCharCode.apply(null, secretHash));
 
-              // Step 3: Concatenate the base64 secret with the challenge, then SHA256 hash
+              const secretBase64 = btoa(String.fromCharCode.apply(null, secretHash));
               const authString = secretBase64 + challenge;
               const authData = encoder.encode(authString);
-              let authHash; // Uint8Array
+              let authHash;
 
               if (window.crypto && window.crypto.subtle) {
                   const hashBuffer = await window.crypto.subtle.digest('SHA-256', authData);
                   authHash = new Uint8Array(hashBuffer);
               } else {
-                  // jsSHA should be loaded by now if crypto.subtle wasn't available
                   const shaObj = new jsSHA("SHA-256", "TEXT", { encoding: "UTF8" });
                   shaObj.update(authString);
                   const hashHex = shaObj.getHash("HEX");
                   authHash = new Uint8Array(hashHex.match(/.{1,2}/g).map(byte => parseInt(byte, 16)));
               }
-
-              // Step 4: Base64 encode the final hashed auth string
               return btoa(String.fromCharCode.apply(null, authHash));
           } catch (error) {
               logMessage(`OBS Authentication generation error: ${error.message}`);
-              throw error; // Re-throw to be caught by the caller
+              throw error;
           }
       }
-      
+
       /**
        * Sends a request to the OBS WebSocket server.
        * @param {string} requestType - The type of request (e.g., "GetSceneList").
        * @param {Object} [requestData={}] - The data for the request.
+       * @param {Object} [options={}] - Optional settings for this request.
+       * @param {boolean} [options.suppressNotFound=false] - If true, suppresses logging for "source not found" errors (code 600).
        * @returns {Promise<Object>} A promise that resolves with the response data.
        */
-      function sendRequest(requestType, requestData = {}) {
+      function sendRequest(requestType, requestData = {}, options = {}) {
       	return new Promise((resolve, reject) => {
-      		if (!obsConnected || !obs) { 
+      		if (!obsConnected || !obs) {
                 logMessage(`Cannot send request '${requestType}': Not connected to OBS.`);
-                reject(new Error("Not connected to OBS")); 
-                return; 
+                reject(new Error("Not connected to OBS"));
+                return;
             }
       		const requestId = generateRequestId(requestType);
-      		
-            // Store callback for this request ID
-            requestCallbacks[requestId] = (response) => {
-      			if (response.requestStatus && response.requestStatus.code === 100) { // Code 100 is success
-                    resolve(response.responseData || {}); // Resolve with responseData or empty object
-                } else { 
-                    const errorMessage = response.requestStatus ? response.requestStatus.comment : "Unknown error";
-                    logMessage(`OBS Request '${requestType}' (ID: ${requestId}) failed: ${errorMessage} (Code: ${response.requestStatus ? response.requestStatus.code : 'N/A'})`);
-                    reject(new Error(`Request ${requestType} failed: ${errorMessage}`));
-                }
-      		};
-      		
-            const requestPayload = { 
-                op: 6, // OpCode 6: Request
-                d: { 
-                    requestType, 
-                    requestId, 
-                    requestData 
-                } 
+
+            requestCallbacks[requestId] = {
+                resolve,
+                reject,
+                requestType, // Store requestType for potential use in logging or error handling
+                suppressNotFound: !!options.suppressNotFound
             };
-            // logMessage(`OBS TX (${requestPayload.op}): ${requestType} - ${JSON.stringify(requestData)}`); // Verbose logging
-      		
-            try { 
-                obs.send(JSON.stringify(requestPayload)); 
-            } catch (error) { 
+
+            const requestPayload = {
+                op: 6, // OpCode 6: Request
+                d: {
+                    requestType,
+                    requestId,
+                    requestData
+                }
+            };
+            // logMessage(`OBS TX (${requestPayload.op}): ${requestType} - ${JSON.stringify(requestData)}`);
+
+            try {
+                obs.send(JSON.stringify(requestPayload));
+            } catch (error) {
                 logMessage(`Error sending OBS request '${requestType}': ${error.message}`);
-                delete requestCallbacks[requestId]; // Clean up callback if send fails
-                reject(error); 
+                if (requestCallbacks[requestId]) { // Check if entry exists before trying to use its properties
+                    const failedEntry = requestCallbacks[requestId];
+                    delete requestCallbacks[requestId];
+                    failedEntry.reject(error); // Reject with the send error
+                } else {
+                    reject(error); // Fallback if entry somehow already deleted
+                }
             }
 
-            // Timeout for the request
       		setTimeout(() => {
-      			if (requestCallbacks[requestId]) { // If callback still exists, it means no response was received
-      				delete requestCallbacks[requestId];
-                    logMessage(`OBS Request '${requestType}' (ID: ${requestId}) timed out.`);
-      				reject(new Error(`Request timeout for ${requestType}`));
+      			if (requestCallbacks[requestId]) {
+      				const entry = requestCallbacks[requestId];
+                    delete requestCallbacks[requestId];
+                    logMessage(`OBS Request '${entry.requestType}' (ID: ${requestId}) timed out.`);
+      				entry.reject(new Error(`Request timeout for ${entry.requestType}`));
       			}
       		}, 5000); // 5-second timeout
       	});
@@ -1802,25 +1819,9 @@
       function onObsConnected() {
           logMessage("OBS Connection fully established. Fetching initial data...");
           fetchObsScenes().then(() => {
-              // Attempt to reconnect to VDO.Ninja if it was connected before a page reload (if settings indicate so)
-              // This logic is typically handled by user action or initial load, vdoNinjaConnected state is not saved.
-              // const settingsJson = localStorage.getItem('obsNinjaSettings');
-              // if (settingsJson) {
-              //     try {
-              //         const settings = JSON.parse(settingsJson);
-              //         if (settings.vdoNinjaWasConnected && (settings.vdoNinjaRoom || settings.vdoNinjaStreamIds)) {
-              //             logMessage("Attempting to auto-reconnect to VDO.Ninja...");
-              //             connectToVdoNinja();
-              //         }
-              //     } catch (e) { 
-              //         logMessage(`Error during VDO.Ninja auto-reconnect attempt: ${e.message}`);
-              //     }
-              // }
-
-              // If auto-grid is enabled, trigger a rearrange for the currently selected target scene
               if (sourceSizingSelect.value === 'autoGrid' && getTargetScene()) {
                   logMessage("Initial rearrange for auto-grid on main target scene after OBS connection.");
-                  setTimeout(() => rearrangeAllStreamsInScene(getTargetScene()), 1000); // Delay slightly
+                  setTimeout(() => rearrangeAllStreamsInScene(getTargetScene()), 1000);
               }
           }).catch(error => {
               logMessage(`Error during post-OBS connection setup (fetching scenes): ${error.message}`);
@@ -1834,19 +1835,17 @@
           logMessage("OBS Connection has been closed or lost.");
           obsConnected = false;
           obsConnectBtn.textContent = 'Connect to OBS';
-          obsConnectBtn.classList.remove('connected'); 
+          obsConnectBtn.classList.remove('connected');
           obsConnectBtn.classList.add('disconnected');
           obsConnectionStatus.textContent = 'Status: Disconnected';
           obsStatusIndicator.classList.remove('connected', 'error');
-          
-          // Mark all active VDO.Ninja streams as not having their source created in OBS
-          Object.values(activeStreams).forEach(stream => stream.sourceCreated = false);
-          updateStreamList(); // Refresh UI to reflect sources are not in OBS
 
-          // Clear scene lists as they are no longer valid/live
+          Object.values(activeStreams).forEach(stream => stream.sourceCreated = false);
+          updateStreamList();
+
           obsScenes = [];
-          updateSceneDropdowns(); // This will clear options or show "Select a scene..."
-          updateOtherScenesList(); // Clear other scenes checkboxes
+          updateSceneDropdowns();
+          updateOtherScenesList();
       }
 
       /**
@@ -1861,38 +1860,31 @@
           try {
               const response = await sendRequest('GetSceneList');
               if (response && response.scenes) {
-                  obsScenes = response.scenes; 
-                  logMessage(`Workspaceed ${obsScenes.length} scenes from OBS.`);
-                  
-                  // Store current selections to try and reapply them
+                  obsScenes = response.scenes;
+                  logMessage(`Fetched ${obsScenes.length} scenes from OBS.`);
+
                   const previouslySelectedMainScene = obsSceneSelect.value;
                   const previouslySelectedScreenShareScene = document.getElementById('screenShareSceneSelect').value;
-                  
-                  updateSceneDropdowns(); // This populates all scene dropdowns with new obsScenes data
 
-                  // Try to restore the main scene selection if it's still valid
+                  updateSceneDropdowns();
+
                   if (previouslySelectedMainScene && obsScenes.some(s => s.sceneName === previouslySelectedMainScene)) {
                       obsSceneSelect.value = previouslySelectedMainScene;
                   } else if (previouslySelectedMainScene) {
                       logMessage(`Previously selected main scene "${previouslySelectedMainScene}" no longer found. Please reselect.`);
-                      obsSceneSelect.value = ""; // Reset if not found
+                      obsSceneSelect.value = "";
                   }
 
-                  // Try to restore the screen share scene selection
                   const screenShareSelectElement = document.getElementById('screenShareSceneSelect');
                   if (previouslySelectedScreenShareScene === "" || (previouslySelectedScreenShareScene && obsScenes.some(s => s.sceneName === previouslySelectedScreenShareScene))) {
                       screenShareSelectElement.value = previouslySelectedScreenShareScene;
                   } else if (previouslySelectedScreenShareScene) {
                       logMessage(`Previously selected screen share scene "${previouslySelectedScreenShareScene}" no longer found. Defaulting to "Same as main".`);
-                      screenShareSelectElement.value = ""; // Reset to default if not found
+                      screenShareSelectElement.value = "";
                   }
-                  
-                  // This also restores selections in mapping dropdowns if they are valid
-                  // updateOtherScenesList() is called within updateSceneDropdowns indirectly or should be called after.
-                  // Ensure other scenes checkboxes are also updated based on the new main scene.
-                  updateOtherScenesList(); 
 
-                  // Restore mapping scene selections based on saved mappings (done by updateSceneDropdowns if mappings exist)
+                  updateOtherScenesList();
+
                   const savedMappingsJson = localStorage.getItem('obsNinjaStreamMappings');
                    if (savedMappingsJson) {
                       try {
@@ -1902,7 +1894,7 @@
                                   if (obsScenes.some(scene => scene.sceneName === mappings[index].sceneName)) {
                                       select.value = mappings[index].sceneName;
                                   } else {
-                                      logMessage(`Saved scene "${mappings[index].sceneName}" for mapping rule ${index + 1} not found.`);
+                                      // logMessage(`Saved scene "${mappings[index].sceneName}" for mapping rule ${index + 1} not found.`);
                                   }
                               }
                           });
@@ -1910,15 +1902,15 @@
                           logMessage(`Error applying saved scene selections to stream mappings: ${e.message}`);
                       }
                   }
-                  obsSceneNameInput.value = obsSceneSelect.value; // Sync hidden input
+                  obsSceneNameInput.value = obsSceneSelect.value;
               } else {
                   logMessage("Failed to fetch OBS scenes or no scenes returned.");
-                  obsScenes = []; // Clear local cache
-                  updateSceneDropdowns(); // Update UI to reflect no scenes
+                  obsScenes = [];
+                  updateSceneDropdowns();
                   updateOtherScenesList();
               }
-          } catch (error) { 
-              logMessage(`Error fetching OBS scenes: ${error.message}`); 
+          } catch (error) {
+              logMessage(`Error fetching OBS scenes: ${error.message}`);
               obsScenes = [];
               updateSceneDropdowns();
               updateOtherScenesList();
@@ -1931,37 +1923,28 @@
        * @param {HTMLSelectElement} selectElement - The select element to populate.
        */
       function populateSceneDropdown(scenesData, selectElement) {
-          const currentValue = selectElement.value; // Preserve current selection if valid after repopulation
-          
-          // Set default option(s) based on the select element's purpose
+          const currentValue = selectElement.value;
+
           if (selectElement.id === 'screenShareSceneSelect') {
               selectElement.innerHTML = '<option value="">Same as main</option>';
-          } else { // For main scene select and mapping selects
+          } else {
               selectElement.innerHTML = '<option value="">Select a scene...</option>';
           }
 
           if (!scenesData || scenesData.length === 0) {
-              // logMessage(`No scenes data to populate dropdown: ${selectElement.id}`);
-              return; // No scenes to add
+              return;
           }
 
-          // Add each scene as an option
-          scenesData.forEach(scene => { 
+          scenesData.forEach(scene => {
               const option = document.createElement('option');
               option.value = scene.sceneName;
               option.textContent = scene.sceneName;
-              selectElement.appendChild(option); 
+              selectElement.appendChild(option);
           });
 
-          // Try to restore the previously selected value if it still exists in the new list of options
           if (currentValue && Array.from(selectElement.options).some(opt => opt.value === currentValue)) {
               selectElement.value = currentValue;
-          } else if (selectElement.id === 'obsSceneSelect' && selectElement.options.length > 1 && currentValue === "") {
-              // For the main scene selector, if it was "Select a scene..." and there are scenes, keep it that way unless a specific one was restored.
-          } else if (selectElement.options.length > 1 && selectElement.id !== 'screenShareSceneSelect' && currentValue === "") {
-              // For mapping dropdowns, keep "Select a scene..." if it was the previous value.
           }
-          // No automatic selection of the first scene if the previous value is no longer valid, to force user choice.
       }
 
       /**
@@ -1979,25 +1962,25 @@
       function getVdoNinjaViewUrl(streamId, includeCommonParams = true) {
           const room = vdoNinjaRoomInput.value.trim();
           const ninjaPassword = vdoNinjaPasswordInput.value;
-          const baseUrl = getVdoNinjaBaseUrl(); // Use the potentially custom base URL
-          const selectedCodec = sourceCodecSelect.value; 
+          const baseUrl = getVdoNinjaBaseUrl();
+          const selectedCodec = sourceCodecSelect.value;
 
           let url = `${baseUrl}/?`;
 
-          if (room) { // If a room name is provided, use room context
+          if (room) {
               url += `view=${encodeURIComponent(streamId)}&solo&room=${encodeURIComponent(room)}`;
-          } else { // Otherwise, view the stream ID directly
+          } else {
               url += `view=${encodeURIComponent(streamId)}`;
           }
 
-          if (ninjaPassword) { // Add password if provided
+          if (ninjaPassword) {
               url += `&password=${encodeURIComponent(ninjaPassword)}`;
           }
-          if (selectedCodec && selectedCodec !== "") { 
+          if (selectedCodec && selectedCodec !== "") {
               url += `&codec=${encodeURIComponent(selectedCodec)}`;
           }
-          if (includeCommonParams) { // Add common parameters for clean OBS source viewing
-              url += "&cleanoutput&proaudio&ab=160&transparent&autoplay&noheader&webcursor"; 
+          if (includeCommonParams) {
+              url += "&cleanoutput&proaudio&ab=160&transparent&autoplay&noheader&webcursor";
           }
           return url;
       }
@@ -2007,181 +1990,134 @@
        */
       function initializeVdoNinjaIframe() {
           const room = vdoNinjaRoomInput.value.trim();
-          const streamIdsInput = vdoNinjaStreamIdsInput.value.trim(); // Comma-separated list of stream IDs
-          
-          if (!room && !streamIdsInput) { 
-              logMessage("VDO.Ninja: Room Name or specific Stream ID(s) must be provided to connect."); 
-              updateVdoNinjaButtonState(false); // Ensure UI reflects failed attempt
-              return; 
+          const streamIdsInput = vdoNinjaStreamIdsInput.value.trim();
+
+          if (!room && !streamIdsInput) {
+              logMessage("VDO.Ninja: Room Name or specific Stream ID(s) must be provided to connect.");
+              updateVdoNinjaButtonState(false);
+              return;
           }
-          
+
           const baseUrl = getVdoNinjaBaseUrl();
           let vdoNinjaUrl = `${baseUrl}/?`;
 
           if (room) {
               vdoNinjaUrl += `room=${encodeURIComponent(room)}`;
-              // If specific stream IDs are also provided with a room, view only those IDs within the room
               if (streamIdsInput) {
                   const viewStreamIds = streamIdsInput.split(',').map(s => s.trim()).filter(s => s).join(',');
                   if (viewStreamIds) vdoNinjaUrl += `&view=${encodeURIComponent(viewStreamIds)}&solo`;
               }
-          } else if (streamIdsInput) { // If no room, but stream IDs are provided, view them directly
+          } else if (streamIdsInput) {
               const viewStreamIds = streamIdsInput.split(',').map(s => s.trim()).filter(s => s).join(',');
               if (viewStreamIds) vdoNinjaUrl += `view=${encodeURIComponent(viewStreamIds)}`;
-              else { // Should not happen if initial check passes, but defensive
+              else {
                   logMessage("VDO.Ninja: Stream IDs provided but were empty after trimming.");
                   updateVdoNinjaButtonState(false);
                   return;
               }
           }
 
-          if (vdoNinjaPasswordInput.value) { // Add password if provided
+          if (vdoNinjaPasswordInput.value) {
               vdoNinjaUrl += `&password=${encodeURIComponent(vdoNinjaPasswordInput.value)}`;
           }
-          
-          // Parameters for data-only connection to receive events from VDO.Ninja
+
           vdoNinjaUrl += "&cleanoutput&dataonly&nocursor&nopush&debug&noaudio&novideo&cors="+encodeURIComponent(window.location.origin);
-          
+
           logMessage(`Initializing VDO.Ninja iframe with URL: ${vdoNinjaUrl}`);
-          vdoNinjaIframe.src = 'about:blank'; // Clear previous content first
-          vdoNinjaIframe.setAttribute('crossorigin', 'anonymous'); // Important for cross-origin communication
-          // The 'allow' attribute is set in HTML, ensure it covers necessary permissions
-          
-          // Load the actual URL after a short delay to ensure 'about:blank' takes effect
-          setTimeout(() => { 
-              vdoNinjaIframe.src = vdoNinjaUrl; 
-              vdoNinjaLastActivityTime = Date.now(); // Initialize activity time
-          }, 100); 
+          vdoNinjaIframe.src = 'about:blank';
+          vdoNinjaIframe.setAttribute('crossorigin', 'anonymous');
+
+          setTimeout(() => {
+              vdoNinjaIframe.src = vdoNinjaUrl;
+              vdoNinjaLastActivityTime = Date.now();
+          }, 100);
       }
 
-      // Event listener for messages from the VDO.Ninja iframe
       window.addEventListener("message", (event) => {
-          const expectedOriginBase = getVdoNinjaBaseUrl(); // Get current base URL setting
+          const expectedOriginBase = getVdoNinjaBaseUrl();
           let parsedExpectedOrigin;
-          try { 
-              parsedExpectedOrigin = new URL(expectedOriginBase); 
-          } catch (e) { 
+          try {
+              parsedExpectedOrigin = new URL(expectedOriginBase);
+          } catch (e) {
               logMessage(`Invalid VDO.Ninja base URL in settings: ${expectedOriginBase}`);
-              return; // Cannot validate origin if base URL is malformed
-          }
-
-          // Security check: ensure message is from the expected VDO.Ninja origin and iframe window
-          if (event.origin !== parsedExpectedOrigin.origin || event.source !== vdoNinjaIframe.contentWindow) {
-              // logMessage(`Ignoring message from unexpected origin (${event.origin}) or source.`); // For debugging
               return;
           }
-          
-          const data = event.data; // The message payload from VDO.Ninja
-          vdoNinjaLastActivityTime = Date.now(); // Update last activity timestamp
 
-          if (!vdoNinjaConnected) { // This is the first message, signifies successful iframe load and communication
-              vdoNinjaConnected = true; // This state is set here, not in updateVdoNinjaButtonState
-              updateVdoNinjaButtonState(true); // Update UI to connected state (enables inputs, changes button)
-              if (vdoNinjaConnectionCheckTimer) { 
-                  clearTimeout(vdoNinjaConnectionCheckTimer); 
-                  vdoNinjaConnectionCheckTimer = null; 
+          if (event.origin !== parsedExpectedOrigin.origin || event.source !== vdoNinjaIframe.contentWindow) {
+              return;
+          }
+
+          const data = event.data;
+          vdoNinjaLastActivityTime = Date.now();
+
+          if (!vdoNinjaConnected) {
+              vdoNinjaConnected = true;
+              updateVdoNinjaButtonState(true);
+              if (vdoNinjaConnectionCheckTimer) {
+                  clearTimeout(vdoNinjaConnectionCheckTimer);
+                  vdoNinjaConnectionCheckTimer = null;
               }
               logMessage("VDO.Ninja iframe connection established and active.");
           }
 
-          // Process specific VDO.Ninja events
           if (data && data.streamID) {
               const streamId = data.streamID;
-              const label = data.label || `Stream ${streamId}`; // Use a default label if none provided
+              const label = data.label || `Stream ${streamId}`;
 
-              // Handle stream connection events
-              if ((data.action === "view-connection" && data.value === true) || 
-                  (data.action === "guest-connected") || // Guest joining a room
-                  (data.action === "push-connection" && data.value === true)) { // Director push starting
+              if ((data.action === "view-connection" && data.value === true) ||
+                  (data.action === "guest-connected") ||
+                  (data.action === "push-connection" && data.value === true)) {
                   logMessage(`VDO.Ninja stream connected/active: "${label}" (ID: ${streamId})`);
-                  activeStreams[streamId] = { 
-                      label, 
-                      sourceCreated: false, // Initial state: not yet added to OBS
-                      streamId, 
-                      uuid: data.UUID || null, // Store UUID if available
-                      connected: true 
+                  activeStreams[streamId] = {
+                      label,
+                      sourceCreated: false,
+                      streamId,
+                      uuid: data.UUID || null,
+                      connected: true
                   };
-                  updateStreamList(); // Update UI list of active streams
-                  
-                  // Automatically add source to OBS if checkbox is checked
+                  updateStreamList();
+
                   if (autoAddSourcesCheckbox.checked) {
                       logMessage(`Auto-adding stream ${streamId} to OBS.`);
                       const targetInfo = getTargetSceneForStream(streamId, label);
                       addStreamToObs(streamId, label, targetInfo);
                   }
-              } 
-              // Handle stream disconnection events
+              }
               else if ((data.action === "view-connection" && data.value === false) ||
                          (data.action === "push-connection" && data.value === false)) {
-                  if (activeStreams[streamId]) { // Check if we are tracking this stream
+                  if (activeStreams[streamId]) {
                       logMessage(`VDO.Ninja stream disconnected/inactive: "${label}" (ID: ${streamId})`);
-                      // Automatically remove source from OBS if checkbox is checked
                       if (autoRemoveSourcesCheckbox && autoRemoveSourcesCheckbox.checked) {
                           logMessage(`Auto-removing stream ${streamId} from OBS.`);
-                          removeStreamFromObs(streamId); // removeStreamFromObs handles OBS removal and state update
+                          removeStreamFromObs(streamId);
                       }
-                      delete activeStreams[streamId]; // Remove from our tracked list
-                      updateStreamList(); // Update UI
+                      delete activeStreams[streamId];
+                      updateStreamList();
                   }
-              } 
-              // Handle label updates for an existing stream
+              }
               else if (data.action === "view-connection-info" && data.value && data.value.label) {
                   if (activeStreams[streamId]) {
                       if (activeStreams[streamId].label !== data.value.label) {
                           logMessage(`VDO.Ninja stream label updated for ID ${streamId}: "${data.value.label}" (was "${activeStreams[streamId].label}")`);
                           activeStreams[streamId].label = data.value.label;
-                          updateStreamList(); // Update UI to reflect new label
+                          updateStreamList();
                       }
                   }
               }
-              // else if (data.action !== 'view-stats-updated') { // Avoid logging frequent stat updates
-              //    logMessage(`VDO.Ninja message (ID: ${streamId}, Action: ${data.action}): ${JSON.stringify(data.value)}`);
-              // }
           }
       }, false);
 
-      /**
-       * Starts a monitor to check for VDO.Ninja iframe connection activity.
-       * If no activity for a while, assumes connection is lost.
-       */
       function startVdoNinjaConnectionMonitor() {
           setInterval(() => {
-              if (vdoNinjaConnected && (Date.now() - vdoNinjaLastActivityTime > 45000)) { // 45 seconds of inactivity
+              if (vdoNinjaConnected && (Date.now() - vdoNinjaLastActivityTime > 45000)) {
                   logMessage("VDO.Ninja connection lost (no activity from iframe). Attempting to reset.");
-                  // Update UI to show lost connection, but keep inputs enabled for user to retry
                   vdoNinjaConnectionStatus.textContent = 'Status: Connection Lost';
-                  vdoNinjaStatusIndicator.classList.add('error'); // Show error state
+                  vdoNinjaStatusIndicator.classList.add('error');
                   vdoNinjaStatusIndicator.classList.remove('connected');
-                  
-                  // Call disconnect which resets button to "Connect" and clears iframe
-                  disconnectFromVdoNinja(); 
+                  disconnectFromVdoNinja();
               }
-          }, 30000); // Check every 30 seconds
+          }, 30000);
       }
-
-       /**
-       * Adds a VDO.Ninja stream as a browser source to OBS.
-       * @param {string} streamId - The VDO.Ninja Stream ID.
-       * @param {string} streamLabel - The label of the stream.
-       * @param {Object} [targetInfo=null] - Pre-calculated target scene info, or null to determine it.
-       */
-       /**
-       * Adds a VDO.Ninja stream as a browser source to OBS.
-       * It first checks if a highlighted version of the source exists; if so, it manages that.
-       * Otherwise, it checks for a base version. If neither exists, it creates the base version.
-       * @param {string} streamId - The VDO.Ninja Stream ID.
-       * @param {string} streamLabel - The label of the stream.
-       * @param {Object} [targetInfo=null] - Pre-calculated target scene info, or null to determine it.
-       */
-      /**
-       * Adds a VDO.Ninja stream as a browser source to OBS.
-       * It first checks if a highlighted version of the source exists; if so, it manages that and updates highlight state.
-       * Otherwise, it checks for a base version. If neither exists, it creates the base version.
-       * It also checks for and associates existing screen share sources for the stream.
-       * @param {string} streamId - The VDO.Ninja Stream ID.
-       * @param {string} streamLabel - The label of the stream.
-       * @param {Object} [targetInfo=null] - Pre-calculated target scene info, or null to determine it.
-       */
 
       async function addStreamToObs(streamId, streamLabel, targetInfo = null) {
           if (!obsConnected || !obs) {
@@ -2200,41 +2136,43 @@
 
           const baseSourceName = `${getFullCameraPrefix()}_${streamId}`;
           const highlightedSourceName = `${getFullHighlightPrefix()}_${streamId}`;
-          let effectiveSourceName = baseSourceName; // Default to base name, will be updated if highlighted or base exists
+          let effectiveSourceName = baseSourceName;
           let sourceReallyExistsGlobally = false;
 
           // --- MODIFIED EXISTENCE CHECK ---
           try {
-              // Check for highlighted version first
-              await sendRequest('GetInputSettings', { inputName: highlightedSourceName });
+              await sendRequest('GetInputSettings', { inputName: highlightedSourceName }, { suppressNotFound: true });
               logMessage(`Highlighted version '${highlightedSourceName}' found for stream ${streamId}. This will be managed.`);
               effectiveSourceName = highlightedSourceName;
               sourceReallyExistsGlobally = true;
-              if (activeStreams[streamId]) activeStreams[streamId].sourceCreated = true; // Mark as 'created' early
-              highlightedStreamId = streamId; // Set global state if highlighted version is found
+              if (activeStreams[streamId]) activeStreams[streamId].sourceCreated = true;
+              highlightedStreamId = streamId;
           } catch (e) {
-              // Highlighted source doesn't exist or error checking it.
-              if (!e.message.toLowerCase().includes("not found") || !e.message.toLowerCase().includes("does not exist") || !e.message.toLowerCase().includes("no source")) {
+              // e.message is "Request GetInputSettings failed: No source was found..."
+              // Corrected IF condition from previous response (using && or !(A || B || C))
+              if (!(e.message.toLowerCase().includes("not found") || e.message.toLowerCase().includes("does not exist") || e.message.toLowerCase().includes("no source") || (e.message.toLowerCase().includes("code") && e.message.toLowerCase().includes("600")))) {
                   logMessage(`Error checking for highlighted source '${highlightedSourceName}': ${e.message}. Will check for base source.`);
               }
               // Now check for base version
               try {
-                  await sendRequest('GetInputSettings', { inputName: baseSourceName });
+                  await sendRequest('GetInputSettings', { inputName: baseSourceName }, { suppressNotFound: true });
                   logMessage(`Base version '${baseSourceName}' found for stream ${streamId}. This will be managed.`);
-                  effectiveSourceName = baseSourceName; // Already default, but explicit.
+                  effectiveSourceName = baseSourceName;
                   sourceReallyExistsGlobally = true;
-                  if (activeStreams[streamId]) activeStreams[streamId].sourceCreated = true; // Mark as 'created'
-                  // If base is found, it means it's not highlighted, so if this stream was previously highlightedStreamId, clear it
-                  // However, this could conflict if another stream was highlighted.
-                  // It's safer to let toggleHighlight manage clearing highlightedStreamId explicitly.
-                  // If we found the base, and this IS the highlightedStreamId, something is inconsistent.
-                  // For now, we only set highlightedStreamId if the *highlighted* source is found.
+                  if (activeStreams[streamId]) activeStreams[streamId].sourceCreated = true;
               } catch (e2) {
-                  // Base source also doesn't exist or error checking it.
-                  if (!e2.message.toLowerCase().includes("not found") && !e2.message.toLowerCase().includes("does not exist") || !e2.message.toLowerCase().includes("no source")) {
+                  // The original condition for e2 was already better:
+                  // (!e2.message.toLowerCase().includes("not found") && !e2.message.toLowerCase().includes("does not exist")) || !e2.message.toLowerCase().includes("no source")
+                  // This evaluates to false for "not found" or "no source" messages.
+                  // Let's ensure it also handles "code 600" for consistency.
+                  const isNotFoundE2 = e2.message.toLowerCase().includes("not found") ||
+                                     e2.message.toLowerCase().includes("does not exist") ||
+                                     e2.message.toLowerCase().includes("no source") ||
+                                     (e2.message.toLowerCase().includes("code") && e2.message.toLowerCase().includes("600"));
+                  if (!isNotFoundE2) {
                       logMessage(`Error checking for base source '${baseSourceName}': ${e2.message}. Will attempt to create.`);
                   }
-                  effectiveSourceName = baseSourceName; // Will be created with this name
+                  effectiveSourceName = baseSourceName;
                   sourceReallyExistsGlobally = false;
               }
           }
@@ -2289,23 +2227,23 @@
                       inputSettings,
                       sceneItemEnabled: true
                   });
-                  effectiveSourceName = baseSourceName;
+                  effectiveSourceName = baseSourceName; // Ensure effectiveSourceName is the one created
                   logMessage(`Source '${effectiveSourceName}' created and added to scene '${targetSceneName}'.`);
                   try {
-                      const itemInfo = await sendRequest('GetSceneItemId', { sceneName: targetSceneName, sourceName: effectiveSourceName });
+                      const itemInfo = await sendRequest('GetSceneItemId', { sceneName: targetSceneName, sourceName: effectiveSourceName }, { suppressNotFound: true });
                       initialSceneItemId = itemInfo.sceneItemId;
                   } catch (e) {
-                      logMessage(`Warning: Couldn't get scene item ID for new source '${effectiveSourceName}' in '${targetSceneName}': ${e.message}`);
+                      // logMessage(`Warning: Couldn't get scene item ID for new source '${effectiveSourceName}' in '${targetSceneName}': ${e.message}`);
                   }
               } else {
                   logMessage(`Source '${effectiveSourceName}' already exists globally. Updating its settings.`);
                   await sendRequest('SetInputSettings', { inputName: effectiveSourceName, inputSettings });
                   try {
-                      const itemInfo = await sendRequest('GetSceneItemId', { sceneName: targetSceneName, sourceName: effectiveSourceName });
+                      const itemInfo = await sendRequest('GetSceneItemId', { sceneName: targetSceneName, sourceName: effectiveSourceName }, { suppressNotFound: true });
                       initialSceneItemId = itemInfo.sceneItemId;
                       logMessage(`Source '${effectiveSourceName}' found as item in scene '${targetSceneName}'.`);
                   } catch (e) {
-                      if (e.message.toLowerCase().includes("not found") || e.message.toLowerCase().includes("no scene items")) {
+                      if (e.message.toLowerCase().includes("not found") || (e.message.toLowerCase().includes("code") && e.message.toLowerCase().includes("600"))) {
                           logMessage(`Source '${effectiveSourceName}' exists globally but not in scene '${targetSceneName}'. Adding it.`);
                           const createItemResponse = await sendRequest('CreateSceneItem', { sceneName: targetSceneName, sourceName: effectiveSourceName });
                           initialSceneItemId = createItemResponse.sceneItemId;
@@ -2316,11 +2254,11 @@
               if (shouldCloneThisStreamToMain && mainDefaultScene && mainDefaultScene !== targetSceneName) {
                   logMessage(`Attempting to clone source '${effectiveSourceName}' to main scene '${mainDefaultScene}'.`);
                   try {
-                      const itemInfo = await sendRequest('GetSceneItemId', { sceneName: mainDefaultScene, sourceName: effectiveSourceName });
+                      const itemInfo = await sendRequest('GetSceneItemId', { sceneName: mainDefaultScene, sourceName: effectiveSourceName }, { suppressNotFound: true });
                       clonedSceneItemId = itemInfo.sceneItemId;
                       logMessage(`Source '${effectiveSourceName}' already exists as an item in main scene '${mainDefaultScene}'.`);
                   } catch (e) {
-                      if (e.message.toLowerCase().includes("not found") || e.message.toLowerCase().includes("no scene items")) {
+                      if (e.message.toLowerCase().includes("not found") || (e.message.toLowerCase().includes("code") && e.message.toLowerCase().includes("600"))) {
                           logMessage(`Cloning source '${effectiveSourceName}' to main scene '${mainDefaultScene}'.`);
                           const createCloneResponse = await sendRequest('CreateSceneItem', { sceneName: mainDefaultScene, sourceName: effectiveSourceName });
                           clonedSceneItemId = createCloneResponse.sceneItemId;
@@ -2343,13 +2281,12 @@
               for (const checkbox of otherSceneCheckboxes) {
                   const otherSceneName = checkbox.value;
                   if (otherSceneName && otherSceneName !== targetSceneName && (!shouldCloneThisStreamToMain || otherSceneName !== mainDefaultScene)) {
-                      logMessage(`Attempting to add/clone source '${effectiveSourceName}' to other selected scene '${otherSceneName}'.`);
                       try {
                           let otherSceneItemId = null;
                           try {
-                               const itemInfo = await sendRequest('GetSceneItemId', { sceneName: otherSceneName, sourceName: effectiveSourceName });
+                               const itemInfo = await sendRequest('GetSceneItemId', { sceneName: otherSceneName, sourceName: effectiveSourceName }, { suppressNotFound: true });
                                otherSceneItemId = itemInfo.sceneItemId;
-                               logMessage(`Source '${effectiveSourceName}' already an item in other scene '${otherSceneName}'.`);
+                               // logMessage(`Source '${effectiveSourceName}' already an item in other scene '${otherSceneName}'.`);
                           } catch(e) { /* OK if not found */ }
 
                           if (!otherSceneItemId) {
@@ -2372,39 +2309,27 @@
               }
               logMessage(`Successfully processed stream "${streamLabel}" (${streamId}), effective OBS source: '${effectiveSourceName}'.`);
 
-              // --- CHECK FOR EXISTING SCREEN SHARE SOURCE ---
               const screenShareSourceNameToCheck = `${getFullReactionPrefix()}_${streamId}:s`;
               try {
-                  await sendRequest('GetInputSettings', { inputName: screenShareSourceNameToCheck });
+                  await sendRequest('GetInputSettings', { inputName: screenShareSourceNameToCheck }, { suppressNotFound: true });
                   logMessage(`Existing screen share source '${screenShareSourceNameToCheck}' found for stream ${streamId}. Associating it.`);
-                  screenShareId = streamId; // Update global screenShareId
+                  screenShareId = streamId;
               } catch (e) {
-                  // Screen share source doesn't exist, or error checking it. No action needed if not found.
-                  if (!e.message.toLowerCase().includes("not found") || !e.message.toLowerCase().includes("does not exist") || !e.message.toLowerCase().includes("no source")) {
-                      logMessage(`Error checking for existing screen share source '${screenShareSourceNameToCheck}': ${e.message}`);
+                  // Only log if it's an unexpected error
+                  const isNotFound = e.message.toLowerCase().includes("not found") || (e.message.toLowerCase().includes("code") && e.message.toLowerCase().includes("600"));
+                  if (!isNotFound) {
+                    logMessage(`Error checking for existing screen share source '${screenShareSourceNameToCheck}': ${e.message}`);
                   }
-                  // If the screen share was for this streamId and is now not found,
-                  // removeScreenShareFromObs (called by user or auto-remove) would handle clearing screenShareId.
-                  // Here we only *set* it if found.
               }
-              // --- END CHECK FOR EXISTING SCREEN SHARE SOURCE ---
 
           } catch (error) {
               logMessage(`Error managing stream '${effectiveSourceName}' ("${streamLabel}") in OBS: ${error.message}`);
               if (activeStreams[streamId]) activeStreams[streamId].sourceCreated = false;
           } finally {
-              updateStreamList(); // This will now reflect updated highlightedStreamId and screenShareId
+              updateStreamList();
           }
       }
 
-      /**
-       * Applies transform (sizing, position) to a source in a scene, or triggers grid rearrangement.
-       * @param {string} sceneName - The name of the OBS scene.
-       * @param {string} sourceName - The name of the source.
-       * @param {number} canvasWidth - The width of the OBS canvas.
-       * @param {number} canvasHeight - The height of the OBS canvas.
-       * @param {number} [sceneItemId=null] - The ID of the scene item (optional, will be fetched if null).
-       */
       async function applyTransformAndGrid(sceneName, sourceName, canvasWidth, canvasHeight, sceneItemId = null) {
           if (!sceneName) {
               logMessage(`Cannot apply transform for source '${sourceName}': Scene name not provided.`);
@@ -2412,41 +2337,40 @@
           }
           let itemIdToTransform = sceneItemId;
 
-          // If sceneItemId is not provided, try to fetch it
-          if (!itemIdToTransform) { 
+          if (!itemIdToTransform) {
               try {
-                  logMessage(`Workspaceing scene item ID for '${sourceName}' in '${sceneName}' to apply transform.`);
-                  const itemInfo = await sendRequest('GetSceneItemId', { sceneName, sourceName });
+                  // logMessage(`Fetching scene item ID for '${sourceName}' in '${sceneName}' to apply transform.`);
+                  const itemInfo = await sendRequest('GetSceneItemId', { sceneName, sourceName }, { suppressNotFound: true }); // Suppress if checking optional item
                   if (itemInfo && itemInfo.sceneItemId) {
                       itemIdToTransform = itemInfo.sceneItemId;
                   } else {
-                      logMessage(`Could not find scene item ID for '${sourceName}' in '${sceneName}'. Cannot apply transform.`);
+                      // logMessage(`Could not find scene item ID for '${sourceName}' in '${sceneName}'. Cannot apply transform.`);
                       return;
                   }
               } catch (error) {
-                  logMessage(`Error fetching scene item ID for transform of '${sourceName}' in '${sceneName}': ${error.message}. Cannot apply transform.`);
+                   const isNotFound = error.message.toLowerCase().includes("not found") || (error.message.toLowerCase().includes("code") && error.message.toLowerCase().includes("600"));
+                   if (!isNotFound) {
+                     logMessage(`Error fetching scene item ID for transform of '${sourceName}' in '${sceneName}': ${error.message}. Cannot apply transform.`);
+                   }
                   return;
               }
           }
 
-          if (!itemIdToTransform) { // Should be redundant if above logic is correct, but as a safeguard
-              logMessage(`Cannot apply transform for '${sourceName}' in '${sceneName}': Valid Scene Item ID not available.`);
+          if (!itemIdToTransform) {
               return;
           }
 
-          // If auto-grid is selected, rearrange all relevant streams in the scene
           if (sourceSizingSelect.value === 'autoGrid') {
               logMessage(`Auto-grid enabled for scene '${sceneName}'. Triggering rearrange.`);
-              // It's generally better to call rearrangeAllStreamsInScene once after all items for a scene are processed.
-              await rearrangeAllStreamsInScene(sceneName); 
-          } else { // Otherwise, apply individual transform based on selected sizing mode
+              await rearrangeAllStreamsInScene(sceneName);
+          } else {
               try {
-                  const transform = calculateTransform(sourceSizingSelect.value, canvasWidth, canvasHeight, canvasWidth, canvasHeight); // Assuming source is canvas sized initially
-                  logMessage(`Applying non-grid transform ('${sourceSizingSelect.value}') to '${sourceName}' (Item ID: ${itemIdToTransform}) in '${sceneName}'.`);
-                  await sendRequest('SetSceneItemTransform', { 
-                      sceneName, 
-                      sceneItemId: itemIdToTransform, 
-                      sceneItemTransform: transform 
+                  const transform = calculateTransform(sourceSizingSelect.value, canvasWidth, canvasHeight, canvasWidth, canvasHeight);
+                  // logMessage(`Applying non-grid transform ('${sourceSizingSelect.value}') to '${sourceName}' (Item ID: ${itemIdToTransform}) in '${sceneName}'.`);
+                  await sendRequest('SetSceneItemTransform', {
+                      sceneName,
+                      sceneItemId: itemIdToTransform,
+                      sceneItemTransform: transform
                   });
               } catch (error) {
                   logMessage(`Error applying non-grid transform to '${sourceName}' (Item ID: ${itemIdToTransform}) in '${sceneName}': ${error.message}`);
@@ -2454,170 +2378,145 @@
           }
       }
 
-      /**
-       * Rearranges all VDO.Ninja sources in a given scene according to the auto-grid layout.
-       * @param {string} sceneName - The name of the OBS scene to rearrange.
-       */
       async function rearrangeAllStreamsInScene(sceneName) {
           if (!obsConnected || !obs || !sceneName || sourceSizingSelect.value !== 'autoGrid') {
-              if (sourceSizingSelect.value !== 'autoGrid') return; // Only run if autoGrid is selected
+              if (sourceSizingSelect.value !== 'autoGrid') return;
               logMessage(`Cannot rearrange streams in scene '${sceneName}': OBS not connected, scene name missing, or auto-grid not selected.`);
               return;
           }
           logMessage(`Rearranging VDO.Ninja streams in scene '${sceneName}' using autoGrid layout.`);
-          
+
           try {
-              let canvasWidth = 1920, canvasHeight = 1080; // Default canvas size
-              try { // Get actual OBS canvas dimensions
+              let canvasWidth = 1920, canvasHeight = 1080;
+              try {
                   const videoSettings = await sendRequest('GetVideoSettings');
                   if (videoSettings && videoSettings.baseWidth && videoSettings.baseHeight) {
-                      canvasWidth = videoSettings.baseWidth; 
+                      canvasWidth = videoSettings.baseWidth;
                       canvasHeight = videoSettings.baseHeight;
                   }
-              } catch (error) { 
+              } catch (error) {
                   logMessage(`Canvas size error during rearrange for scene '${sceneName}': ${error.message}. Using default ${canvasWidth}x${canvasHeight}.`);
               }
 
               const sceneItemsResponse = await sendRequest('GetSceneItemList', { sceneName });
-              const camPrefixWithUnderscore = getFullCameraPrefix() + "_"; // For precise matching
+              const camPrefixWithUnderscore = getFullCameraPrefix() + "_";
+              const hlPrefixWithUnderscore = getFullHighlightPrefix() + "_";
 
-              // Filter for active VDO.Ninja camera sources in the scene
-              // This includes regular sources and sources that might be currently highlighted (which have a different prefix)
+
               const vdoNinjaSourcesInScene = sceneItemsResponse.sceneItems.filter(item => {
                   const isRegularCameraSource = item.sourceName.startsWith(camPrefixWithUnderscore);
-                  const isHighlightedCameraSource = item.sourceName.startsWith(getFullHighlightPrefix() + "_");
+                  const isHighlightedCameraSource = item.sourceName.startsWith(hlPrefixWithUnderscore);
 
-                  // Check if the source (regular or highlighted) corresponds to an *active* stream
                   let streamIdFromSourceName = null;
                   if (isRegularCameraSource) {
                       streamIdFromSourceName = item.sourceName.substring(camPrefixWithUnderscore.length);
                   } else if (isHighlightedCameraSource) {
-                      streamIdFromSourceName = item.sourceName.substring((getFullHighlightPrefix() + "_").length);
+                      streamIdFromSourceName = item.sourceName.substring(hlPrefixWithUnderscore.length);
                   }
 
                   return (isRegularCameraSource || isHighlightedCameraSource) &&
                          streamIdFromSourceName &&
-                         activeStreams[streamIdFromSourceName] && 
+                         activeStreams[streamIdFromSourceName] &&
                          activeStreams[streamIdFromSourceName].connected &&
-                         activeStreams[streamIdFromSourceName].sourceCreated; // Ensure it's meant to be in OBS
+                         activeStreams[streamIdFromSourceName].sourceCreated;
               });
 
 
               if (vdoNinjaSourcesInScene.length === 0) {
-                  logMessage(`No active VDO.Ninja sources found in scene '${sceneName}' to rearrange for auto-grid.`);
+                  // logMessage(`No active VDO.Ninja sources found in scene '${sceneName}' to rearrange for auto-grid.`);
                   return;
               }
 
               const positions = calculateGridPositions(vdoNinjaSourcesInScene.length, canvasWidth, canvasHeight);
-              
-              logMessage(`Calculated ${positions.length} grid positions for ${vdoNinjaSourcesInScene.length} sources in '${sceneName}'.`);
+
+              // logMessage(`Calculated ${positions.length} grid positions for ${vdoNinjaSourcesInScene.length} sources in '${sceneName}'.`);
 
               for (let i = 0; i < vdoNinjaSourcesInScene.length; i++) {
                   const item = vdoNinjaSourcesInScene[i];
-                  // Source width/height for calculateTransform should ideally be the item's actual dimensions,
-                  // but for browser sources, OBS often uses the canvas dimensions as the base.
                   const transform = calculateTransform('autoGrid', canvasWidth, canvasHeight, canvasWidth, canvasHeight, positions[i]);
-                  logMessage(`Applying grid transform to '${item.sourceName}' (Item ID: ${item.sceneItemId}) in '${sceneName}': Pos X:${transform.positionX.toFixed(0)}, Y:${transform.positionY.toFixed(0)}, W:${transform.width.toFixed(0)}, H:${transform.height.toFixed(0)}`);
-                  await sendRequest('SetSceneItemTransform', { 
-                      sceneName, 
-                      sceneItemId: item.sceneItemId, 
-                      sceneItemTransform: transform 
+                  // logMessage(`Applying grid transform to '${item.sourceName}' (Item ID: ${item.sceneItemId}) in '${sceneName}': Pos X:${transform.positionX.toFixed(0)}, Y:${transform.positionY.toFixed(0)}, W:${transform.width.toFixed(0)}, H:${transform.height.toFixed(0)}`);
+                  await sendRequest('SetSceneItemTransform', {
+                      sceneName,
+                      sceneItemId: item.sceneItemId,
+                      sceneItemTransform: transform
                   });
               }
               logMessage(`Successfully rearranged ${vdoNinjaSourcesInScene.length} VDO.Ninja sources in scene '${sceneName}'.`);
-          } catch (error) { 
-              logMessage(`Error rearranging streams in scene '${sceneName}': ${error.message}`); 
+          } catch (error) {
+              logMessage(`Error rearranging streams in scene '${sceneName}': ${error.message}`);
           }
       }
 
-      /**
-       * Calculates the transform object for an OBS scene item based on sizing mode.
-       * @param {string} sizingMode - The sizing mode (e.g., 'defaultSize', 'bestFit', 'autoGrid').
-       * @param {number} sourceWidth - The original width of the source.
-       * @param {number} sourceHeight - The original height of the source.
-       * @param {number} canvasWidth - The width of the OBS canvas.
-       * @param {number} canvasHeight - The height of the OBS canvas.
-       * @param {Object} [gridPosition=null] - Position object for 'autoGrid' {x, y, width, height}.
-       * @returns {Object} The OBS transform object.
-       */
       function calculateTransform(sizingMode, sourceWidth, sourceHeight, canvasWidth, canvasHeight, gridPosition = null) {
-          // Default transform: centered, original size
-          let transform = { 
-              alignment: 5, // Center alignment
-              boundsType: "OBS_BOUNDS_NONE", // No bounds by default
-              boundsAlignment: 0, // Alignment within bounds (not relevant for NONE)
-              boundsWidth: sourceWidth, 
-              boundsHeight: sourceHeight, 
-              positionX: (canvasWidth - sourceWidth) / 2, // Center X
-              positionY: (canvasHeight - sourceHeight) / 2, // Center Y
-              scaleX: 1.0, 
-              scaleY: 1.0, 
-              rotation: 0.0, 
-              cropTop: 0, cropBottom: 0, cropLeft: 0, cropRight: 0, 
-              sourceWidth: sourceWidth, // Original source dimensions
+          let transform = {
+              alignment: 5,
+              boundsType: "OBS_BOUNDS_NONE",
+              boundsAlignment: 0,
+              boundsWidth: sourceWidth,
+              boundsHeight: sourceHeight,
+              positionX: (canvasWidth - sourceWidth) / 2,
+              positionY: (canvasHeight - sourceHeight) / 2,
+              scaleX: 1.0,
+              scaleY: 1.0,
+              rotation: 0.0,
+              cropTop: 0, cropBottom: 0, cropLeft: 0, cropRight: 0,
+              sourceWidth: sourceWidth,
               sourceHeight: sourceHeight,
-              width: sourceWidth, // Actual width on canvas (after scaling, before bounds)
-              height: sourceHeight // Actual height on canvas
+              width: sourceWidth,
+              height: sourceHeight
           };
 
           switch (sizingMode) {
-              case 'stretchToFill': 
-                  transform.boundsType = "OBS_BOUNDS_STRETCH"; 
-                  transform.boundsWidth = canvasWidth; 
+              case 'stretchToFill':
+                  transform.boundsType = "OBS_BOUNDS_STRETCH";
+                  transform.boundsWidth = canvasWidth;
                   transform.boundsHeight = canvasHeight;
-                  transform.width = canvasWidth; // Set final width/height to canvas size
+                  transform.width = canvasWidth;
                   transform.height = canvasHeight;
-                  transform.positionX = 0; // Position at top-left
+                  transform.positionX = 0;
                   transform.positionY = 0;
                   break;
-              case 'bestFit':       
-                  transform.boundsType = "OBS_BOUNDS_SCALE_INNER"; // Scale to fit inside bounds, preserving aspect
-                  transform.boundsWidth = canvasWidth; 
+              case 'bestFit':
+                  transform.boundsType = "OBS_BOUNDS_SCALE_INNER";
+                  transform.boundsWidth = canvasWidth;
                   transform.boundsHeight = canvasHeight;
-                  transform.width = canvasWidth; 
+                  transform.width = canvasWidth;
                   transform.height = canvasHeight;
-                  transform.positionX = 0; 
+                  transform.positionX = 0;
                   transform.positionY = 0;
                   break;
               case 'autoGrid':
-                  if (gridPosition) { // If grid position data is provided
-                      transform.boundsType = "OBS_BOUNDS_SCALE_INNER"; // Fit within the grid cell, preserving aspect
-                      transform.positionX = gridPosition.x; 
+                  if (gridPosition) {
+                      transform.boundsType = "OBS_BOUNDS_SCALE_INNER";
+                      transform.positionX = gridPosition.x;
                       transform.positionY = gridPosition.y;
-                      transform.boundsWidth = gridPosition.width; 
+                      transform.boundsWidth = gridPosition.width;
                       transform.boundsHeight = gridPosition.height;
-                      transform.width = gridPosition.width; 
+                      transform.width = gridPosition.width;
                       transform.height = gridPosition.height;
-                  } else { // Fallback if no grid position (should ideally not happen if called correctly)
+                  } else {
                       logMessage("Warning: autoGrid sizing mode called without gridPosition. Falling back to 'bestFit'.");
-                      transform.boundsType = "OBS_BOUNDS_SCALE_INNER"; 
+                      transform.boundsType = "OBS_BOUNDS_SCALE_INNER";
                       transform.boundsWidth = canvasWidth; transform.boundsHeight = canvasHeight;
                       transform.width = canvasWidth; transform.height = canvasHeight;
                       transform.positionX = 0; transform.positionY = 0;
                   }
                   break;
-              case 'defaultSize': // Already handled by the initial transform object settings
-              default: 
-                  // Default is centered, original size. If canvas is different from source, it stays centered.
-                  // If source is larger than canvas, it will be clipped unless bounds are set.
-                  // For browser sources often set to canvas size, so this effectively means 1:1 at center.
-                  break; 
+              case 'defaultSize':
+              default:
+                  break;
           }
           return transform;
       }
 
 
-      /**
-       * Removes a VDO.Ninja stream's source(s) from OBS scenes.
-       * @param {string} streamId - The VDO.Ninja Stream ID to remove.
-       */
       async function removeStreamFromObs(streamId) {
           if (!obsConnected || !obs) {
               logMessage(`Cannot remove stream ${streamId} from OBS: Not connected to OBS.`);
               return;
           }
           if (!activeStreams[streamId] && streamId !== screenShareId && streamId !== highlightedStreamId) {
-              logMessage(`Stream ${streamId} not found in active local streams list. Removal process may be incomplete if it was not a shared resource (screen/highlight).`);
+             // logMessage(`Stream ${streamId} not found in active local streams list. Removal process may be incomplete if it was not a shared resource (screen/highlight).`);
           }
 
           const baseSourceName = `${getFullCameraPrefix()}_${streamId}`;
@@ -2628,13 +2527,11 @@
           const currentLabel = streamInfo ? streamInfo.label : `Stream ${streamId}`;
           const targetInfo = getTargetSceneForStream(streamId, currentLabel);
 
-          // NEW: If this stream is currently highlighted, unhighlight it first
           if (highlightedStreamId === streamId) {
               logMessage(`Stream ${streamId} is currently highlighted. Unhighlighting before removal.`);
-              await toggleHighlight(streamId, currentLabel, targetInfo);
+              await toggleHighlight(streamId, currentLabel, targetInfo); // toggleHighlight now uses suppressNotFound for GetInputSettings
           }
 
-          // Collect all scenes where this stream's source item(s) might exist
           const scenesToClean = new Set();
           if (targetInfo && targetInfo.scene) {
               scenesToClean.add(targetInfo.scene);
@@ -2649,159 +2546,132 @@
 
           let itemRemovedThisRun = false;
 
-          // Attempt to remove the base source item from each relevant scene
           for (const sceneName of scenesToClean) {
               if (!sceneName) continue;
 
-              if (await tryRemoveFromScene(baseSourceName, sceneName)) {
+              if (await tryRemoveFromScene(baseSourceName, sceneName)) { // tryRemoveFromScene uses suppressNotFound for GetSceneItemId
                   itemRemovedThisRun = true;
               }
           }
 
-          // If this stream was also being screen-shared, initiate its removal.
           if (screenShareId === streamId) {
               logMessage(`Stream ${streamId} was actively screen sharing. Initiating screen share removal.`);
-              await removeScreenShareFromObs(streamId);
+              await removeScreenShareFromObs(streamId); // removeScreenShareFromObs also needs suppressNotFound for GetInputSettings
           }
 
-          // Update the local state for this stream if it's still in our active list
-          if (activeStreams[streamId]) { 
+          if (activeStreams[streamId]) {
               activeStreams[streamId].sourceCreated = false;
           }
 
           if (itemRemovedThisRun) {
               logMessage(`Finished removing source items for stream ${streamId} from specified OBS scenes.`);
           } else {
-              logMessage(`No active source items for stream ${streamId} were present in the specified OBS scenes during this removal pass.`);
+              // logMessage(`No active source items for stream ${streamId} were present in the specified OBS scenes during this removal pass.`);
           }
-          
-          // After removal, if auto-grid is enabled, rearrange streams in affected scenes.
+
           if (sourceSizingSelect.value === 'autoGrid') {
               const uniqueScenesProcessed = new Set(Array.from(scenesToClean).filter(s => s));
               for (const sceneName of uniqueScenesProcessed) {
                   logMessage(`Auto-grid: Triggering rearrange for scene '${sceneName}' after stream removal.`);
-                  setTimeout(() => rearrangeAllStreamsInScene(sceneName), 250); 
+                  setTimeout(() => rearrangeAllStreamsInScene(sceneName), 250);
               }
           }
-          
-          // Update UI list unless screen share removal already did it
+
           if (screenShareId !== streamId) {
               updateStreamList();
           }
           saveSettings();
       }
 
-      /**
-       * Removes a screen share source from all OBS scenes and deletes the input.
-       * @param {string} streamIdToRemove - The Stream ID whose screen share source should be removed.
-       */
       async function removeScreenShareFromObs(streamIdToRemove) {
           if (!obsConnected || !obs) {
               logMessage("Cannot remove screen share: Not connected to OBS.");
               return;
           }
-          if (!streamIdToRemove) { // Should not happen if called correctly
-              logMessage("Cannot remove screen share: streamIdToRemove is null or undefined.");
-              if (screenShareId === streamIdToRemove) { // If current global share was this null ID
+          if (!streamIdToRemove) {
+              if (screenShareId === streamIdToRemove) {
                   screenShareId = null;
-                  updateStreamList(); 
+                  updateStreamList();
               }
               return;
           }
 
-          const sourceName = `${getFullReactionPrefix()}_${streamIdToRemove}:s`; // Construct screen share source name
+          const sourceName = `${getFullReactionPrefix()}_${streamIdToRemove}:s`;
           logMessage(`Attempting to fully remove screen share source '${sourceName}' from OBS (all scenes and input).`);
 
           let itemRemovedFromAnyScene = false;
           try {
-              // Iterate through all scenes in OBS to find and remove the scene item
               const scenesResponse = await sendRequest('GetSceneList');
               if (scenesResponse && scenesResponse.scenes) {
                   for (const scene of scenesResponse.scenes) {
-                      if (await tryRemoveFromScene(sourceName, scene.sceneName)) {
-                          itemRemovedFromAnyScene = true; // Track if item was found and removed from at least one scene
+                      if (await tryRemoveFromScene(sourceName, scene.sceneName)) { // tryRemoveFromScene uses suppressNotFound
+                          itemRemovedFromAnyScene = true;
                       }
                   }
               }
 
-              // After attempting to remove from all scenes, try to remove the input (source) itself
               try {
-                  await sendRequest('GetInputSettings', { inputName: sourceName }); // Check if input exists
+                  await sendRequest('GetInputSettings', { inputName: sourceName }, { suppressNotFound: true }); // Check if input exists, suppress log if not
                   logMessage(`Removing global input '${sourceName}' from OBS.`);
                   await sendRequest('RemoveInput', { inputName: sourceName });
                   logMessage(`Successfully removed input '${sourceName}'.`);
               } catch (e) {
-                  if (!e.message.toLowerCase().includes("not found") || !e.message.toLowerCase().includes("does not exist") || !e.message.toLowerCase().includes("no source")) {
-                      logMessage(`Input '${sourceName}' did not exist globally for removal (already gone or never created).`);
-                  } else if (itemRemovedFromAnyScene) { 
-                      // If items were removed from scenes but global input removal failed
-                      logMessage(`Removed '${sourceName}' items from scenes, but global input removal failed (may be in use by something else or error): ${e.message}`);
-                  } else {
-                       logMessage(`Input '${sourceName}' not found for global removal and was not found as an item in any scene.`);
+                  const isNotFound = e.message.toLowerCase().includes("not found") ||
+                                     e.message.toLowerCase().includes("does not exist") ||
+                                     e.message.toLowerCase().includes("no source") ||
+                                     (e.message.toLowerCase().includes("code") && e.message.toLowerCase().includes("600"));
+
+                  if (!isNotFound) {
+                      logMessage(`Global input removal for '${sourceName}' failed (may be in use or other error): ${e.message}`);
+                  } else if (!itemRemovedFromAnyScene) {
+                     // logMessage(`Input '${sourceName}' not found for global removal and was not found as an item in any scene.`);
                   }
               }
 
           } catch (error) {
               logMessage(`Error during screen share removal process for '${sourceName}': ${error.message}`);
           } finally {
-              // Ensure the global state is updated if this was the active screen share
               if (screenShareId === streamIdToRemove) {
                   screenShareId = null;
               }
-              updateStreamList(); // Refresh UI to reflect the change
-              // saveSettings(); // If screenShareId were part of saved settings and needs persisting
+              updateStreamList();
           }
       }
 
-      /**
-       * Attempts to remove a source item from a specific OBS scene.
-       * @param {string} sourceName - The name of the source item to remove.
-       * @param {string} sceneName - The name of the scene.
-       * @returns {Promise<boolean>} True if removal was successful or item didn't exist, false on error.
-       */
       async function tryRemoveFromScene(sourceName, sceneName) {
           if (!sceneName) {
-              logMessage(`Cannot remove source '${sourceName}': Scene name not provided.`);
+              // logMessage(`Cannot remove source '${sourceName}': Scene name not provided.`);
               return false;
           }
           try {
-              // Get the ID of the scene item
-              const itemInfo = await sendRequest('GetSceneItemId', { sceneName, sourceName });
+              const itemInfo = await sendRequest('GetSceneItemId', { sceneName, sourceName }, { suppressNotFound: true }); // Suppress if item not found
               if (itemInfo && itemInfo.sceneItemId) {
                   logMessage(`Removing source item '${sourceName}' (ID: ${itemInfo.sceneItemId}) from scene '${sceneName}'.`);
                   await sendRequest('RemoveSceneItem', { sceneName, sceneItemId: itemInfo.sceneItemId });
-                  logMessage(`Successfully removed '${sourceName}' from scene '${sceneName}'.`);
-                  return true; // Successfully removed
-              } else {
-                  // This case should be caught by the GetSceneItemId error if item not found.
-                  // logMessage(`Source item '${sourceName}' not found in scene '${sceneName}' (itemInfo missing ID).`);
-                  return false; // Item ID not found in response, though request was "successful"
+                  // logMessage(`Successfully removed '${sourceName}' from scene '${sceneName}'.`);
+                  return true;
               }
+              return false;
           } catch (error) {
-              // If error indicates "not found", it's not a critical failure for removal, just means it wasn't there.
-              if (error.message.toLowerCase().includes("not found") || 
-                  error.message.toLowerCase().includes("no scene items were found") ||
-                  error.message.toLowerCase().includes("could not find")) {
-                  // logMessage(`Source item '${sourceName}' not found in scene '${sceneName}' for removal.`);
-              } else { // Log other, unexpected errors
+              const isNotFound = error.message.toLowerCase().includes("not found") ||
+                                 error.message.toLowerCase().includes("no scene items were found") ||
+                                 error.message.toLowerCase().includes("could not find") ||
+                                 (error.message.toLowerCase().includes("code") && error.message.toLowerCase().includes("600"));
+              if (!isNotFound) {
                   logMessage(`Error trying to remove source item '${sourceName}' from scene '${sceneName}': ${error.message}`);
               }
-              return false; // Item not found or error occurred
+              return false;
           }
       }
 
-      /**
-       * Loads the jsSHA library for SHA256 hashing if Web Crypto API is not available.
-       * @returns {Promise<void>} Resolves when the library is loaded or already available.
-       */
       function loadJsShaLibrary() {
           return new Promise((resolve, reject) => {
-              if (typeof jsSHA !== 'undefined') { // Check if already loaded
-                  resolve(); 
-                  return; 
+              if (typeof jsSHA !== 'undefined') {
+                  resolve();
+                  return;
               }
               const script = document.createElement('script');
-              script.src = 'https://cdnjs.cloudflare.com/ajax/libs/jsSHA/3.3.0/sha256.js'; // CDN link for jsSHA
+              script.src = 'https://cdnjs.cloudflare.com/ajax/libs/jsSHA/3.3.0/sha256.js';
               script.onload = () => {
                   logMessage("jsSHA library loaded successfully (fallback for Web Crypto).");
                   resolve();
@@ -2814,27 +2684,23 @@
           });
       }
 
-      // Ensure these are defined globally if accessed by functions like updateOtherScenesList directly
       const otherScenesContainer = document.getElementById('otherScenesContainer');
-      const otherScenesListDiv = document.getElementById('otherScenesList'); 
+      const otherScenesListDiv = document.getElementById('otherScenesList');
       const screenShareSceneSelect = document.getElementById('screenShareSceneSelect');
 
 
-      // Event Listeners for UI elements changing
       obsSceneSelect.addEventListener('change', () => {
-          obsSceneNameInput.value = obsSceneSelect.value; // Sync hidden input
+          obsSceneNameInput.value = obsSceneSelect.value;
           saveSettings();
-          updateOtherScenesList(); // Update available "other scenes" based on new main scene selection
-          updateStreamList(); // Update target scene display for active streams if it depends on main scene
-          // If auto-grid is on, might want to rearrange the new main scene
+          updateOtherScenesList();
+          updateStreamList();
           if (sourceSizingSelect.value === 'autoGrid' && getTargetScene()) {
               rearrangeAllStreamsInScene(getTargetScene());
           }
       });
 
-      // Add change listeners to all relevant input fields to save settings automatically
-      [ obsWsUrlInput, obsWsPasswordInput, 
-        vdoNinjaBaseUrlInput, vdoNinjaRoomInput, vdoNinjaPasswordInput, vdoNinjaStreamIdsInput, 
+      [ obsWsUrlInput, obsWsPasswordInput,
+        vdoNinjaBaseUrlInput, vdoNinjaRoomInput, vdoNinjaPasswordInput, vdoNinjaStreamIdsInput,
         autoAddSourcesCheckbox, autoRemoveSourcesCheckbox
       ].forEach(el => {
           if (el) el.addEventListener('change', saveSettings);
@@ -2842,7 +2708,6 @@
 
       sourceSizingSelect.addEventListener('change', () => {
           saveSettings();
-          // If auto-grid is selected, rearrange sources in the current target scene and any linked "other" scenes.
           if (sourceSizingSelect.value === 'autoGrid') {
               const mainTargetScene = getTargetScene();
               if (mainTargetScene) {
@@ -2853,17 +2718,16 @@
               });
           }
       });
-      sourceCodecSelect.addEventListener('change', async () => { // Tornada async
+      sourceCodecSelect.addEventListener('change', async () => {
           saveSettings();
           const newCodec = sourceCodecSelect.value;
           logMessage(`Codec alterado para: ${newCodec || 'none'}. Atualizando fontes OBS...`);
 
           if (!obsConnected) {
-              logMessage("OBS não está conectado. As fontes não serão atualizadas com o novo codec até a reconexão e uma nova ação (ex: re-adicionar fonte ou mudar codec novamente).");
+              logMessage("OBS não está conectado. As fontes não serão atualizadas com o novo codec até a reconexão e uma nova ação.");
               return;
           }
 
-          // Atualizar fontes de streams ativos (câmeras/convidados)
           for (const streamId in activeStreams) {
               if (Object.hasOwnProperty.call(activeStreams, streamId) && activeStreams[streamId].sourceCreated) {
                   let effectiveSourceName = `${getFullCameraPrefix()}_${streamId}`;
@@ -2872,39 +2736,39 @@
                   }
 
                   try {
-                      const currentSettingsResponse = await sendRequest('GetInputSettings', { inputName: effectiveSourceName });
+                      const currentSettingsResponse = await sendRequest('GetInputSettings', { inputName: effectiveSourceName }, { suppressNotFound: true });
                       if (currentSettingsResponse && currentSettingsResponse.inputSettings) {
-                          const newViewUrl = getVdoNinjaViewUrl(streamId); // Já pega o codec novo
+                          const newViewUrl = getVdoNinjaViewUrl(streamId);
                           const updatedSettings = { ...currentSettingsResponse.inputSettings, url: newViewUrl };
-                          
+
                           await sendRequest('SetInputSettings', {
                               inputName: effectiveSourceName,
                               inputSettings: updatedSettings
                           });
                           logMessage(`Fonte '${effectiveSourceName}' atualizada com URL: ${newViewUrl}`);
-                      } else {
-                          logMessage(`Não foi possível obter as configurações atuais da fonte '${effectiveSourceName}'.`);
                       }
                   } catch (error) {
-                      logMessage(`Erro ao atualizar codec da fonte '${effectiveSourceName}': ${error.message}`);
+                      const isNotFound = error.message.toLowerCase().includes("not found") || (error.message.toLowerCase().includes("code") && error.message.toLowerCase().includes("600"));
+                      if (!isNotFound) {
+                        logMessage(`Erro ao atualizar codec da fonte '${effectiveSourceName}': ${error.message}`);
+                      }
                   }
               }
           }
 
-          // Atualizar fonte de compartilhamento de tela, se ativa
           if (screenShareId) {
               const screenShareSourceName = `${getFullReactionPrefix()}_${screenShareId}:s`;
               try {
-                  const currentScreenShareSettingsResponse = await sendRequest('GetInputSettings', { inputName: screenShareSourceName });
+                  const currentScreenShareSettingsResponse = await sendRequest('GetInputSettings', { inputName: screenShareSourceName }, { suppressNotFound: true });
                   if (currentScreenShareSettingsResponse && currentScreenShareSettingsResponse.inputSettings) {
                       const room = vdoNinjaRoomInput.value.trim();
                       const baseUrl = getVdoNinjaBaseUrl();
                       let newScreenShareUrl = `${baseUrl}/?view=${encodeURIComponent(screenShareId)}:s&solo&room=${encodeURIComponent(room)}`;
-                      
+
                       if (newCodec && newCodec !== "") {
                           newScreenShareUrl += `&codec=${encodeURIComponent(newCodec)}`;
                       } else {
-                          newScreenShareUrl += `&codec=vp9`; // Default para screen share
+                          newScreenShareUrl += `&codec=vp9`;
                       }
                       if (vdoNinjaPasswordInput.value) {
                           newScreenShareUrl += `&password=${encodeURIComponent(vdoNinjaPasswordInput.value)}`;
@@ -2918,11 +2782,12 @@
                           inputSettings: updatedScreenShareSettings
                       });
                       logMessage(`Fonte de screen share '${screenShareSourceName}' atualizada com URL: ${newScreenShareUrl}`);
-                  } else {
-                       logMessage(`Não foi possível obter as configurações atuais da fonte de screen share '${screenShareSourceName}'.`);
                   }
               } catch (error) {
-                  logMessage(`Erro ao atualizar codec da fonte de screen share '${screenShareSourceName}': ${error.message}`);
+                   const isNotFound = error.message.toLowerCase().includes("not found") || (error.message.toLowerCase().includes("code") && error.message.toLowerCase().includes("600"));
+                   if (!isNotFound) {
+                    logMessage(`Erro ao atualizar codec da fonte de screen share '${screenShareSourceName}': ${error.message}`);
+                   }
               }
           }
           logMessage("Atualização de codec nas fontes OBS concluída.");
@@ -2934,32 +2799,28 @@
       if (screenShareSceneSelect) {
           screenShareSceneSelect.addEventListener('change', saveSettings);
       }
-      // Also save settings if screen share dimensions change
       const screenShareWidthInput = document.getElementById('screenShareWidth');
       const screenShareHeightInput = document.getElementById('screenShareHeight');
       if (screenShareWidthInput) screenShareWidthInput.addEventListener('change', saveSettings);
       if (screenShareHeightInput) screenShareHeightInput.addEventListener('change', saveSettings);
 
 
-      // Initial setup when the DOM is fully loaded
       document.addEventListener('DOMContentLoaded', () => {
-          loadSettings(); // Load all saved settings first (includes prefixes, VDO base URL etc.)
+          loadSettings();
           logMessage("VDO.Ninja OBS Control Dock Initialized. Welcome!");
-          
-          // Initial UI state for VDO.Ninja connection controls
-          updateVdoNinjaButtonState(false); // Ensures button is "Connect" and inputs are enabled
-          toggleVdoNinjaInputs(false);      // Explicitly enable VDO.Ninja inputs after loading settings
 
-          // Add blur effect to sensitive-ish fields for privacy until focused
+          updateVdoNinjaButtonState(false);
+          toggleVdoNinjaInputs(false);
+
           const secureFields = document.querySelectorAll('#vdoNinjaRoom, #vdoNinjaStreamIds');
           secureFields.forEach(field => {
               field.classList.add('blur-field');
               field.addEventListener('focus', () => field.classList.remove('blur-field'));
               field.addEventListener('blur', () => { if (field.value === '') field.classList.add('blur-field'); });
           });
-          
-          startVdoNinjaConnectionMonitor(); // Start checking for VDO.Ninja iframe activity
-          updatePrefixLabels(); // Ensure prefix labels are correct on load
+
+          startVdoNinjaConnectionMonitor();
+          updatePrefixLabels();
       });
     </script>
   </body>
