@@ -1,266 +1,760 @@
 <!DOCTYPE html>
+
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
     <title>VDO.Ninja OBS Control Dock</title>
+
     <style>
       body {
-          font-family: sans-serif;
-          margin: 5px;
-          background-color: #13141A;
-          color: #e0e0e0;
-          font-size: 13px;
+        font-family: "Segoe UI", Roboto, Helvetica, Arial, sans-serif; /* Modern font stack */
+
+        margin: 0; /* Remove default margin */
+
+        padding: 15px; /* Add some padding around the whole page */
+
+        background-color: #181a1b; /* Slightly different dark */
+
+        color: #e0e0e0;
+
+        font-size: 14px; /* Base font size */
+
+        line-height: 1.6; /* Improved readability */
       }
+
       .container {
-          margin-bottom: 10px;
-          padding: 8px;
-          background-color: #272A33;
-          border-radius: 5px;
-          border: 1px solid #3a3a48;
+        margin-bottom: 15px; /* Increased spacing */
+
+        padding: 15px; /* Increased padding */
+
+        background-color: #2c2e33; /* Darker, richer container */
+
+        border-radius: 8px; /* More rounded */
+
+        border: 1px solid #3e4147; /* Softer border */
+
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2); /* Subtle shadow for depth */
       }
+
       .collapsible {
-          cursor: pointer;
-          user-select: none;
-          padding: 8px 0;
-          position: relative;
-          font-weight: bold;
-          background: rgba(255,255,255,0.03);
-          margin: -8px -8px 8px -8px;
-          padding-left: 12px;
-          border-bottom: 1px solid #3a3a48;
+        cursor: pointer;
+        user-select: none;
+        padding: 12px 15px;
+        position: relative;
+        font-weight: 600;
+        font-size: 1.1em;
+        background: #35383d;
+        margin: -15px -15px 10px -15px;
+        padding-left: 15px;
+        border-bottom: 1px solid #3e4147;
+        border-top-left-radius: 8px;
+        border-top-right-radius: 8px;
+        transition: background-color 0.2s ease;
       }
+
+      .collapsible.collapsed {
+        border-bottom-left-radius: 8px;
+        border-bottom-right-radius: 8px;
+        margin-bottom: 0;
+        border-bottom: none;
+      }
+
+      .container .collapsible:last-child.collapsed {
+        margin-bottom: -15px;
+      }
+
+      .collapsible[data-state="expand"]::after {
+        content: "▼";
+      }
+
+      .collapsible[data-state="collapse"]::after {
+        content: "▲";
+      }
+
       .collapsible::after {
-          content: '▼';
-          position: absolute;
-          right: 12px;
-          font-size: 12px;
-          color: #8a8a9a;
-          transition: transform 0.2s ease;
+        position: absolute;
+        right: 15px;
+        top: 50%;
+        transform: translateY(-50%);
+        font-size: 14px;
+        color: #a0a0b0;
+        transition: transform 0.2s ease;
       }
-      .collapsible.collapsed::after {
-          content: '►';
-          transform: none;
-      }
-      .collapsible::before {
-          content: 'Click to ' attr(data-state);
-          position: absolute;
-          right: 30px;
-          font-size: 10px;
-          color: #666;
-          font-weight: normal;
-      }
+
       .collapsible[data-state="expand"]::before {
-          content: 'Click to expand';
+        content: "Click to expand";
       }
+
       .collapsible[data-state="collapse"]::before {
-          content: 'Click to collapse';
+        content: "Click to collapse";
       }
+
+      .collapsible::before {
+        position: absolute;
+        right: 40px;
+        font-size: 10px;
+        color: #666;
+        font-weight: normal;
+      }
+
       .collapsible:hover {
-          background: rgba(255,255,255,0.08);
+        background: #404348;
       }
+
       .collapsible-content {
-          max-height: 1000px;
-          overflow: hidden;
-          transition: max-height 0.2s ease-out;
-          padding-top: 5px;
+        max-height: 1000px;
+        overflow: hidden;
+        transition: max-height 0.3s ease-in-out, padding-top 0.3s ease-in-out, opacity 0.3s ease-in-out;
+        padding-top: 10px;
+        opacity: 1;
       }
+
       .collapsible-content.collapsed {
-          max-height: 0;
-          padding-top: 0;
+        max-height: 0;
+        padding-top: 0;
+        opacity: 0;
+        overflow: hidden;
       }
+
       label {
-          display: block;
-          margin-bottom: 5px;
-      }
-      input[type="text"], input[type="password"], input[type="number"], select {
-          width: calc(100% - 16px);
-          padding: 5px;
-          margin-bottom: 8px;
-          border: 1px solid #424254;
-          border-radius: 3px;
-          background-color: #3C404D;
-          color: #e0e0e0;
-      }
-      select {
-          padding: 6px 5px;
-          height: auto;
-      }
-      button {
-          padding: 6px 10px;
-          background-color: #3C404D;
-          color: white;
-          border: none;
-          border-radius: 3px;
-          cursor: pointer;
-          margin-right: 3px;
-          margin-bottom: 3px;
-          font-size: 12px;
-      }
-      button.connected {
-          background-color: #4C80AF;
-      }
-      button.disconnected {
-          background-color: #484860;
-      }
-      button:hover {
-          background-color: #5a5a7a;
-      }
-      .blur-field {
-          filter: blur(5px);
-          transition: filter 0.2s ease;
-      }
-      .blur-field:focus {
-          filter: blur(0);
-      }
-      #vdoNinjaIframe {
-          width: 1px;
-          height: 1px;
-          position: absolute;
-          left: -1000px;
-          top: -1000px;
-          border: 0;
-      }
-      .log-area {
-          height: 100px;
-          background-color: #1a1a24;
-          color: #ccc;
-          border: 1px solid #424254;
-          overflow-y: scroll;
-          padding: 5px;
-          font-family: monospace;
-          font-size: 0.9em;
-          margin-top: 5px;
-          white-space: pre-wrap;
-      }
-      .status-indicator {
-          display: inline-block;
-          width: 8px;
-          height: 8px;
-          border-radius: 50%;
-          margin-left: 5px;
-          background-color: #555;
-      }
-      .status-indicator.connected {
-          background-color: #4C80AF;
-      }
-      .status-indicator.error {
-          background-color: #f44336;
-      }
-      .stream-list {
-          background-color: #1a1a24;
-          border: 1px solid #424254;
-          border-radius: 3px;
-          padding: 5px;
-          margin-top: 3px;
-          transition: max-height 0.3s ease;
-      }
-      .stream-list:empty {
-          min-height: 30px;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-      }
-      .stream-item {
-          padding: 4px;
-          border-bottom: 1px solid #3c3c4a;
-          font-size: 12px;
-          word-break: break-word;
-      }
-      .stream-item:last-child {
-          border-bottom: none;
-      }
-      h1, h2 {
-          color: #c8c8c8;
-          margin: 5px 0;
-          font-size: 1.1em;
-      }
-      h1 {
-          font-size: 1.2em;
-      }
-      small {
-          color: #8a8a9a;
-          font-size: 0.85em;
-      }
-      .add-stream-btn {
-          background-color: #4C80AF;
-          color: white;
-          padding: 2px 4px;
-          font-size: 11px;
-      }
-      .highlight-btn {
-          padding: 2px 4px;
-          color: white;
-          cursor: pointer;
-          font-size: 11px;
-          transition: background-color 0.2s;
-      }
-      .screen-share-btn {
-          background-color: #9C27B0;
-          color: white;
-          padding: 2px 4px;
-          font-size: 11px;
-      }
-      .status-line {
-          font-size: 12px;
-          margin-top: 5px;
-          display: flex;
-          align-items: center;
-      }
-      input[type="checkbox"] {
-          accent-color: #4C80AF;
-          margin-right: 5px;
-      }
-      .checkbox-label {
-          display: flex;
-          align-items: center;
-          margin-bottom: 3px;
-      }
-      .checkbox-label input {
-          margin-right: 4px;
-      }
-      ::-webkit-scrollbar {
-          width: 6px;
-          height: 6px;
-      }
-      ::-webkit-scrollbar-track {
-          background: #1a1a24;
-          border-radius: 3px;
-      }
-      ::-webkit-scrollbar-thumb {
-          background: #3C404D;
-          border-radius: 3px;
-      }
-      ::-webkit-scrollbar-thumb:hover {
-          background: #4C80AF;
-      }
-      * {
-          scrollbar-width: thin;
-          scrollbar-color: #3C404D #1a1a24;
-      }
-      .flex-row {
-          display: flex;
-          gap: 4px;
-          flex-wrap: wrap;
-      }
-      #obsSceneNameInput {
-          display: none !important;
-      }
-      #loadScenesBtn {
-          display: inline-block;
-          margin-left: 5px;
-          vertical-align: top;
-      }
-      .container:nth-child(6) .collapsible-content { /* Adjusted for new container holding Active Streams */
-          max-height: none !important;
-          overflow: visible !important;
-      }
-      .prefix-input-label {
-        margin-bottom: 2px;
         display: block;
+
+        margin-bottom: 6px;
+
+        font-weight: 500; /* Slightly bolder labels */
+
+        color: #c0c0c0; /* Lighter labels */
       }
+
+      input[type="text"],
+      input[type="password"],
+      input[type="number"],
+      select {
+        width: calc(100% - 22px); /* Adjusted width calculation for padding (10px each side + 1px border each side) */
+
+        padding: 10px; /* More padding */
+
+        margin-bottom: 12px; /* More spacing */
+
+        border: 1px solid #4a4d54; /* Softer border */
+
+        border-radius: 6px; /* More rounded */
+
+        background-color: #25272c; /* Darker input background */
+
+        color: #e0e0e0;
+
+        font-size: 1em;
+
+        box-sizing: border-box; /* Ensures padding and border don't increase width */
+
+        transition: border-color 0.2s ease, box-shadow 0.2s ease;
+      }
+
+      input[type="text"]:focus,
+      input[type="password"]:focus,
+      input[type="number"]:focus,
+      select:focus {
+        border-color: #007aff; /* Accent color on focus */
+
+        box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.25); /* Focus ring */
+
+        outline: none;
+      }
+
+      select {
+        padding-right: 30px; /* Make space for the arrow */
+
+        appearance: none; /* For custom arrow */
+
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23A0A0B0'%3E%3Cpath d='M8 11L3 6h10L8 11z'/%3E%3C/svg%3E");
+
+        background-repeat: no-repeat;
+
+        background-position: right 10px center;
+
+        background-size: 12px;
+      }
+
+      button {
+        padding: 10px 15px; /* Larger padding */
+
+        background-color: #4a5060; /* Default button color */
+
+        color: white;
+
+        border: none;
+
+        border-radius: 6px; /* More rounded */
+
+        cursor: pointer;
+
+        margin-right: 5px;
+
+        margin-bottom: 5px;
+
+        font-size: 0.95em;
+
+        font-weight: 500;
+
+        transition: background-color 0.2s ease, transform 0.1s ease;
+      }
+
+      button:hover {
+        background-color: #5a6070; /* Darker hover */
+      }
+
+      button:active {
+        transform: translateY(1px); /* Click effect */
+      }
+
+      button.connected {
+        background-color: #007aff; /* Modern blue for connected */
+      }
+
+      button.connected:hover {
+        background-color: #0056b3;
+      }
+
+      button.disconnected {
+        background-color: #6c757d; /* Grey for disconnected */
+      }
+
+      button.disconnected:hover {
+        background-color: #5a6268;
+      }
+
+      .blur-field {
+        filter: blur(5px);
+
+        transition: filter 0.2s ease;
+      }
+
+      .blur-field:focus {
+        filter: blur(0);
+      }
+
+      #vdoNinjaIframe {
+        width: 1px;
+
+        height: 1px;
+
+        position: absolute;
+
+        left: -1000px;
+
+        top: -1000px;
+
+        border: 0;
+      }
+
+      .log-area {
+        height: 120px; /* Slightly taller */
+
+        background-color: #202225; /* Consistent dark background */
+
+        color: #b0b0b0; /* Softer log text */
+
+        border: 1px solid #4a4d54;
+
+        border-radius: 6px; /* Rounded */
+
+        overflow-y: scroll;
+
+        padding: 10px;
+
+        font-family: "Consolas", "Monaco", "Lucida Console", monospace; /* Monospace for logs */
+
+        font-size: 0.9em;
+
+        margin-top: 10px;
+
+        white-space: pre-wrap;
+      }
+
+      .status-indicator {
+        display: inline-block;
+
+        width: 10px; /* Slightly larger */
+
+        height: 10px; /* Slightly larger */
+
+        border-radius: 50%;
+
+        margin-left: 8px;
+
+        background-color: #555;
+
+        transition: background-color 0.3s ease, box-shadow 0.3s ease;
+      }
+
+      .status-indicator.connected {
+        background-color: #007aff; /* Consistent blue */
+
+        box-shadow: 0 0 8px rgba(0, 122, 255, 0.7); /* Glow effect */
+      }
+
+      .status-indicator.error {
+        background-color: #dc3545; /* Standard error red */
+
+        box-shadow: 0 0 8px rgba(220, 53, 69, 0.7); /* Glow effect */
+      }
+
+      .stream-list {
+        background-color: #202225;
+
+        border: 1px solid #4a4d54;
+
+        border-radius: 6px;
+
+        padding: 5px; /* Reduced overall padding for stream list */
+
+        margin-top: 5px;
+
+        transition: max-height 0.3s ease;
+      }
+
+      .stream-list:empty {
+        min-height: 40px; /* Adjusted height */
+
+        display: flex;
+
+        align-items: center;
+
+        justify-content: center;
+
+        color: #888; /* Softer text for empty state */
+
+        padding: 10px; /* Padding for empty state text */
+      }
+
+      .stream-item {
+        padding: 10px 12px; /* More padding */
+
+        border-bottom: 1px solid #383b40; /* Softer separator */
+
+        font-size: 1em; /* Standardized font size */
+
+        word-break: break-word;
+
+        background-color: #2c2e33; /* Slightly different background for items */
+
+        margin: 0 0 8px 0; /* Space between items, remove side margins */
+
+        border-radius: 4px; /* Rounded items */
+      }
+
+      .stream-item:last-child {
+        border-bottom: none;
+
+        margin-bottom: 0;
+      }
+
+      h1 {
+        color: #d0d0d0;
+
+        margin: 0 0 20px 0; /* h1 margin */
+
+        padding-bottom: 15px;
+
+        font-size: 1.8em; /* h1 size */
+
+        font-weight: 600;
+
+        border-bottom: 1px solid #3e4147; /* Separator for main title */
+      }
+
+      h2 {
+        /* Base h2 styles, .collapsible will add more */
+
+        color: #c8c8c8;
+
+        margin: 5px 0;
+
+        font-size: 1.1em;
+      }
+
+      small {
+        color: #9090a0; /* Softer small text */
+
+        font-size: 0.88em;
+
+        display: block; /* Make small text take its own line often */
+
+        margin-top: 3px;
+
+        line-height: 1.4;
+      }
+
+      /* Specific Button Color Overrides */
+
+      /* Note: These rely on the JS setting specific inline background-color styles. */
+
+      .add-stream-btn {
+        /* Default "Add to OBS" */
+
+        background-color: #28a745 !important; /* Green for add */
+      }
+
+      .add-stream-btn:hover {
+        background-color: #218838 !important;
+      }
+
+      /* For "Remove from OBS" when JS changes inline style to red */
+
+      button.add-stream-btn[style*="rgb(244, 67, 54)"],
+      button.add-stream-btn[style*="#F44336"] {
+        background-color: #dc3545 !important; /* Red for remove */
+      }
+
+      button.add-stream-btn[style*="rgb(244, 67, 54)"]:hover,
+      button.add-stream-btn[style*="#F44336"]:hover {
+        background-color: #c82333 !important;
+      }
+
+      .highlight-btn {
+        /* Default "Highlight" */
+
+        background-color: #17a2b8 !important; /* Info blue/teal */
+      }
+
+      .highlight-btn:hover {
+        background-color: #138496 !important;
+      }
+
+      /* For "Unhighlight" when JS changes inline style to red */
+
+      button.highlight-btn[style*="rgb(244, 67, 54)"],
+      button.highlight-btn[style*="#F44336"] {
+        background-color: #ffc107 !important; /* Warning yellow */
+
+        color: #212529 !important; /* Dark text for yellow button */
+      }
+
+      button.highlight-btn[style*="rgb(244, 67, 54)"]:hover,
+      button.highlight-btn[style*="#F44336"]:hover {
+        background-color: #e0a800 !important;
+      }
+
+      .screen-share-btn {
+        /* Default "Screen Share" */
+
+        background-color: #6f42c1 !important; /* Purple */
+      }
+
+      .screen-share-btn:hover {
+        background-color: #5a2aa8 !important;
+      }
+
+      /* For "Stop Screen Share" when JS changes inline style to red */
+
+      button.screen-share-btn[style*="rgb(244, 67, 54)"],
+      button.screen-share-btn[style*="#F44336"] {
+        background-color: #fd7e14 !important; /* Orange for stop */
+      }
+
+      button.screen-share-btn[style*="rgb(244, 67, 54)"]:hover,
+      button.screen-share-btn[style*="#F44336"]:hover {
+        background-color: #e66c00 !important;
+      }
+
+      .status-line {
+        font-size: 1em; /* Consistent font size */
+
+        margin-top: 10px;
+
+        display: flex;
+
+        align-items: center;
+      }
+
+      #obsConnectionStatus,
+      #vdoNinjaConnectionStatus {
+        /* Status text styling */
+
+        margin-left: 8px;
+
+        color: #b0b0b0;
+      }
+
+      input[type="checkbox"] {
+        accent-color: #007aff; /* Modern blue */
+
+        margin-right: 8px; /* More space */
+
+        width: 15px; /* Custom size */
+
+        height: 15px;
+
+        vertical-align: middle;
+
+        flex-shrink: 0; /* Prevent shrinking in flex layouts */
+      }
+
+      .checkbox-label {
+        display: flex;
+
+        align-items: center;
+
+        margin-bottom: 5px;
+
+        color: #c0c0c0;
+
+        font-size: 0.95em;
+      }
+
+      .checkbox-label input {
+        /* Target checkbox within our label structure */
+
+        margin-bottom: 0; /* Align with label text */
+
+        margin-right: 8px;
+      }
+
+      /* Scrollbar styles - refine with new palette */
+
+      ::-webkit-scrollbar {
+        width: 10px; /* Slightly wider */
+
+        height: 10px;
+      }
+
+      ::-webkit-scrollbar-track {
+        background: #202225; /* Dark track */
+
+        border-radius: 5px;
+      }
+
+      ::-webkit-scrollbar-thumb {
+        background: #4a4d54; /* Scrollbar thumb */
+
+        border-radius: 5px;
+
+        border: 2px solid #202225; /* Creates a "padding" effect */
+      }
+
+      ::-webkit-scrollbar-thumb:hover {
+        background: #007aff; /* Accent on hover */
+      }
+
+      * {
+        /* Firefox scrollbar styling */
+
+        scrollbar-width: auto; /* Or 'thin' if preferred */
+
+        scrollbar-color: #4a4d54 #202225; /* thumb track */
+      }
+
+      .flex-row {
+        display: flex;
+
+        gap: 8px; /* Increased gap */
+
+        flex-wrap: wrap;
+
+        align-items: center; /* Default alignment for flex-rows */
+      }
+
+      #obsSceneNameInput {
+        display: none !important;
+      }
+
+      #loadScenesBtn {
+        margin-left: 5px;
+
+        vertical-align: top; /* Align with select if they were side-by-side */
+      }
+
+      /* Adjusted for new container holding Active Streams - This rule allows it to expand fully. */
+
+      .container:nth-child(6) .collapsible-content + .collapsible:not(.collapsed) {
+        max-height: none !important;
+
+        overflow: visible !important;
+      }
+
+
+      .prefix-input-label {
+        margin-bottom: 4px; /* Slightly more margin */
+
+        display: block;
+
+        font-size: 0.9em; /* Smaller for these sub-labels */
+
+        color: #a0a0b0;
+      }
+
       .prefix-group {
-        margin-bottom: 8px;
+        margin-bottom: 10px; /* More space */
+      }
+
+      /* Help icon (?) for codec */
+
+      a[href^="https://docs.vdo.ninja/advanced-settings/video-parameters/codec"]
+      {
+        display: inline-flex; /* Use flex to center content */
+
+        align-items: center;
+
+        justify-content: center;
+
+        text-decoration: none;
+
+        color: #a0a0b0;
+
+        font-size: 12px; /* Keep size */
+
+        border: 1px solid #a0a0b0;
+
+        border-radius: 50%;
+
+        width: 18px; /* Slightly larger for easier click */
+
+        height: 18px;
+
+        font-weight: bold;
+
+        vertical-align: middle;
+
+        margin-left: 4px; /* More spacing */
+
+        margin-bottom: 0; /* Align better with select */
+
+        transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+      }
+
+      a[href^="https://docs.vdo.ninja/advanced-settings/video-parameters/codec"]:hover
+      {
+        background-color: #007aff;
+
+        color: white;
+
+        border-color: #007aff;
+      }
+
+      /* Stream Mapping UI adjustments */
+
+      .stream-mapping {
+        background-color: #25272c; /* Slightly different background */
+
+        padding: 12px;
+
+        border: 1px solid #383b40;
+
+        border-radius: 6px;
+
+        margin-bottom: 10px; /* Add margin-bottom for spacing between mapping rules */
+      }
+
+      .stream-mapping .flex-row {
+        margin-bottom: 8px; /* Space between rows of controls in a single mapping */
+      }
+
+      .stream-mapping .flex-row:last-child {
+        margin-bottom: 0;
+      }
+
+      .stream-mapping input[type="text"],
+      .stream-mapping select {
+        margin-bottom: 0; /* Remove bottom margin for inputs inside mapping, handled by flex gap/row margin */
+
+        font-size: 0.9em; /* Slightly smaller for compact layout */
+
+        padding: 8px;
+      }
+
+      .stream-mapping .remove-mapping-btn {
+        padding: 6px 8px; /* Smaller padding for remove button */
+
+        background-color: #c82333 !important; /* Danger red */
+
+        font-size: 0.9em;
+
+        margin-left: auto; /* Push to the right */
+      }
+
+      .stream-mapping .remove-mapping-btn:hover {
+        background-color: #a01c28 !important;
+      }
+
+      .stream-mapping small {
+        /* Adjust small text in mappings */
+
+        font-size: 0.8em;
+
+        margin-top: 5px;
+      }
+
+      .mapping-stream-id {
+        flex-basis: 100px;
+        flex-grow: 1;
+        min-width: 80px;
+      }
+
+      .mapping-label {
+        flex-basis: 140px;
+        flex-grow: 2;
+        min-width: 100px;
+      }
+
+      .mapping-match-type {
+        flex-basis: 100px;
+        flex-grow: 1;
+        min-width: 90px;
+      }
+
+      .mapping-scene-name {
+        flex-basis: 150px;
+        flex-grow: 2;
+        min-width: 120px;
+      }
+
+      .remove-mapping-btn {
+        flex-shrink: 0;
+      } /* Prevent remove button from shrinking */
+
+      #addStreamMappingBtn {
+        /* Make it stand out a bit */
+
+        background-color: #0069d9; /* Bootstrap primary blue */
+
+        border-color: #0062cc;
+      }
+
+      #addStreamMappingBtn:hover {
+        background-color: #005cbf;
+
+        border-color: #0056b3;
+      }
+
+      /* Ensure consistent spacing for checkbox labels within stream mappings */
+
+      .stream-mapping .checkbox-label {
+        font-size: 0.9em; /* Smaller to fit */
+
+        margin-bottom: 0; /* Remove bottom margin as it's in a flex row */
+      }
+
+      /* Target OBS Target Settings dropdowns for specific width */
+
+      #obsSceneSelect,
+      #screenShareSceneSelect {
+        /* width handled by inline style, but can be adjusted if needed */
+      }
+
+      /* Make width of select and button in "Target Scene" line up nicely */
+
+      #obsTargetSettingsFlexContainer > div:first-child {
+        /* Assuming you wrap obsSceneSelect and loadScenesBtn in this */
+
+        flex-grow: 1;
+      }
+
+      #obsTargetSettingsFlexContainer > button {
+        flex-shrink: 0;
       }
     </style>
   </head>
@@ -268,9 +762,7 @@
     <h1>VDO.Ninja OBS Control</h1>
 
     <div class="container">
-      <h2 class="collapsible" data-state="collapse">
-        OBS WebSocket Connection
-      </h2>
+      <h2 class="collapsible" data-state="expand">OBS WebSocket Connection</h2>
       <div class="collapsible-content">
         <label for="obsWsUrl">WebSocket URL:</label>
         <input type="text" id="obsWsUrl" value="ws://localhost:4455" />
@@ -278,15 +770,18 @@
         <label for="obsWsPassword">Password:</label>
         <input type="password" id="obsWsPassword" value="" />
 
-        <label for="cameraPrefix" id="cameraSubPrefixLabelText" class="prefix-input-label">Camera prefix:</label>
-        <input type="text" id="cameraPrefix" value="VDO">
-
-        <label for="reactionSubPrefix" id="reactionSubPrefixLabelText" class="prefix-input-label">Reaction prefix: VDO.</label>
-        <input type="text" id="reactionSubPrefix" value="Screen">
-
-        <label for="highlightSubPrefix" id="highlightSubPrefixLabelText" class="prefix-input-label">Highlight prefix: VDO.</label>
-        <input type="text" id="highlightSubPrefix" value="Highlight">
-
+        <div class="prefix-group">
+            <label for="cameraPrefix" id="cameraSubPrefixLabelText" class="prefix-input-label">Camera prefix:</label>
+            <input type="text" id="cameraPrefix" value="VDO">
+        </div>
+        <div class="prefix-group">
+            <label for="reactionSubPrefix" id="reactionSubPrefixLabelText" class="prefix-input-label">Reaction prefix: VDO.</label>
+            <input type="text" id="reactionSubPrefix" value="Screen">
+        </div>
+        <div class="prefix-group">
+            <label for="highlightSubPrefix" id="highlightSubPrefixLabelText" class="prefix-input-label">Highlight prefix: VDO.</label>
+            <input type="text" id="highlightSubPrefix" value="Highlight">
+        </div>
         <div class="status-line">
           <button id="obsConnectBtn">Connect to OBS</button>
           <span id="obsConnectionStatus">Status: Disconnected</span>
@@ -296,7 +791,7 @@
     </div>
 
     <div class="container">
-      <h2 class="collapsible" data-state="collapse">VDO.Ninja Settings</h2>
+      <h2 class="collapsible" data-state="expand">VDO.Ninja Settings</h2>
       <div class="collapsible-content">
         <label for="vdoNinjaBaseUrl">VDO.Ninja Base URL:</label>
         <input
@@ -328,33 +823,34 @@
           placeholder="streamId1,streamId2"
           class="blur-field"
         />
+
         <small>Room Name or Stream ID(s) needed</small>
         </div>
     </div>
 
     <div class="container">
-      <h2 class="collapsible" data-state="expand">Stream ID Mappings</h2>
+      <h2 class="collapsible" data-state="collapse">Stream ID Mappings</h2>
       <div class="collapsible-content collapsed">
         <div id="streamMappingContainer">
           <div id="streamMappings">
             </div>
-          <button id="addStreamMappingBtn">Add New Mapping</button>
+          <button id="addStreamMappingBtn" style="margin-top:10px;">Add New Mapping</button>
         </div>
       </div>
     </div>
 
     <div class="container">
       <h2 class="collapsible" data-state="expand">OBS Target Settings</h2>
-      <div class="collapsible-content collapsed">
+      <div class="collapsible-content">
         <label for="obsSceneSelect">Target Scene:</label>
-        <div style="display: flex; gap: 10px;">
-          <select id="obsSceneSelect" style="width: 300px;">
+        <div class="flex-row" style="gap: 10px;" id="obsTargetSettingsFlexContainer">
+          <select id="obsSceneSelect" style="width: 300px; flex-grow:1;">
             <option value="">Select a scene...</option>
           </select>
           <button id="loadScenesBtn">Re-Fetch Scenes</button>
         </div>
 
-        <div style="display: flex; gap: 10px; align-items: flex-start; margin-top: 8px;">
+        <div class="flex-row" style="align-items: flex-end; margin-top: 12px; gap: 15px;">
           <div>
             <label for="sourceSizing">New Source Sizing:</label>
             <select id="sourceSizing" style="width: 250px;">
@@ -365,22 +861,24 @@
             </select>
           </div>
           <div>
-            <label for="sourceCodec" style="margin-right: 3px;">Codec:</label>
-            <select id="sourceCodec" style="width: 150px;">
-              <option value="">none</option>
-              <option value="h264">h264</option>
-              <option value="vp8">vp8</option>
-              <option value="vp9">vp9</option>
-              <option value="av1">av1</option>
-              <option value="h265">h265</option>
-              <option value="webp">webp</option>
-              <option value="hardware">hardware</option>
-            </select>
-            <a href="https://docs.vdo.ninja/advanced-settings/video-parameters/codec" target="_blank" title="Learn more about codec options" style="text-decoration: none; color: #c8c8c8; font-size: 10px; display: inline-block; border: 1px solid #c8c8c8; border-radius: 50%; width: 12px; height: 12px; text-align: center; line-height: 12px; font-weight: bold; vertical-align: middle; margin-left: 0px; margin-bottom: 5px;">?</a>
+            <label for="sourceCodec">Codec:</label>
+            <div class="flex-row" style="gap:2px;">
+                <select id="sourceCodec" style="width: 150px;">
+                  <option value="">none</option>
+                  <option value="h264">h264</option>
+                  <option value="vp8">vp8</option>
+                  <option value="vp9">vp9</option>
+                  <option value="av1">av1</option>
+                  <option value="h265">h265</option>
+                  <option value="webp">webp</option>
+                  <option value="hardware">hardware</option>
+                </select>
+                <a href="https://docs.vdo.ninja/advanced-settings/video-parameters/codec" target="_blank" title="Learn more about codec options">?</a>
+            </div>
           </div>
         </div>
 
-        <div id="autoSourceOptions" style="display: flex; gap: 10px; margin-bottom: 8px; margin-top: 8px;">
+        <div id="autoSourceOptions" class="flex-row" style="gap: 15px; margin-bottom: 8px; margin-top: 15px;">
           <label class="checkbox-label">
             <input type="checkbox" id="autoAddSources" checked />
             Auto-add new streams as sources
@@ -393,42 +891,43 @@
 
         <div
           id="otherScenesContainer"
-          style="margin-top: 10px; border-top: 1px solid #3a3a48; padding-top: 10px; display: none;"
+          style="margin-top: 15px; border-top: 1px solid #3E4147; padding-top: 15px; display: none;"
         >
           <label>Copy sources to other scenes (reference):</label>
-          <div id="otherScenesList">
+          <div id="otherScenesList" style="margin-top: 5px;">
             </div>
         </div>
-        <input type="text" id="obsSceneNameInput" style="display:none;" /> <div
-          style="margin-top: 10px; border-top: 1px solid #3a3a48; padding-top: 10px;"
+        <input type="text" id="obsSceneNameInput" style="display:none;" />
+        <div
+          style="margin-top: 15px; border-top: 1px solid #3E4147; padding-top: 15px;"
         >
-          <label>Screen Sharing Settings:</label>
-          <div style="display: flex; gap: 10px;">
+          <label style="font-weight:600; font-size:1.05em;">Screen Sharing Settings:</label>
+          <div class="flex-row" style="gap: 15px; align-items: flex-start;">
             <div>
-              <label style="font-size: 11px;">Target Scene:</label>
+              <label for="screenShareSceneSelect" style="font-size: 0.95em;">Target Scene:</label>
               <select id="screenShareSceneSelect" style="width: 300px;">
                 <option value="">Same as main</option>
                 </select>
             </div>
-          </div>
-          <div style="display: block; gap: 10px; margin-bottom: 8px;">
-            <div>
-              <label style="font-size: 11px;">Width:</label>
-              <input
-                type="number"
-                id="screenShareWidth"
-                value="1920"
-                style="width: 80px;"
-              />
-            </div>
-            <div>
-              <label style="font-size: 11px;">Height:</label>
-              <input
-                type="number"
-                id="screenShareHeight"
-                value="1080"
-                style="width: 80px;"
-              />
+            <div class="flex-row" style="gap: 8px;">
+                <div>
+                  <label for="screenShareWidth" style="font-size: 0.95em;">Width:</label>
+                  <input
+                    type="number"
+                    id="screenShareWidth"
+                    value="1920"
+                    style="width: 100px;"
+                  />
+                </div>
+                <div>
+                  <label for="screenShareHeight" style="font-size: 0.95em;">Height:</label>
+                  <input
+                    type="number"
+                    id="screenShareHeight"
+                    value="1080"
+                    style="width: 100px;"
+                  />
+                </div>
             </div>
           </div>
         </div>
@@ -437,9 +936,9 @@
 
     <div class="container">
       <h2 class="collapsible" data-state="expand">Active Streams</h2>
-      <div class="collapsible-content collapsed">
+      <div class="collapsible-content">
         <div id="streamList" class="stream-list">
-          <div class="stream-item">No active streams</div>
+          <div class="stream-item" style="text-align:center; background-color:transparent; border:none; color:#888;">No active streams</div>
         </div>
       </div>
     </div>
@@ -451,7 +950,7 @@
 
     <div class="container">
       <h2 class="collapsible" data-state="expand">Log</h2>
-      <div class="collapsible-content collapsed">
+      <div class="collapsible-content">
         <div id="logArea" class="log-area"></div>
       </div>
     </div>
@@ -502,21 +1001,26 @@
       let highlightedStreamId = null; // Stream ID currently highlighted
       let loadedSelectedOtherScenes = []; // Array to store selected "other scenes" from localStorage
 
-      // Setup for collapsible UI sections
       document.querySelectorAll('.collapsible').forEach(header => {
-          header.addEventListener('click', function() {
-              this.classList.toggle('collapsed');
-              const content = this.nextElementSibling;
-              if (content.classList.contains('collapsible-content')) {
-                  content.classList.toggle('collapsed');
-                  // Update the data-state attribute for ARIA/styling
-                  if (content.classList.contains('collapsed')) {
-                      this.setAttribute('data-state', 'expand');
-                  } else {
-                      this.setAttribute('data-state', 'collapse');
-                  }
-              }
-          });
+        const content = header.nextElementSibling;
+        const startsExpanded = header.dataset.state === "expand";
+
+        if (startsExpanded) {
+          header.classList.remove('collapsed');
+          content.classList.remove('collapsed');
+          header.setAttribute('data-state', 'collapse');
+        } else {
+          header.classList.add('collapsed');
+          content.classList.add('collapsed');
+          header.setAttribute('data-state', 'expand');
+        }
+
+        header.addEventListener('click', function () {
+          const isCollapsed = header.classList.toggle('collapsed');
+          content.classList.toggle('collapsed');
+          const newState = isCollapsed ? 'expand' : 'collapse';
+          header.setAttribute('data-state', newState);
+        });
       });
 
       // Create and inject VDO.Ninja connection controls dynamically
@@ -534,9 +1038,9 @@
       vdoNinjaConnectionStatus.textContent = 'Status: Disconnected';
       vdoNinjaConnectionStatus.style.marginLeft = '5px';
 
-      const vdoNinjaSettingsContainer = document.querySelector('.container:nth-child(2)'); // VDO.Ninja Settings container
+      const vdoNinjaSettingsContainer = document.querySelector('.container:nth-child(3)'); // VDO.Ninja Settings container
       const buttonsDiv = document.createElement('div'); // Container for the VDO.Ninja connect button and status
-      buttonsDiv.style.marginTop = '5px';
+      buttonsDiv.style.marginTop = '10px'; // Increased margin
       buttonsDiv.className = 'status-line';
       buttonsDiv.appendChild(vdoNinjaConnectBtn);
       buttonsDiv.appendChild(vdoNinjaConnectionStatus);
@@ -603,13 +1107,14 @@
        * Updates the descriptive labels for prefixes next to their input fields.
        */
       function updatePrefixLabels() {
-          const cameraPrefix = getFullCameraPrefix();
-          // const reactionPrefix = getFullReactionPrefix(); // Not directly used in label text
-          // const highlightPrefix = getFullHighlightPrefix(); // Not directly used in label text
+          const cameraPrefixVal = getFullCameraPrefix();
+          const reactionSubPrefixVal = reactionSubPrefixInput.value.trim();
+          const highlightSubPrefixVal = highlightSubPrefixInput.value.trim();
+
           // Update the labels to show the current full prefix being used
-          cameraSubPrefixLabelText.textContent = `Camera prefix: ${cameraPrefix || '(none)'}`;
-          reactionSubPrefixLabelText.textContent = `Reaction prefix: ${cameraPrefix || '(none)'}${cameraPrefix ? '.' : ''}${reactionSubPrefixInput.value.trim() || '(none)'}`;
-          highlightSubPrefixLabelText.textContent = `Highlight prefix: ${cameraPrefix || '(none)'}${cameraPrefix ? '.' : ''}${highlightSubPrefixInput.value.trim() || '(none)'}`;
+          // cameraSubPrefixLabelText.textContent = `Camera prefix:`; // Label itself is now static
+          reactionSubPrefixLabelText.textContent = `Reaction prefix: ${cameraPrefixVal || '(VDO)'}${cameraPrefixVal ? '.' : ''}${reactionSubPrefixVal || '(Screen)'}`;
+          highlightSubPrefixLabelText.textContent = `Highlight prefix: ${cameraPrefixVal || '(VDO)'}${cameraPrefixVal ? '.' : ''}${highlightSubPrefixVal || '(Highlight)'}`;
       }
       // Add event listeners to prefix inputs to update labels and save settings on change
       cameraPrefixInput.addEventListener('input', () => {
@@ -813,11 +1318,6 @@
           const streamMappingsDiv = document.getElementById('streamMappings');
           const mappingDiv = document.createElement('div');
           mappingDiv.className = 'stream-mapping'; // For styling and selection
-          mappingDiv.style.margin = '5px 0';
-          mappingDiv.style.padding = '5px';
-          mappingDiv.style.border = '1px dashed #424254'; // Visually group each mapping
-          mappingDiv.style.borderRadius = '3px';
-
 
           // Sanitize input if it's a PointerEvent (e.g. from button click with no params)
           const initialStreamId = (streamId instanceof PointerEvent || typeof streamId === 'object' && streamId !== null && streamId.target) ? '' : streamId;
@@ -825,32 +1325,32 @@
 
           mappingDiv.innerHTML = `
               <div style="margin-bottom: 5px;">
-                  <label style="font-size: 11px; margin-bottom: 2px; display: block;">Stream Mapping Rule</label>
-                  <div class="flex-row" style="align-items: center; flex-wrap: nowrap; margin-bottom: 2px;">
-                      <input type="text" placeholder="Stream ID" value="${initialStreamId}" class="mapping-stream-id" style="width:80px; margin-right: 4px; font-size:11px;">
-                      <input type="text" placeholder="Label (optional)" value="${label}" class="mapping-label" style="width:120px; margin-right: 4px; font-size:11px;">
-                      <select class="mapping-match-type" style="width:90px; margin-right: 4px; font-size:11px;">
+                  <label style="font-size: 1em; margin-bottom: 6px; display: block; font-weight:500;">Stream Mapping Rule</label>
+                  <div class="flex-row" style="align-items: center; margin-bottom: 6px;">
+                      <input type="text" placeholder="Stream ID" value="${initialStreamId}" class="mapping-stream-id" title="VDO.Ninja Stream ID">
+                      <input type="text" placeholder="Label (optional)" value="${label}" class="mapping-label" title="VDO.Ninja Stream Label">
+                      <select class="mapping-match-type" title="How to match stream">
                           <option value="streamId" ${matchType === 'streamId' ? 'selected' : ''}>ID Only</option>
                           <option value="label" ${matchType === 'label' ? 'selected' : ''}>Label Only</option>
                           <option value="both" ${matchType === 'both' ? 'selected' : ''}>Both Required</option>
                           <option value="either" ${matchType === 'either' ? 'selected' : ''}>Either Match</option>
                       </select>
-                      <select class="mapping-scene-name" style="width:130px; font-size:11px;">
+                      <select class="mapping-scene-name" title="Target OBS Scene">
                           <option value="">Select a scene...</option>
                       </select>
-                      <button class="remove-mapping-btn" style="width:auto; padding:3px 5px; margin-left: 4px; background-color:#d32f2f;">×</button>
+                      <button class="remove-mapping-btn" title="Remove this mapping rule">×</button>
                   </div>
-                  <div class="flex-row" style="margin-top: 3px; gap: 8px;">
-                      <label class="checkbox-label" style="margin-bottom: 0; font-size:11px;">
+                  <div class="flex-row" style="gap: 15px;">
+                      <label class="checkbox-label" style="margin-bottom: 0;">
                           <input type="checkbox" class="mapping-clone-to-main" ${shouldClone ? 'checked' : ''}>
                           Clone to main scene
                       </label>
-                      <label class="checkbox-label" style="margin-bottom: 0; font-size:11px;">
+                      <label class="checkbox-label" style="margin-bottom: 0;">
                           <input type="checkbox" class="mapping-switch-to-scene" ${shouldSwitch ? 'checked' : ''}>
                           Switch to scene on add
                       </label>
                   </div>
-                  <small style="color: #8a8a9a; font-size: 10px; display: block; margin-top: 2px;">
+                  <small style="color: #8a8a9a; font-size: 0.85em; display: block; margin-top: 4px;">
                       Define how incoming streams are routed to OBS scenes.
                   </small>
               </div>
@@ -971,7 +1471,8 @@
                   if (scene.sceneName !== mainSceneName) { // Don't list the main scene as an "other" scene
                       const checkboxId = `otherScene_${scene.sceneName.replace(/\s+/g, '_')}`; // Create a unique ID
                       const listItem = document.createElement('div');
-                      listItem.className = 'checkbox-label';
+                      listItem.className = 'checkbox-label'; // Use existing class for styling
+                      listItem.style.marginBottom = "8px"; // Add some space between checkboxes
 
                       const checkbox = document.createElement('input');
                       checkbox.type = 'checkbox';
@@ -988,12 +1489,17 @@
                       const label = document.createElement('label');
                       label.htmlFor = checkboxId;
                       label.textContent = scene.sceneName;
+                      label.style.marginLeft = "0"; // Ensure label text is close to checkbox
 
                       listItem.appendChild(checkbox);
                       listItem.appendChild(label);
                       otherScenesListDiv.appendChild(listItem); // Add to the list
                   }
               });
+               // If, after filtering, no "other" scenes are available, hide the container
+              if (otherScenesListDiv.childElementCount === 0) {
+                container.style.display = 'none';
+              }
           } else {
               container.style.display = 'none'; // Hide if no main scene or no other scenes
           }
@@ -1003,16 +1509,8 @@
        * Updates the list of active VDO.Ninja streams in the UI.
        */
       function updateStreamList() {
-          // The container for active streams is the 5th .container element (index 4)
-          // This was previously hardcoded and might need adjustment if layout changes.
-          // const activeStreamsContainer = document.querySelectorAll('.container')[4];
-          // if (activeStreamsContainer) {
-          //     const collapsibleContent = activeStreamsContainer.querySelector('.collapsible-content');
-          //     // The CSS rule `.container:nth-child(6) .collapsible-content` handles expansion.
-          // }
-
           if (Object.keys(activeStreams).length === 0) {
-              streamListContainer.innerHTML = '<div class="stream-item">No active streams</div>';
+              streamListContainer.innerHTML = '<div class="stream-item" style="text-align:center; background-color:transparent; border:none; color:#888;">No active streams</div>';
               return;
           }
           streamListContainer.innerHTML = ''; // Clear previous list
@@ -1035,18 +1533,24 @@
 
                   // Build HTML for the stream item
                   let streamItemHTML = `
-                      <div style="font-weight: bold;">${stream.label || streamId}</div>
+                      <div style="font-weight: 600; font-size: 1.05em; color: #E0E0E0;">${stream.label || streamId}</div>
                       <small>ID: ${streamId}${stream.label ? ` | Label: ${stream.label}` : ''}</small>
-                      <small style="display: block; color: #8a8a9a;">
+                      <small style="display: block; color: #A0A0B0;">
                           → Target Scene: ${targetSceneName || 'Not Set'}
                           ${isDefaultScene && targetSceneName ? '(default)' : targetSceneName ? '(mapped)' : ''}
                       </small>
-                      ${stream.sourceCreated ? '<span style="color:#4CAF50"> ✓ Added to OBS</span>' : '<span style="color:#FFA000"> ✗ Not in OBS</span>'}
-                      <div style="margin-top: 5px;">
-                          <button class="add-stream-btn" data-stream-id="${streamId}"
-                              style="background-color: ${stream.sourceCreated ? '#F44336' : '#4C80AF'}; margin-right: 5px;">
-                                  ${stream.sourceCreated ? 'Remove from OBS' : 'Add to OBS'}
-                          </button>`;
+                      <div style="margin-top: 2px; font-size: 0.9em;">
+                        ${stream.sourceCreated ? '<span style="color:#28A745">✓ Added to OBS</span>' : '<span style="color:#FFC107">✗ Not in OBS</span>'}
+                      </div>
+                      <div style="margin-top: 8px;" class="flex-row">`; // Use flex-row for button alignment
+
+                  // Add/Remove Button
+                  // JS will set the correct background color for these buttons via inline styles initially, CSS will override with !important
+                  streamItemHTML += `
+                      <button class="add-stream-btn" data-stream-id="${streamId}"
+                          style="background-color: ${stream.sourceCreated ? '#F44336' : '#4C80AF'};">
+                              ${stream.sourceCreated ? 'Remove from OBS' : 'Add to OBS'}
+                      </button>`;
 
                   // Add Highlight button if source is in OBS
                   if (stream.sourceCreated) {
@@ -1061,7 +1565,7 @@
                   if (stream.sourceCreated) { // Only show if the main stream source is in OBS
                        streamItemHTML += `
                           <button class="screen-share-btn" data-stream-id="${streamId}"
-                                  style="background-color: ${isCurrentlyScreenSharingThisStream ? '#F44336' : '#9C27B0'}; margin-left: 5px;">
+                                  style="background-color: ${isCurrentlyScreenSharingThisStream ? '#F44336' : '#9C27B0'};">
                               ${isCurrentlyScreenSharingThisStream ? 'Stop Screen Share' : 'Screen Share'}
                           </button>`;
                   }
@@ -1861,7 +2365,7 @@
               const response = await sendRequest('GetSceneList');
               if (response && response.scenes) {
                   obsScenes = response.scenes;
-                  logMessage(`Fetched ${obsScenes.length} scenes from OBS.`);
+                  logMessage(`Workspaceed ${obsScenes.length} scenes from OBS.`);
 
                   const previouslySelectedMainScene = obsSceneSelect.value;
                   const previouslySelectedScreenShareScene = document.getElementById('screenShareSceneSelect').value;
@@ -2339,7 +2843,7 @@
 
           if (!itemIdToTransform) {
               try {
-                  // logMessage(`Fetching scene item ID for '${sourceName}' in '${sceneName}' to apply transform.`);
+                  // logMessage(`Workspaceing scene item ID for '${sourceName}' in '${sceneName}' to apply transform.`);
                   const itemInfo = await sendRequest('GetSceneItemId', { sceneName, sourceName }, { suppressNotFound: true }); // Suppress if checking optional item
                   if (itemInfo && itemInfo.sceneItemId) {
                       itemIdToTransform = itemInfo.sceneItemId;
@@ -2504,6 +3008,31 @@
                   break;
               case 'defaultSize':
               default:
+                   // Centered default size
+                  transform.positionX = (canvasWidth - sourceWidth) / 2;
+                  transform.positionY = (canvasHeight - sourceHeight) / 2;
+                  // Ensure it doesn't go off screen if source is larger than canvas for default
+                  if (sourceWidth > canvasWidth) {
+                    transform.width = canvasWidth;
+                    transform.positionX = 0;
+                    transform.boundsType = "OBS_BOUNDS_SCALE_TO_WIDTH"; // Or SCALE_INNER to maintain aspect
+                    transform.boundsWidth = canvasWidth;
+                  }
+                  if (sourceHeight > canvasHeight) {
+                    transform.height = canvasHeight;
+                    transform.positionY = 0;
+                    transform.boundsType = "OBS_BOUNDS_SCALE_TO_HEIGHT"; // Or SCALE_INNER
+                    transform.boundsHeight = canvasHeight;
+                  }
+                  if (sourceWidth > canvasWidth && sourceHeight > canvasHeight) {
+                    transform.boundsType = "OBS_BOUNDS_SCALE_INNER";
+                    transform.boundsWidth = canvasWidth;
+                    transform.boundsHeight = canvasHeight;
+                    transform.width = canvasWidth;
+                    transform.height = canvasHeight;
+                    transform.positionX = 0;
+                    transform.positionY = 0;
+                  }
                   break;
           }
           return transform;
@@ -2671,7 +3200,7 @@
                   return;
               }
               const script = document.createElement('script');
-              script.src = 'https://cdnjs.cloudflare.com/ajax/libs/jsSHA/3.3.0/sha256.js';
+              script.src = 'https://cdnjs.cloudflare.com/ajax/libs/jsSHA/3.3.0/sha256.js'; // Ensure this is a valid and trusted CDN
               script.onload = () => {
                   logMessage("jsSHA library loaded successfully (fallback for Web Crypto).");
                   resolve();
@@ -2716,15 +3245,63 @@
               document.querySelectorAll('.other-scene-checkbox:checked').forEach(checkbox => {
                   if (checkbox.value) rearrangeAllStreamsInScene(checkbox.value);
               });
+          } else { // If not autoGrid, apply standard transform to all managed sources in relevant scenes
+                const scenesToUpdate = new Set();
+                if(getTargetScene()) scenesToUpdate.add(getTargetScene());
+                document.querySelectorAll('.other-scene-checkbox:checked').forEach(cb => scenesToUpdate.add(cb.value));
+                getStreamMappings().forEach(m => scenesToUpdate.add(m.sceneName));
+
+                scenesToUpdate.forEach(sceneName => {
+                    if(sceneName) applyStandardTransformToAllManagedStreamsInScene(sceneName);
+                });
           }
       });
+
+      async function applyStandardTransformToAllManagedStreamsInScene(sceneName) {
+        if (!obsConnected || !sceneName || sourceSizingSelect.value === 'autoGrid') return;
+        logMessage(`Applying standard transform ('${sourceSizingSelect.value}') to VDO.Ninja sources in scene '${sceneName}'.`);
+
+        try {
+            let canvasWidth = 1920, canvasHeight = 1080;
+            const videoSettings = await sendRequest('GetVideoSettings');
+            if (videoSettings && videoSettings.baseWidth && videoSettings.baseHeight) {
+                canvasWidth = videoSettings.baseWidth;
+                canvasHeight = videoSettings.baseHeight;
+            }
+
+            const sceneItemsResponse = await sendRequest('GetSceneItemList', { sceneName });
+            const camPrefixWithUnderscore = getFullCameraPrefix() + "_";
+            const hlPrefixWithUnderscore = getFullHighlightPrefix() + "_";
+
+            for (const item of sceneItemsResponse.sceneItems) {
+                const isManagedSource = (item.sourceName.startsWith(camPrefixWithUnderscore) || item.sourceName.startsWith(hlPrefixWithUnderscore)) &&
+                                        (item.inputKind === 'browser_source'); // Assuming VDO.Ninja sources are browser_source
+
+                if (isManagedSource) {
+                    const streamIdGuess = item.sourceName.replace(camPrefixWithUnderscore, "").replace(hlPrefixWithUnderscore, "");
+                    if (activeStreams[streamIdGuess] && activeStreams[streamIdGuess].sourceCreated) { // Check if it's one we are actively managing
+                        const transform = calculateTransform(sourceSizingSelect.value, canvasWidth, canvasHeight, canvasWidth, canvasHeight);
+                        await sendRequest('SetSceneItemTransform', {
+                            sceneName,
+                            sceneItemId: item.sceneItemId,
+                            sceneItemTransform: transform
+                        });
+                    }
+                }
+            }
+        } catch (error) {
+            logMessage(`Error applying standard transform in scene '${sceneName}': ${error.message}`);
+        }
+    }
+
+
       sourceCodecSelect.addEventListener('change', async () => {
           saveSettings();
           const newCodec = sourceCodecSelect.value;
-          logMessage(`Codec alterado para: ${newCodec || 'none'}. Atualizando fontes OBS...`);
+          logMessage(`Codec changed to: ${newCodec || 'none'}. Updating OBS sources...`);
 
           if (!obsConnected) {
-              logMessage("OBS não está conectado. As fontes não serão atualizadas com o novo codec até a reconexão e uma nova ação.");
+              logMessage("OBS is not connected. Sources will not be updated with the new codec until reconnection and a new action.");
               return;
           }
 
@@ -2745,12 +3322,12 @@
                               inputName: effectiveSourceName,
                               inputSettings: updatedSettings
                           });
-                          logMessage(`Fonte '${effectiveSourceName}' atualizada com URL: ${newViewUrl}`);
+                          logMessage(`Source '${effectiveSourceName}' updated with URL: ${newViewUrl}`);
                       }
                   } catch (error) {
                       const isNotFound = error.message.toLowerCase().includes("not found") || (error.message.toLowerCase().includes("code") && error.message.toLowerCase().includes("600"));
                       if (!isNotFound) {
-                        logMessage(`Erro ao atualizar codec da fonte '${effectiveSourceName}': ${error.message}`);
+                        logMessage(`Error updating codec for source '${effectiveSourceName}': ${error.message}`);
                       }
                   }
               }
@@ -2781,16 +3358,16 @@
                           inputName: screenShareSourceName,
                           inputSettings: updatedScreenShareSettings
                       });
-                      logMessage(`Fonte de screen share '${screenShareSourceName}' atualizada com URL: ${newScreenShareUrl}`);
+                      logMessage(`Screen share source '${screenShareSourceName}' updated with URL: ${newScreenShareUrl}`);
                   }
               } catch (error) {
                    const isNotFound = error.message.toLowerCase().includes("not found") || (error.message.toLowerCase().includes("code") && error.message.toLowerCase().includes("600"));
                    if (!isNotFound) {
-                    logMessage(`Erro ao atualizar codec da fonte de screen share '${screenShareSourceName}': ${error.message}`);
+                    logMessage(`Error updating codec for screen share source '${screenShareSourceName}': ${error.message}`);
                    }
               }
           }
-          logMessage("Atualização de codec nas fontes OBS concluída.");
+          logMessage("Codec update for OBS sources complete.");
       });
 
 
@@ -2820,7 +3397,8 @@
           });
 
           startVdoNinjaConnectionMonitor();
-          updatePrefixLabels();
+          updatePrefixLabels(); // Initial call to set prefix labels correctly
+          updateStreamList(); // Ensure "No active streams" shows correctly styled initially
       });
     </script>
   </body>
