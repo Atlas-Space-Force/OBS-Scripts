@@ -741,7 +741,8 @@
       /* Target OBS Target Settings dropdowns for specific width */
 
       #obsSceneSelect,
-      #screenShareSceneSelect {
+      #screenShareSceneSelect,
+      #highlightSceneSelect {
         /* width handled by inline style, but can be adjusted if needed */
       }
 
@@ -755,6 +756,18 @@
 
       #obsTargetSettingsFlexContainer > button {
         flex-shrink: 0;
+      }
+
+      .settings-group {
+          margin-top: 15px;
+          border-top: 1px solid #3E4147;
+          padding-top: 15px;
+      }
+
+      .settings-group:first-child {
+          margin-top: 0;
+          border-top: none;
+          padding-top: 0;
       }
     </style>
   </head>
@@ -840,98 +853,95 @@
     </div>
 
     <div class="container">
-      <h2 class="collapsible" data-state="expand">OBS Target Settings</h2>
-      <div class="collapsible-content">
-        <label for="obsSceneSelect">Target Scene:</label>
-        <div class="flex-row" style="gap: 10px;" id="obsTargetSettingsFlexContainer">
-          <select id="obsSceneSelect" style="width: 300px; flex-grow:1;">
-            <option value="">Select a scene...</option>
-          </select>
-          <button id="loadScenesBtn">Re-Fetch Scenes</button>
-        </div>
+        <h2 class="collapsible" data-state="expand">OBS Target Settings</h2>
+        <div class="collapsible-content">
 
-        <div class="flex-row" style="align-items: flex-end; margin-top: 12px; gap: 15px;">
-          <div>
-            <label for="sourceSizing">New Source Sizing:</label>
-            <select id="sourceSizing" style="width: 250px;">
-              <option value="defaultSize">Default (1920x1080 at 0,0)</option>
-              <option value="bestFit">Best Fit (Preserve Aspect)</option>
-              <option value="stretchToFill">Stretch to Fill Screen</option>
-              <option value="autoGrid">Auto Grid Layout</option>
-            </select>
-          </div>
-          <div>
-            <label for="sourceCodec">Codec:</label>
-            <div class="flex-row" style="gap:2px;">
-                <select id="sourceCodec" style="width: 150px;">
-                  <option value="">none</option>
-                  <option value="h264">h264</option>
-                  <option value="vp8">vp8</option>
-                  <option value="vp9">vp9</option>
-                  <option value="av1">av1</option>
-                  <option value="h265">h265</option>
-                  <option value="webp">webp</option>
-                  <option value="hardware">hardware</option>
-                </select>
-                <a href="https://docs.vdo.ninja/advanced-settings/video-parameters/codec" target="_blank" title="Learn more about codec options">?</a>
-            </div>
-          </div>
-        </div>
-
-        <div id="autoSourceOptions" class="flex-row" style="gap: 15px; margin-bottom: 8px; margin-top: 15px;">
-          <label class="checkbox-label">
-            <input type="checkbox" id="autoAddSources" checked />
-            Auto-add new streams as sources
-          </label>
-          <label class="checkbox-label">
-            <input type="checkbox" id="autoRemoveSources" checked />
-            Auto-remove sources on disconnect
-          </label>
-        </div>
-
-        <div
-          id="otherScenesContainer"
-          style="margin-top: 15px; border-top: 1px solid #3E4147; padding-top: 15px; display: none;"
-        >
-          <label>Copy sources to other scenes (reference):</label>
-          <div id="otherScenesList" style="margin-top: 5px;">
-            </div>
-        </div>
-        <input type="text" id="obsSceneNameInput" style="display:none;" />
-        <div
-          style="margin-top: 15px; border-top: 1px solid #3E4147; padding-top: 15px;"
-        >
-          <label style="font-weight:600; font-size:1.05em;">Screen Sharing Settings:</label>
-          <div class="flex-row" style="gap: 15px; align-items: flex-start;">
-            <div>
-              <label for="screenShareSceneSelect" style="font-size: 0.95em;">Target Scene:</label>
-              <select id="screenShareSceneSelect" style="width: 300px;">
-                <option value="">Same as main</option>
-                </select>
-            </div>
-            <div class="flex-row" style="gap: 8px;">
-                <div>
-                  <label for="screenShareWidth" style="font-size: 0.95em;">Width:</label>
-                  <input
-                    type="number"
-                    id="screenShareWidth"
-                    value="1920"
-                    style="width: 100px;"
-                  />
-                </div>
-                <div>
-                  <label for="screenShareHeight" style="font-size: 0.95em;">Height:</label>
-                  <input
-                    type="number"
-                    id="screenShareHeight"
-                    value="1080"
-                    style="width: 100px;"
-                  />
+            <div class="settings-group">
+                <label for="obsSceneSelect">Target Scene:</label>
+                <div class="flex-row" style="gap: 10px;" id="obsTargetSettingsFlexContainer">
+                    <select id="obsSceneSelect" style="width: 300px; flex-grow:1;">
+                        <option value="">Select a scene...</option>
+                    </select>
+                    <button id="loadScenesBtn">Re-Fetch Scenes</button>
                 </div>
             </div>
-          </div>
+
+            <div id="otherScenesContainer" class="settings-group" style="display: none;">
+                <label>Copy sources to other scenes (reference):</label>
+                <div id="otherScenesList" style="margin-top: 5px;"></div>
+            </div>
+            <input type="text" id="obsSceneNameInput" style="display:none;" />
+
+            <div class="settings-group">
+                <label style="font-weight:600; font-size:1.05em;">Screen Sharing Settings:</label>
+                <div class="flex-row" style="gap: 15px; align-items: flex-start;">
+                    <div>
+                        <label for="screenShareSceneSelect" style="font-size: 0.95em;">Target Scene:</label>
+                        <select id="screenShareSceneSelect" style="width: 300px;">
+                            <option value="">Same as main</option>
+                        </select>
+                    </div>
+                    <div class="flex-row" style="gap: 8px;">
+                        <div>
+                            <label for="screenShareWidth" style="font-size: 0.95em;">Width:</label>
+                            <input type="number" id="screenShareWidth" value="1920" style="width: 100px;" />
+                        </div>
+                        <div>
+                            <label for="screenShareHeight" style="font-size: 0.95em;">Height:</label>
+                            <input type="number" id="screenShareHeight" value="1080" style="width: 100px;" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="settings-group">
+                <label for="highlightSceneSelect" style="font-weight:600; font-size:1.05em;">Highlight Scene:</label>
+                <select id="highlightSceneSelect" style="width: 300px;">
+                    <option value="">Select a scene for highlights...</option>
+                </select>
+            </div>
+
+            <div id="autoSourceOptions" class="settings-group flex-row" style="gap: 15px;">
+                <label class="checkbox-label">
+                    <input type="checkbox" id="autoAddSources" checked />
+                    Auto-add new streams as sources
+                </label>
+                <label class="checkbox-label">
+                    <input type="checkbox" id="autoRemoveSources" checked />
+                    Auto-remove sources on disconnect
+                </label>
+            </div>
+
+            <div class="settings-group">
+                 <div class="flex-row" style="align-items: flex-end; gap: 15px;">
+                    <div>
+                        <label for="sourceSizing">New Source Sizing:</label>
+                        <select id="sourceSizing" style="width: 250px;">
+                            <option value="defaultSize">Default (1920x1080 at 0,0)</option>
+                            <option value="bestFit">Best Fit (Preserve Aspect)</option>
+                            <option value="stretchToFill">Stretch to Fill Screen</option>
+                            <option value="autoGrid">Auto Grid Layout</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="sourceCodec">Codec:</label>
+                        <div class="flex-row" style="gap:2px;">
+                            <select id="sourceCodec" style="width: 150px;">
+                                <option value="">none</option>
+                                <option value="h264">h264</option>
+                                <option value="vp8">vp8</option>
+                                <option value="vp9">vp9</option>
+                                <option value="av1">av1</option>
+                                <option value="h265">h265</option>
+                                <option value="webp">webp</option>
+                                <option value="hardware">hardware</option>
+                            </select>
+                            <a href="https://docs.vdo.ninja/advanced-settings/video-parameters/codec" target="_blank" title="Learn more about codec options">?</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-      </div>
     </div>
 
     <div class="container">
@@ -985,6 +995,7 @@
       const streamListContainer = document.getElementById('streamList');
       const logArea = document.getElementById('logArea');
       const loadScenesBtn = document.getElementById('loadScenesBtn');
+      const highlightSceneSelect = document.getElementById('highlightSceneSelect');
 
       // State variables
       let obs = null; // WebSocket connection object for OBS
@@ -1056,7 +1067,9 @@
               connectToVdoNinja();
           }
       });
-
+      function sleep(ms) {
+        return new Promise(resolve => setTimeout(resolve, ms || DEF_DELAY));
+      }
 
       /**
        * Logs a message to the console and the on-screen log area.
@@ -1190,10 +1203,10 @@
               sourceCodec: sourceCodecSelect.value,
               autoAddSources: autoAddSourcesCheckbox.checked,
               autoRemoveSources: autoRemoveSourcesCheckbox.checked,
-              // vdoNinjaConnected: vdoNinjaConnected, // Typically not saved, dock should start disconnected
               screenShareWidth: document.getElementById('screenShareWidth').value,
               screenShareHeight: document.getElementById('screenShareHeight').value,
-              screenShareScene: document.getElementById('screenShareSceneSelect').value
+              screenShareScene: document.getElementById('screenShareSceneSelect').value,
+              highlightScene: highlightSceneSelect.value
           };
           localStorage.setItem('obsNinjaSettings', JSON.stringify(settings));
 
@@ -1425,7 +1438,7 @@
                   if (screenShareWidthInput) screenShareWidthInput.value = settings.screenShareWidth || '1920';
                   if (screenShareHeightInput) screenShareHeightInput.value = settings.screenShareHeight || '1080';
 
-                  // Actual selection for obsSceneSelect and screenShareSceneSelect happens in fetchObsScenes after scenes are loaded
+                  // Actual selection for obsSceneSelect, screenShareSceneSelect, and highlightSceneSelect happens in fetchObsScenes after scenes are loaded
 
                   updatePrefixLabels(); // Update prefix display labels based on loaded values
                   logMessage("Settings loaded from localStorage.");
@@ -1587,27 +1600,114 @@
                   }
                   const highlightBtn = streamDiv.querySelector('.highlight-btn');
                   if (highlightBtn) {
-                      highlightBtn.addEventListener('click', () => {
-                          // targetInfo already calculated
-                          toggleHighlight(streamId, stream.label, targetInfo);
+                      highlightBtn.addEventListener('click', async () => {
+                          await handleHighlightClick(streamId, stream.label, targetInfo);
                       });
                   }
                   const screenShareBtn = streamDiv.querySelector('.screen-share-btn');
                   if (screenShareBtn) {
                       screenShareBtn.addEventListener('click', async () => {
-                          const clickedStreamIdForScreenShare = streamId; // Closure captures this
-                          const currentActiveScreenShareGlobal = screenShareId;
-                          if (currentActiveScreenShareGlobal === clickedStreamIdForScreenShare) {
-                              await removeScreenShareFromObs(clickedStreamIdForScreenShare);
-                          } else {
-                              // If another stream is sharing, removeScreenShareFromObs will be called by addScreenShareToObs
-                              await addScreenShareToObs(clickedStreamIdForScreenShare, stream.label);
-                          }
+                          await handleScreenShareClick(streamId, stream.label);
                       });
                   }
               }
           }
       }
+
+       /**
+        * Handles the logic when a "Highlight" or "Unhighlight" button is clicked.
+        * This is the main entry point for the highlight action.
+        * @param {string} clickedStreamId - The ID of the stream to toggle highlight for.
+        * @param {string} clickedStreamLabel - The label of the clicked stream.
+        * @param {Object} clickedTargetInfo - The target scene information for the clicked stream.
+        */
+       async function handleHighlightClick(clickedStreamId, clickedStreamLabel, clickedTargetInfo) {
+           if (!obsConnected || !obs) {
+               logMessage("Cannot highlight: Not connected to OBS.");
+               return;
+           }
+
+           // If any stream is screen sharing, stop it first.
+           if (screenShareId) {
+               logMessage(`A screen share is active (${screenShareId}). Stopping it before highlighting.`);
+               await removeScreenShareFromObs(screenShareId);
+           }
+
+           // Now, proceed with toggling the highlight.
+           await toggleHighlight(clickedStreamId, clickedStreamLabel, clickedTargetInfo);
+
+           // After highlighting, if a stream is now highlighted, switch to the highlight scene.
+           const newHighlightScene = highlightSceneSelect.value;
+           if (highlightedStreamId && newHighlightScene) {
+               try {
+                   const studio = await sendRequest('GetStudioModeEnabled');
+                   if (studio.studioModeEnabled) {
+                       logMessage(`Studio Mode Enabled - Triggering scene switch to Highlight Scene: '${newHighlightScene}'.`);
+                       await sendRequest('SetCurrentPreviewScene', { sceneName: newHighlightScene });
+                       await sleep(100);
+                       await sendRequest('TriggerStudioModeTransition');
+                   } else{
+                       logMessage(`Triggering scene switch to Highlight Scene: '${newHighlightScene}'.`);
+                       await sendRequest('SetCurrentProgramScene', { sceneName: newHighlightScene });
+                   }
+               } catch (e) {
+                   logMessage(`Error switching to highlight scene '${newHighlightScene}': ${e.message}`);
+               }
+           }
+       }
+
+
+       /**
+        * Handles the logic when a "Screen Share" or "Stop Screen Share" button is clicked.
+        * @param {string} streamId - The VDO.Ninja Stream ID to screen share.
+        * @param {string} streamLabel - The label of the stream.
+        */
+       async function handleScreenShareClick(streamId, streamLabel) {
+           const clickedStreamIdForScreenShare = streamId;
+           const currentActiveScreenShareGlobal = screenShareId;
+
+           if (currentActiveScreenShareGlobal === clickedStreamIdForScreenShare) {
+               // If clicking "Stop Screen Share" on the active one
+               await removeScreenShareFromObs(clickedStreamIdForScreenShare);
+           } else {
+               // This is a new screen share request.
+               if (!obsConnected || !obs) {
+                   logMessage("Cannot start screen share: Not connected to OBS.");
+                   return;
+               }
+
+               // If a camera is currently highlighted, unhighlight it first.
+               if (highlightedStreamId) {
+                   logMessage(`A camera is highlighted (${highlightedStreamId}). Unhighlighting it before starting screen share.`);
+                   const oldHighlightDetails = activeStreams[highlightedStreamId];
+                   const oldHighlightLabel = oldHighlightDetails ? oldHighlightDetails.label : '';
+                   const oldHighlightTargetInfo = getTargetSceneForStream(highlightedStreamId, oldHighlightLabel);
+                   await toggleHighlight(highlightedStreamId, oldHighlightLabel, oldHighlightTargetInfo); // This will unhighlight it
+               }
+
+               // Now add the new screen share. This function also handles removing any old one.
+               await addScreenShareToObs(clickedStreamIdForScreenShare, streamLabel);
+
+               // After successfully starting the share, switch to the scene.
+               const screenShareScene = document.getElementById('screenShareSceneSelect').value || getTargetScene();
+               if (screenShareId && screenShareScene) {
+                   try {
+                       const studio = await sendRequest('GetStudioModeEnabled');
+                       if (studio.studioModeEnabled) {
+                           logMessage(`Studio Mode Enabled - Triggering scene switch to Screen Share Scene: '${screenShareScene}'.`);
+                           await sendRequest('SetCurrentPreviewScene', { sceneName: screenShareScene });
+                           await sleep(100);
+                           await sendRequest('TriggerStudioModeTransition');
+                       } else{
+                           logMessage(`Triggering scene switch to Screen Share Scene: '${screenShareScene}'.`);
+                           await sendRequest('SetCurrentProgramScene', { sceneName: screenShareScene });
+                       }
+                   } catch (e) {
+                       logMessage(`Error switching to screen share scene '${screenShareScene}': ${e.message}`);
+                   }
+               }
+           }
+       }
 
       /**
        * Adds or updates a screen share source in OBS for a given stream.
@@ -1846,6 +1946,7 @@
                           await rearrangeAllStreamsInScene(getTargetScene());
                       }
                   }
+                  await checkAndReturnToMainScene(); // Check if we should return to main scene
               } catch (e) {
                   const isNotFoundOrDoesNotExist = e.message.toLowerCase().includes("not found") ||
                                                  e.message.toLowerCase().includes("does not exist") ||
@@ -1857,6 +1958,7 @@
                       // logMessage(`Cannot unhighlight ${clickedStreamId}: Source ${clickedNewHighlightedSourceName} not found. Assuming it's already ${clickedOriginalSourceName}.`);
                   }
                   highlightedStreamId = null; // Ensure state is cleared on error too
+                  await checkAndReturnToMainScene(); // Also check on failure
               }
           } else {
               // Intent: Highlight the clicked stream
@@ -1955,6 +2057,7 @@
           // Store current values before clearing and repopulating dropdowns
           const currentMainSceneValue = obsSceneSelect.value;
           const currentScreenShareSceneValue = document.getElementById('screenShareSceneSelect').value;
+          const currentHighlightSceneValue = highlightSceneSelect.value;
           const mappingSceneSelects = document.querySelectorAll('.mapping-scene-name');
           const currentMappingSceneValues = Array.from(mappingSceneSelects).map(select => select.value);
 
@@ -1962,6 +2065,9 @@
           populateSceneDropdown(obsScenes, obsSceneSelect);
           // Populate the screen share target scene dropdown
           populateSceneDropdown(obsScenes, document.getElementById('screenShareSceneSelect'));
+           // Populate the new highlight scene dropdown
+          populateSceneDropdown(obsScenes, highlightSceneSelect, 'Select a scene for highlights...');
+
 
           // Restore main scene selection if it's still a valid scene
           if (currentMainSceneValue && obsScenes.some(scene => scene.sceneName === currentMainSceneValue)) {
@@ -1970,6 +2076,10 @@
           // Restore screen share scene selection (empty value for "Same as main" is also valid)
           if (currentScreenShareSceneValue === "" || (currentScreenShareSceneValue && obsScenes.some(scene => scene.sceneName === currentScreenShareSceneValue))) {
               document.getElementById('screenShareSceneSelect').value = currentScreenShareSceneValue;
+          }
+          // Restore highlight scene selection
+          if (currentHighlightSceneValue && obsScenes.some(scene => scene.sceneName === currentHighlightSceneValue)) {
+              highlightSceneSelect.value = currentHighlightSceneValue;
           }
 
 
@@ -2363,31 +2473,37 @@
           logMessage("Fetching OBS scenes...");
           try {
               const response = await sendRequest('GetSceneList');
+               const settingsJson = localStorage.getItem('obsNinjaSettings');
+               const settings = settingsJson ? JSON.parse(settingsJson) : {};
+
+
               if (response && response.scenes) {
                   obsScenes = response.scenes;
                   logMessage(`Workspaceed ${obsScenes.length} scenes from OBS.`);
 
-                  const previouslySelectedMainScene = obsSceneSelect.value;
-                  const previouslySelectedScreenShareScene = document.getElementById('screenShareSceneSelect').value;
+                  updateSceneDropdowns(); // Populate all dropdowns first
 
-                  updateSceneDropdowns();
-
-                  if (previouslySelectedMainScene && obsScenes.some(s => s.sceneName === previouslySelectedMainScene)) {
-                      obsSceneSelect.value = previouslySelectedMainScene;
-                  } else if (previouslySelectedMainScene) {
-                      logMessage(`Previously selected main scene "${previouslySelectedMainScene}" no longer found. Please reselect.`);
-                      obsSceneSelect.value = "";
+                  // Now, restore saved settings
+                  if (settings.obsSceneName && obsScenes.some(s => s.sceneName === settings.obsSceneName)) {
+                      obsSceneSelect.value = settings.obsSceneName;
+                  } else if (settings.obsSceneName) {
+                      logMessage(`Previously selected main scene "${settings.obsSceneName}" no longer found. Please reselect.`);
                   }
 
-                  const screenShareSelectElement = document.getElementById('screenShareSceneSelect');
-                  if (previouslySelectedScreenShareScene === "" || (previouslySelectedScreenShareScene && obsScenes.some(s => s.sceneName === previouslySelectedScreenShareScene))) {
-                      screenShareSelectElement.value = previouslySelectedScreenShareScene;
-                  } else if (previouslySelectedScreenShareScene) {
-                      logMessage(`Previously selected screen share scene "${previouslySelectedScreenShareScene}" no longer found. Defaulting to "Same as main".`);
-                      screenShareSelectElement.value = "";
+                  if (settings.screenShareScene === "" || (settings.screenShareScene && obsScenes.some(s => s.sceneName === settings.screenShareScene))) {
+                      document.getElementById('screenShareSceneSelect').value = settings.screenShareScene;
+                  } else if (settings.screenShareScene) {
+                       logMessage(`Previously selected screen share scene "${settings.screenShareScene}" no longer found. Defaulting to "Same as main".`);
                   }
 
-                  updateOtherScenesList();
+                  if (settings.highlightScene && obsScenes.some(s => s.sceneName === settings.highlightScene)) {
+                      highlightSceneSelect.value = settings.highlightScene;
+                  } else if (settings.highlightScene) {
+                      logMessage(`Previously selected highlight scene "${settings.highlightScene}" no longer found. Please reselect.`);
+                  }
+
+
+                  updateOtherScenesList(); // This depends on main scene selection, so call after setting it.
 
                   const savedMappingsJson = localStorage.getItem('obsNinjaStreamMappings');
                    if (savedMappingsJson) {
@@ -2425,14 +2541,15 @@
        * Populates a given select element with OBS scene names.
        * @param {Array<Object>} scenesData - Array of scene objects from OBS.
        * @param {HTMLSelectElement} selectElement - The select element to populate.
+       * @param {string} [placeholderText='Select a scene...'] - Placeholder text for the first option.
        */
-      function populateSceneDropdown(scenesData, selectElement) {
+      function populateSceneDropdown(scenesData, selectElement, placeholderText = 'Select a scene...') {
           const currentValue = selectElement.value;
 
           if (selectElement.id === 'screenShareSceneSelect') {
               selectElement.innerHTML = '<option value="">Same as main</option>';
           } else {
-              selectElement.innerHTML = '<option value="">Select a scene...</option>';
+              selectElement.innerHTML = `<option value="">${placeholderText}</option>`;
           }
 
           if (!scenesData || scenesData.length === 0) {
@@ -2809,7 +2926,14 @@
 
               if (shouldSwitchToThisScene) {
                   logMessage(`Switching OBS current program scene to '${targetSceneName}'.`);
-                  await sendRequest('SetCurrentProgramScene', { sceneName: targetSceneName });
+                  const studio = await sendRequest('GetStudioModeEnabled');
+                  if (studio.studioModeEnabled) {
+                      await sendRequest('SetCurrentPreviewScene', { sceneName: targetSceneName });
+                      await sleep(100);
+                      await sendRequest('TriggerStudioModeTransition');
+                  } else{
+                      await sendRequest('SetCurrentProgramScene', { sceneName: targetSceneName });
+                  }
               }
               logMessage(`Successfully processed stream "${streamLabel}" (${streamId}), effective OBS source: '${effectiveSourceName}'.`);
 
@@ -3164,6 +3288,7 @@
                   screenShareId = null;
               }
               updateStreamList();
+              await checkAndReturnToMainScene(); // NEW: Check if we should go to main scene
           }
       }
 
@@ -3213,6 +3338,35 @@
           });
       }
 
+      /**
+       * NEW: Checks if no highlight or screen share is active, and if so,
+       * transitions OBS to the main scene.
+       */
+      async function checkAndReturnToMainScene() {
+        if (highlightedStreamId === null && screenShareId === null) {
+            const mainScene = getTargetScene(); // Gets obsSceneSelect.value
+            if (mainScene && obsConnected) {
+                try {
+                    // Check the current scene to avoid unnecessary transitions
+                    const currentSceneResponse = await sendRequest('GetCurrentProgramScene');
+                    if (currentSceneResponse && currentSceneResponse.currentProgramSceneName !== mainScene) {
+                        logMessage(`No active highlight or screen share. Returning to main scene: '${mainScene}'.`);
+                        const studio = await sendRequest('GetStudioModeEnabled');
+                        if (studio.studioModeEnabled) {
+                            await sendRequest('SetCurrentPreviewScene', { sceneName: mainScene });
+                            await sleep(100);
+                            await sendRequest('TriggerStudioModeTransition');
+                        } else{
+                            await sendRequest('SetCurrentProgramScene', { sceneName: mainScene });
+                        }
+                    }
+                } catch (e) {
+                    logMessage(`Error trying to return to main scene '${mainScene}': ${e.message}`);
+                }
+            }
+        }
+      }
+
       const otherScenesContainer = document.getElementById('otherScenesContainer');
       const otherScenesListDiv = document.getElementById('otherScenesList');
       const screenShareSceneSelect = document.getElementById('screenShareSceneSelect');
@@ -3230,10 +3384,12 @@
 
       [ obsWsUrlInput, obsWsPasswordInput,
         vdoNinjaBaseUrlInput, vdoNinjaRoomInput, vdoNinjaPasswordInput, vdoNinjaStreamIdsInput,
-        autoAddSourcesCheckbox, autoRemoveSourcesCheckbox
+        autoAddSourcesCheckbox, autoRemoveSourcesCheckbox,
+        highlightSceneSelect, screenShareSceneSelect
       ].forEach(el => {
           if (el) el.addEventListener('change', saveSettings);
       });
+
 
       sourceSizingSelect.addEventListener('change', () => {
           saveSettings();
