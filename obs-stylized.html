@@ -783,7 +783,7 @@
             <input type="text" id="highlightSubPrefix" value="Highlight">
         </div>
         <div class="status-line">
-          <button id="obsConnectBtn">Connect to OBS</button>
+          <button id="obsConnectBtn">Connect</button>
           <span id="obsConnectionStatus">Status: Disconnected</span>
           <span id="obsStatusIndicator" class="status-indicator"></span>
         </div>
@@ -1026,7 +1026,7 @@
       // Create and inject VDO.Ninja connection controls dynamically
       const vdoNinjaConnectBtn = document.createElement('button');
       vdoNinjaConnectBtn.id = 'vdoNinjaConnectBtn';
-      vdoNinjaConnectBtn.textContent = 'Connect to VDO.Ninja';
+      vdoNinjaConnectBtn.textContent = 'Connect';
       vdoNinjaConnectBtn.style.marginTop = '5px';
 
       const vdoNinjaStatusIndicator = document.createElement('span');
@@ -1149,14 +1149,14 @@
       function updateVdoNinjaButtonState(isVdoConnected) {
           vdoNinjaConnected = isVdoConnected; // Update global state
           if (vdoNinjaConnected) {
-              vdoNinjaConnectBtn.textContent = 'Disconnect from VDO.Ninja';
+              vdoNinjaConnectBtn.textContent = 'Disconnect';
               vdoNinjaConnectBtn.classList.remove('disconnected');
               vdoNinjaConnectBtn.classList.add('connected');
               vdoNinjaConnectionStatus.textContent = 'Status: Connected';
               vdoNinjaStatusIndicator.classList.add('connected');
               vdoNinjaStatusIndicator.classList.remove('error');
           } else {
-              vdoNinjaConnectBtn.textContent = 'Connect to VDO.Ninja';
+              vdoNinjaConnectBtn.textContent = 'Connect';
               vdoNinjaConnectBtn.classList.remove('connected');
               vdoNinjaConnectBtn.classList.add('disconnected');
               vdoNinjaConnectionStatus.textContent = 'Status: Disconnected';
@@ -1296,7 +1296,7 @@
                   vdoNinjaConnectionStatus.textContent = 'Status: Connection Failed';
                   vdoNinjaStatusIndicator.classList.add('error');
                   // Revert button to "Connect" but don't call disconnectFromVdoNinja as it wasn't fully connected
-                  vdoNinjaConnectBtn.textContent = 'Connect to VDO.Ninja';
+                  vdoNinjaConnectBtn.textContent = 'Connect';
                   toggleVdoNinjaInputs(false); // Re-enable inputs
               }
           }, 10000); // 10-second timeout
@@ -2084,7 +2084,7 @@
                   if (obs) { try { obs.close(); } catch (e) {} obs = null; } // Clean up
                   obsConnectionStatus.textContent = 'Status: Error - Connection timed out';
                   obsStatusIndicator.classList.add('error');
-                  obsConnectBtn.textContent = 'Connect to OBS'; // Reset button
+                  obsConnectBtn.textContent = 'Connect'; // Reset button
                   obsConnectBtn.classList.remove('connected');
                   obsConnectBtn.classList.add('disconnected');
               }
@@ -2182,7 +2182,7 @@
                   logMessage(`OBS WebSocket Error: ${errorMsg}`);
                   obsStatusIndicator.classList.add('error');
                   obsConnectionStatus.textContent = 'Status: Error';
-                  obsConnectBtn.textContent = 'Connect to OBS';
+                  obsConnectBtn.textContent = 'Connect';
                   obsConnectBtn.classList.remove('connected');
                   obsConnectBtn.classList.add('disconnected');
                   obsConnected = false;
@@ -2206,7 +2206,7 @@
               logMessage(`Error creating OBS WebSocket connection: ${error.message}`);
               obsConnectionStatus.textContent = 'Status: Error';
               obsStatusIndicator.classList.add('error');
-              obsConnectBtn.textContent = 'Connect to OBS';
+              obsConnectBtn.textContent = 'Connect';
               obsConnectBtn.classList.remove('connected');
               obsConnectBtn.classList.add('disconnected');
               obsConnected = false;
@@ -2338,7 +2338,7 @@
       function onObsDisconnected() {
           logMessage("OBS Connection has been closed or lost.");
           obsConnected = false;
-          obsConnectBtn.textContent = 'Connect to OBS';
+          obsConnectBtn.textContent = 'Connect';
           obsConnectBtn.classList.remove('connected');
           obsConnectBtn.classList.add('disconnected');
           obsConnectionStatus.textContent = 'Status: Disconnected';
