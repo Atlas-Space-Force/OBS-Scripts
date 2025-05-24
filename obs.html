@@ -525,7 +525,7 @@
             for="cameraPrefix"
             id="cameraSubPrefixLabelText"
             class="prefix-input-label"
-            >Camera prefix:</label
+            >General Camera prefix:</label
           >
           <input type="text" id="cameraPrefix" value="VDO" />
         </div>
@@ -932,13 +932,13 @@
         const highlightSubPrefixVal = highlightSubPrefixInput.value.trim();
 
         // Update the labels to show the current full prefix being used
-        // cameraSubPrefixLabelText.textContent = `Camera prefix:`; // Label itself is now static
+        // cameraSubPrefixLabelText.textContent = `General Camera prefix:`; // Label itself is now static
         reactionSubPrefixLabelText.textContent = `Reaction prefix: ${
-          cameraPrefixVal || "(VDO)"
-        }${cameraPrefixVal ? "." : ""}${reactionSubPrefixVal || "(Screen)"}`;
+          cameraPrefixVal || ""
+        }${cameraPrefixVal && reactionSubPrefixVal? "." : ""}${reactionSubPrefixVal || ""}`;
         highlightSubPrefixLabelText.textContent = `Highlight prefix: ${
-          cameraPrefixVal || "(VDO)"
-        }${cameraPrefixVal ? "." : ""}${highlightSubPrefixVal || "(Highlight)"}`;
+          cameraPrefixVal || "VDO"
+        }${cameraPrefixVal && highlightSubPrefixVal? "." : ""}${highlightSubPrefixVal || ""}`;
       }
       // Add event listeners to prefix inputs to update labels and save settings on change
       cameraPrefixInput.addEventListener("input", () => {

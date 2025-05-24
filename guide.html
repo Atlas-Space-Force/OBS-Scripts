@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advanced OBS Studio Automation Suite Guide</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            background-color: #181a1b;
+            color: #e0e0e0;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+        .container {
+            max-width: 80rem; /* 1280px */
+            margin-left: auto;
+            margin-right: auto;
+            padding: 1.5rem;
+        }
+        main.container {
+            padding-top: 1.5rem;
+            padding-bottom: 1.5rem;
+        }
+        header {
+            background-color: #2c2e33;
+            color: #e0e0e0;
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid #3e4147;
+        }
+        header .container {
+             padding: 1rem 0;
+        }
+        header h1 {
+            font-size: 1.875rem; /* 30px */
+            font-weight: 700;
+            color: #d0d0d0;
+            margin: 0;
+        }
+        header p {
+            font-size: 0.875rem; /* 14px */
+            color: #a0a0b0;
+            margin: 0.25rem 0 0 0;
+        }
+        nav {
+            background-color: #35383d;
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+        nav ul {
+            display: flex;
+            list-style: none;
+            padding: 0.75rem 1.5rem;
+            margin: 0;
+            gap: 1.5rem;
+            overflow-x: auto;
+        }
+        .nav-button {
+            background-color: transparent;
+            border: none;
+            color: #e0e0e0;
+            padding: 0.5rem 0.75rem;
+            border-radius: 0.375rem; /* 6px */
+            font-size: 0.875rem; /* 14px */
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.15s ease-in-out;
+        }
+        .nav-button:hover {
+            background-color: #404348;
+        }
+        .nav-button.active-nav {
+            background-color: #4a4d54;
+            font-weight: 600;
+        }
+        .content-section {
+            display: none;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+        .content-section.active {
+            display: flex;
+        }
+        .card {
+            background-color: #2c2e33;
+            padding: 1.5rem;
+            border-radius: 0.5rem; /* 8px */
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            border: 1px solid #3e4147;
+        }
+        .card h2, .card h3 {
+            font-weight: 600;
+            color: #c8c8c8;
+            margin-top: 0;
+            margin-bottom: 1rem;
+        }
+        .card h2 { font-size: 1.5rem; } /* 24px */
+        .card h3 { font-size: 1.25rem; } /* 20px */
+        .card p, .card li {
+            color: #c0c0c0;
+            line-height: 1.6;
+        }
+        .feature-card {
+            border: 1px solid #4a4d54;
+            border-radius: 0.375rem; /* 6px */
+            padding: 1rem;
+            background-color: #25272c;
+            transition: border-color 0.2s ease-in-out;
+        }
+        .feature-card:hover {
+            border-color: #c8c8c8;
+        }
+        .feature-card h4 {
+            font-size: 1.125rem; /* 18px */
+            font-weight: 500;
+            color: #c8c8c8;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            margin: 0;
+        }
+        .toggle-icon {
+            font-size: 0.875rem; /* 14px */
+            color: #a0a0b0;
+            transform-origin: center;
+            transition: transform 0.3s ease-in-out;
+        }
+        .toggle-icon.rotate-180 {
+            transform: rotate(180deg);
+        }
+        .feature-details {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease-in-out, margin-top 0.5s ease-in-out;
+            margin-top: 0;
+        }
+        .feature-details.open {
+            max-height: 1000px; /* Adjust as needed */
+            margin-top: 0.75rem;
+        }
+        .feature-details p, .feature-details ul {
+            margin-top: 0;
+            margin-bottom: 0.5rem;
+        }
+        ul, ol {
+            padding-left: 1.5rem;
+        }
+        li {
+            margin-bottom: 0.5rem;
+        }
+        ol ol, ol ul, ul ol, ul ul {
+            margin-top: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+        code {
+            background-color: #3e4147;
+            color: #e0e0e0;
+            padding: 0.125rem 0.375rem;
+            border-radius: 0.25rem;
+            font-family: 'Consolas', 'Monaco', monospace;
+        }
+        footer {
+            background-color: #2c2e33;
+            color: #a0a0b0;
+            text-align: center;
+            padding: 1rem;
+            margin-top: 2rem;
+            border-top: 1px solid #3e4147;
+            font-size: 0.875rem;
+        }
+        .space-y-4 > *:not(:last-child) { margin-bottom: 1rem; }
+        .space-y-3 > *:not(:last-child) { margin-bottom: 0.75rem; }
+        .space-y-2 > *:not(:last-child) { margin-bottom: 0.5rem; }
+        
+        .layout-toggle-controls {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 1rem;
+            margin-bottom: 0.5rem;
+        }
+        .layout-toggle-btn {
+            background-color: #35383d;
+            border: 1px solid #4a4d54;
+            color: #c0c0c0;
+            padding: 0.25rem 0.75rem;
+            border-radius: 0.25rem;
+            cursor: pointer;
+            font-size: 0.8rem;
+            transition: background-color 0.2s, border-color 0.2s;
+        }
+        .layout-toggle-btn:hover {
+            background-color: #404348;
+            border-color: #a0a0b0;
+        }
+        .layout-toggle-btn.active {
+            background-color: #4a5060;
+            border-color: #c8c8c8;
+            color: #e0e0e0;
+            font-weight: 600;
+        }
+        .layout-mockup {
+            border: 2px solid #4a5568;
+            background-color: #2d3748;
+            padding: 1rem;
+            margin-top: 0.5rem;
+            border-radius: 0.375rem;
+            display: none; 
+        }
+        .layout-mockup.active {
+            display: block; 
+        }
+        .mockup-title {
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: #c0c0c0;
+            margin: 0 0 0.5rem 0;
+        }
+        .layout-mockup .main-content {
+            background-color: #4a5568;
+            border: 1px dashed #718096;
+            color: #e2e8f0;
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 0.25rem;
+            padding: 0.5rem;
+        }
+        .layout-mockup .camera {
+            background-color: #718096;
+            border: 1px dashed #a0aec0;
+            text-align: center;
+            font-size: 0.875rem;
+            color: #e2e8f0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 0.25rem;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="container">
+            <h1>Advanced OBS Studio Automation Suite</h1>
+            <p>An Interactive Guide to the Lua Script & Control Dock</p>
+        </div>
+    </header>
+
+    <nav>
+        <div class="container" style="padding: 0;">
+            <ul>
+                <li><button data-target="control-dock" class="nav-button">Control Dock</button></li>
+                <li><button data-target="lua-script" class="nav-button">Lua Script</button></li>
+                <li><button data-target="integration" class="nav-button">Integrated Workflow</button></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main class="container">
+        <section id="control-dock" class="content-section">
+            <div class="card">
+                <h2>VDO.Ninja OBS Control Dock (Modified)</h2>
+                <p>
+                    This is a modified version of the OBS Control Dock by <b>Steve Seguin</b> (creator of VDO.Ninja). It's a web-based interface for managing VDO.Ninja sources in OBS Studio via the OBS WebSocket plugin, enhanced to integrate seamlessly with the Advanced Scene Layouts Lua script.
+                </p>
+                <div style="margin-top: 0.75rem; font-size: 0.875rem;">
+                    <p>Original OBS Controller: <a href="https://vdo.ninja/obs" target="_blank" style="color: #60a5fa; text-decoration: underline;">https://vdo.ninja/obs</a></p>
+                    <p>Steve Seguin's GitHub: <a href="https://github.com/steveseguin" target="_blank" style="color: #60a5fa; text-decoration: underline;">https://github.com/steveseguin</a></p>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>Key Features</h3>
+                <div class="space-y-4">
+                    <div class="feature-card"><h4><span>VDO.Ninja Room Integration</span> <span class="toggle-icon">▼</span></h4><div class="feature-details"><p>Connect to your VDO.Ninja room to see and manage all active participants.</p></div></div>
+                    <div class="feature-card"><h4><span>Dynamic Source Management</span> <span class="toggle-icon">▼</span></h4><div class="feature-details"><p>Automatically add, remove, and rename VDO.Ninja sources in your OBS scenes.</p></div></div>
+                    <div class="feature-card"><h4><span>Screen Share Integration</span> <span class="toggle-icon">▼</span></h4><div class="feature-details"><p>Dedicated feature to manage VDO.Ninja screen shares. It creates sources with a "Reaction" prefix for the Lua script's Reaction Layout.</p></div></div>
+                    <div class="feature-card"><h4><span>Highlight Source Management</span> <span class="toggle-icon">▼</span></h4><div class="feature-details"><p>Ability to "Highlight" a VDO.Ninja participant, renaming their source with a "Highlight" prefix to trigger the Lua script's Highlight Layout.</p></div></div>
+                    <div class="feature-card"><h4><span>Stream Mapping</span> <span class="toggle-icon">▼</span></h4><div class="feature-details"><p>Advanced rules to automatically route specific streams (by Stream ID or Label) to different OBS scenes.</p></div></div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>Installation and Setup</h3>
+                <ol class="space-y-3">
+                    <li><b>Choose how to access the page</b>:
+                        <ul style="font-size: 0.875rem;">
+                            <li><b>Local Option</b>: Download <code>obs.html</code> and copy the file path.</li>
+                            <li><b>Hosted Option</b>: Copy the URL <code>https://morsethecode.github.io/OBS-Scripts/obs</code> instead of downloading the file.</li>
+                        </ul>
+                    </li>
+                    <li><b>Add as an OBS Dock</b>:
+                        <ul style="font-size: 0.875rem;">
+                            <li>In OBS: <b>Docks</b> &rarr; <b>Custom Browser Docks...</b>.</li>
+                            <li>Choose Dock Name(e.g., "VDO.Ninja Control").</li>
+                            <li>Choose URL (<code>Can be the URL or the downloaded file path</code>).</li>
+                            <li>Click <b>Apply</b>, then <b>Close</b>.</li>
+                            <li>Position the new dock.</li>
+                        </ul>
+                    </li>
+                    <li><b>Configure the Dock</b>:
+                        <ul style="font-size: 0.875rem;">
+                            <li><b>OBS WebSocket</b>: Enter URL (default <code>ws://localhost:4455</code>) and password. Click Connect.</li>
+                            <li><b>Prefixes</b>: Set <b>Camera Prefix</b>, <b>Reaction Prefix</b>, and <b>Highlight Prefix</b>.</li>
+                            <li><b>VDO.Ninja</b>: Enter room name and password (if any). Click Connect.</li>
+                            <li><b>Target Scenes</b>: Select main target scene, other scenes the sources will be copied to, and scenes exclusive for Highlights/Screen Shares.</li>
+                        </ul>
+                    </li>
+                </ol>
+            </div>
+        </section>
+
+        <section id="lua-script" class="content-section">
+            <div class="card">
+                <h2>Advanced Scene Layouts Lua Script</h2>
+                <p>
+                    This robust Lua script offers a powerful set of tools to dynamically manage and organize your scenes within OBS Studio. It integrates three core functionalities: <b>Grid Layout</b>, <b>Reaction Layout</b>, and <b>Highlight Layout</b>, all with multi-language support to ensure an accessible and intuitive user experience. This section will guide you through its features and setup.
+                </p>
+            </div>
+
+            <div class="card">
+                <h3>Key Features</h3>
+                <div class="space-y-4">
+                    <div class="feature-card">
+                        <h4>
+                            <span>Dynamic Grid Layout</span>
+                            <span class="toggle-icon">▼</span>
+                        </h4>
+                        <div class="feature-details space-y-2">
+                            <p>Organizes multiple video sources into a customizable grid, perfect for multi-participant streams or varied content displays.</p>
+                            <ul>
+                                <li><b>Flexible Settings</b>: Adjust spacing, margins, and X/Y offsets.</li>
+                                <li><b>Split-Screen Mode</b>: Optimizes view for two cameras (e.g., interviews).</li>
+                            </ul>
+                            <div class="layout-mockup active">
+                                <p class="mockup-title">Visual Example (2x2 Grid):</p>
+                                <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.5rem; height: 8rem;">
+                                    <div class="camera">Cam 1</div>
+                                    <div class="camera">Cam 2</div>
+                                    <div class="camera">Cam 3</div>
+                                    <div class="camera">Cam 4</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="feature-card">
+                        <h4>
+                            <span>Immersive Reaction Layout</span>
+                            <span class="toggle-icon">▼</span>
+                        </h4>
+                        <div class="feature-details space-y-2">
+                            <p>Creates engaging reaction layouts with cameras positioned relative to a main content window (e.g., a window capture).</p>
+                             <ul>
+                                <li><b>Camera Distribution</b>: Place cameras on one side or symmetrically on both.</li>
+                                <li><b>Custom Positioning</b>: Control spacing and offsets.</li>
+                                <li><b>Dedicated Prefixes</b>: For reaction cameras and main content.</li>
+                            </ul>
+                            <div class="layout-toggle-controls">
+                                <button class="layout-toggle-btn" data-target="reaction-layout-left">Cameras on Left</button>
+                                <button class="layout-toggle-btn" data-target="reaction-layout-sides">Cameras on Both Sides</button>
+                            </div>
+                            <div id="reaction-layout-left" class="layout-mockup">
+                                <p class="mockup-title">Visual Example (Cameras Left):</p>
+                                <div style="display: flex; gap: 0.5rem; height: 10rem;">
+                                    <div style="width: 25%; display: flex; flex-direction: column; gap: 0.5rem;">
+                                        <div class="camera" style="flex: 1;">Cam 1</div>
+                                        <div class="camera" style="flex: 1;">Cam 2</div>
+                                    </div>
+                                    <div class="main-content">Main Content (e.g., Gameplay)</div>
+                                </div>
+                            </div>
+                            <div id="reaction-layout-sides" class="layout-mockup">
+                                <p class="mockup-title">Visual Example (Cameras on Both Sides):</p>
+                                <div style="display: flex; gap: 0.5rem; height: 10rem;">
+                                     <div style="width: 20%; display: flex; flex-direction: column; gap: 0.5rem; justify-content: center;"><div class="camera" style="height: 45%;">Cam 1</div></div>
+                                    <div class="main-content" style="width: 60%;">Main Content (e.g., Gameplay)</div>
+                                     <div style="width: 20%; display: flex; flex-direction: column; gap: 0.5rem; justify-content: center;"><div class="camera" style="height: 45%;">Cam 2</div></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="feature-card">
+                        <h4>
+                            <span>Dynamic Highlight Layout</span>
+                            <span class="toggle-icon">▼</span>
+                        </h4>
+                        <div class="feature-details space-y-2">
+                            <p>Features a specific main source (e.g., primary speaker) in a larger frame, with other cameras arranged around it. Promotes a browser source to the main area.</p>
+                             <ul>
+                                <li><b>Camera Distribution</b>: Secondary cameras on one or both sides.</li>
+                                <li><b>Fine Adjustments</b>: Control spacing and X/Y offsets.</li>
+                            </ul>
+                             <div class="layout-toggle-controls">
+                                <button class="layout-toggle-btn" data-target="highlight-layout-sides">Cameras on Both Sides</button>
+                                <button class="layout-toggle-btn" data-target="highlight-layout-left">Cameras on Left</button>
+                            </div>
+                            <div id="highlight-layout-sides" class="layout-mockup">
+                                <p class="mockup-title">Visual Example (Highlight Center, Cameras on Sides):</p>
+                                <div style="display: flex; gap: 0.5rem; height: 12rem;">
+                                    <div style="width: 20%; display: flex; flex-direction: column; gap: 0.25rem; justify-content: space-around;">
+                                        <div class="camera" style="height: 50%;">Cam A</div>
+                                        <div class="camera" style="height: 50%;">Cam B</div>
+                                    </div>
+                                    <div class="main-content" style="width: 60%;">Highlighted Speaker</div>
+                                    <div style="width: 20%; display: flex; flex-direction: column; gap: 0.25rem; justify-content: space-around;">
+                                        <div class="camera" style="height: 50%;">Cam C</div>
+                                        <div class="camera" style="height: 50%;">Cam D</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="highlight-layout-left" class="layout-mockup">
+                                <p class="mockup-title">Visual Example (Highlight Right, Cameras on Left):</p>
+                                <div style="display: flex; gap: 0.5rem; height: 12rem;">
+                                    <div style="width: 25%; display: flex; flex-direction: column; gap: 0.25rem; justify-content: space-around;">
+                                        <div class="camera" style="height: 25%;">Cam A</div>
+                                        <div class="camera" style="height: 25%;">Cam B</div>
+                                        <div class="camera" style="height: 25%;">Cam C</div>
+                                        <div class="camera" style="height: 25%;">Cam D</div>
+                                    </div>
+                                    <div class="main-content" style="width: 75%;">Highlighted Speaker</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                     <div class="feature-card">
+                        <h4>
+                            <span>Multi-Language Support</span>
+                            <span class="toggle-icon">▼</span>
+                        </h4>
+                        <div class="feature-details">
+                            <p>The user interface is available in English, Portuguese, Spanish, Chinese, Russian, Japanese, and German for broader accessibility.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>Installation and Configuration</h3>
+                <ol class="space-y-3">
+                    <li><b>Save the Script</b>: Download the <code>Advanced Scene Layouts.lua</code> file.</li>
+                    <li><b>Open OBS Studio</b>: Launch OBS.</li>
+                    <li><b>Add the Script</b>:
+                        <ul style="font-size: 0.875rem;">
+                            <li>Go to <b>Tools</b> &rarr; <b>Scripts</b>.</li>
+                            <li>Click the "<b>+</b>" button (bottom left).</li>
+                            <li>Navigate to and select the downloaded <code>.lua</code> file.</li>
+                        </ul>
+                    </li>
+                    <li><b>Configure the Script</b>:
+                        <ul style="font-size: 0.875rem;">
+                            <li>Select the script from the list to show its properties on the right.</li>
+                            <li><b>Enable Layouts</b>: Check boxes for Grid, Reaction, and/or Highlight layouts.</li>
+                            <li><b>Assign Scenes</b>: Select the target OBS scene for each enabled layout.</li>
+                            <li><b>Set Prefixes</b>: Define the General Camera Prefix, Highlight Main Source Prefix and Reacted ContentPrefix (must be the same ones defined in the Control Dock)</li>
+                            <li><b>Adjust & Customize</b>: Use sliders for spacing, margins, and offsets.</li>
+                        </ul>
+                    </li>
+                </ol>
+            </div>
+        </section>
+
+        <section id="integration" class="content-section">
+            <div class="card">
+                <h2>Part 3: Integrated Workflow</h2>
+                <p>
+                    When used together, the Control Dock and the Lua script create a highly automated streaming environment. The Dock handles VDO.Ninja connections and OBS source management, while the Lua script takes care of the visual arrangement within your OBS scenes. This synergy allows for dynamic and professional-looking productions with minimal manual intervention.
+                </p>
+            </div>
+
+            <div class="card">
+                <h3>How They Integrate</h3>
+                <p style="margin-bottom: 1rem;">The core of the integration lies in <b>source name prefixes</b>.</p>
+                <ol class="space-y-3">
+                    <li>The <b>Control Dock</b> adds new VDO.Ninja participants to OBS. It assigns a base <b>Camera Prefix</b> to their source names (e.g., <code>VDO_streamID123</code>).</li>
+                    <li>When you use a feature like "Highlight" in the Control Dock, it renames the specific participant's source in OBS to use the configured <b>Highlight Prefix</b> (e.g., <code>VDO.Highlight_streamID123</code>). Similarly for screen shares using the "Reaction" prefix.</li>
+                    <li>The <b>Lua Script</b>, running in the background within OBS, constantly monitors the source names in your managed scene(s). When it detects a source name that matches one of its configured prefixes (Camera, Reaction, or Highlight), it automatically applies the corresponding layout rules, dynamically arranging the sources.</li>
+                </ol>
+                 <p style="margin-top: 1rem; font-size: 0.875rem; color: #a0a0b0; background-color: #25272c; padding: 0.75rem; border-radius: 0.375rem; border: 1px solid #3e4147;">
+                    <strong style="color: #c8c8c8;">Key Takeaway:</strong> Consistent prefix configuration between the Control Dock and the Lua Script is essential for the automation to work correctly.
+                </p>
+            </div>
+
+            <div class="card">
+                <h3>Example Workflow: Using the Highlight Feature</h3>
+                <ol class="space-y-4">
+                    <li><b>Configuration</b>:
+                        <ul style="font-size: 0.875rem;">
+                            <li>In the <b>Control Dock</b>: Set <code>Camera Prefix</code> to <code>VDO</code> and <code>Highlight prefix</code> to <code>Highlight</code>.</li>
+                            <li>In the <b>Lua Script</b>: Enable "Highlight Layout". Set "Highlight Scene" to the same Highlight Scene configured in the Control Dock. Set "Highlight Camera Prefix" to <code>VDO</code> and "Highlight Main Source Prefix" to <code>VDO.Highlight</code>.</li>
+                        </ul>
+                        <p style="margin-top: 1rem; font-size: 0.875rem; color: #a0a0b0; background-color: #25272c; padding: 0.75rem; border-radius: 0.375rem; border: 1px solid #3e4147;">
+                            <strong style="color: #c8c8c8;">Note:</strong> The Dock prepends the camera prefix to the highlight prefix, so if you set <code>VDO</code> as <code>Camera Prefix</code> and <code>Highlight</code> as <code>Highlight prefix</code>, <code>VDO.Highlight</code> is the actual main source prefix that must be used in the Lua Script.
+                        </p>
+                    </li>
+                    <li><b>In Action</b>:
+                        <ul style="font-size: 0.875rem;" class="space-y-2">
+                            <li>Multiple guests join your VDO.Ninja room. The Dock adds them to OBS as <code>VDO_guest1</code>, <code>VDO_guest2</code>, etc. The Lua script, not seeing a "main" highlighted source yet, arranges them using the Grid Layout settings by default in the target Highlight scene.</li>
+                            <li>You decide to feature Guest 2. In the Control Dock's "Active Streams" list, click the <b>Highlight</b> button for Guest 2.</li>
+                            <li>The Dock renames Guest 2's source in OBS from <code>VDO_guest2</code> to <code>VDO.Highlight_guest2</code> and triggers a transition to the target Highlight scene in OBS if you're not in it.</li>
+                            <li>The Lua script detects the <code>VDO.Highlight_</code> prefix. It immediately applies the Highlight Layout: <code>VDO.Highlight_guest2</code> becomes the large, featured source, and other sources like <code>VDO_guest1</code> are arranged as smaller cameras.</li>
+                            <li>Clicking "Unhighlight" in the Dock reverses the renaming. The Lua script then reverts to the Grid Layout.</li>
+                        </ul>
+                    </li>
+                </ol>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 Interactive Guide. Based on community tools for OBS Studio & VDO.Ninja.</p>
+    </footer>
+
+    <script>
+        const navButtons = document.querySelectorAll('.nav-button');
+        const contentSections = document.querySelectorAll('.content-section');
+        const featureCardHeaders = document.querySelectorAll('.feature-card h4');
+        const layoutToggleButtons = document.querySelectorAll('.layout-toggle-btn');
+
+        function showSection(targetId) {
+            contentSections.forEach(section => {
+                section.style.display = (section.id === targetId) ? 'flex' : 'none';
+                 // If you want sections to become active by adding a class:
+                // section.classList.toggle('active', section.id === targetId);
+            });
+            // Optional: Smooth scroll to the section. 
+            // Adjust headerOffset if you have a fixed/sticky header.
+            const targetElement = document.getElementById(targetId);
+            if (targetElement) {
+                // Delay scroll slightly to ensure section is displayed and layout is calculated
+                setTimeout(() => {
+                    const headerOffset = 100; // Adjust this value based on your sticky nav's height
+                    const elementPosition = targetElement.getBoundingClientRect().top;
+                    const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+            
+                    window.scrollTo({
+                        top: offsetPosition,
+                        behavior: "smooth"
+                    });
+                }, 100); // Small delay
+            }
+        }
+
+        navButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                const targetId = button.dataset.target;
+                showSection(targetId);
+                navButtons.forEach(btn => btn.classList.remove('active-nav'));
+                button.classList.add('active-nav');
+            });
+        });
+
+        featureCardHeaders.forEach(cardHeader => {
+            cardHeader.addEventListener('click', () => {
+                const details = cardHeader.nextElementSibling;
+                const icon = cardHeader.querySelector('.toggle-icon');
+                details.classList.toggle('open');
+                icon.classList.toggle('rotate-180');
+            });
+        });
+
+        layoutToggleButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                const targetId = button.dataset.target;
+                const parentDetails = button.closest('.feature-details');
+
+                // Deactivate other buttons and mockups within the same feature card
+                parentDetails.querySelectorAll('.layout-toggle-btn').forEach(btn => btn.classList.remove('active'));
+                parentDetails.querySelectorAll('.layout-mockup').forEach(mockup => mockup.classList.remove('active'));
+                // parentDetails.querySelectorAll('.layout-mockup').forEach(mockup => mockup.style.display = 'none');
+
+
+                // Activate the clicked button and its target mockup
+                button.classList.add('active');
+                document.getElementById(targetId).classList.add('active');
+                // document.getElementById(targetId).style.display = 'block';
+            });
+        });
+
+        // Initialize: show the first section and activate its nav button
+        function initializeActiveStates() {
+            // Activate the first navigation button and its corresponding section
+            if (navButtons.length > 0 && contentSections.length > 0) {
+                // The navButtons NodeList is in document order.
+                // Since "Control Dock" is now first in HTML, navButtons[0] will be "Control Dock".
+                showSection(navButtons[0].dataset.target);
+                navButtons[0].classList.add('active-nav');
+            }
+
+            // For each feature card, activate the first layout toggle button and its mockup
+            document.querySelectorAll('.feature-details').forEach(details => {
+                const firstButton = details.querySelector('.layout-toggle-btn');
+                if (firstButton) {
+                    firstButton.classList.add('active');
+                    const firstMockupId = firstButton.dataset.target;
+                    const firstMockup = document.getElementById(firstMockupId);
+                    if (firstMockup) {
+                        firstMockup.classList.add('active');
+                        // firstMockup.style.display = 'block'; // Ensure it's visible
+                    }
+                }
+            });
+        }
+
+        initializeActiveStates();
+    </script>
+
+</body>
+</html>
