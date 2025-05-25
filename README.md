@@ -22,12 +22,12 @@ Immersive Reaction Layout:
 * Camera Distribution: Choose between having all reaction cameras on a single side or symmetrically distributed on both sides of the screen.
 * Custom Positioning: Control spacing and X/Y offsets for a perfect fit with your content window.
 * Adjust Spacing: Change the spacing between cameras and the main content at will.
-* Dedicated Prefixes: Define prefixes for your reaction camera sources (Reaction Prefix) and for the main content window capture (Reaction Window Prefix), ensuring the script identifies and positions elements correctly.
+* Dedicated Prefix: Define prefixes for the main content window capture (Reacted Content Prefix), ensuring the script identifies and positions elements correctly.
 
 Dynamic Highlight Layout (NEW):
 * This layout is designed to highlight a specific source while other reaction cameras are positioned relative to it.
 * Same appeance as the Reaction Layout, but the highlighted camera is placed where the screen capture would be.
-* Flexible Settings: Define prefixes for the lateral cameras (Highlight Camera Prefix) and for the main source (Highlight Main Source Prefix).
+* Dedicated Prefix: Define prefixes for the main source (Highlight Main Source Prefix).
 * Camera Distribution: Option to distribute highlight cameras on both sides of the screen.
 * Fine Adjustments: Control spacing and X/Y offsets for optimal positioning.
 
