@@ -7,8 +7,8 @@ math = require("math")
 
 local INTERVAL_MS = 100
 local ASPECT_RATIO = 16 / 9
-local REACTION_CROP_RATIO = 1 -- Crop the width for reaction sources
-local HIGHLIGHT_CROP_RATIO = 1 -- Crop the width for highlight sources
+local REACTION_CROP_RATIO = 3/4 -- Crop the width for reaction sources
+local HIGHLIGHT_CROP_RATIO = 3/4 -- Crop the width for highlight sources
 
 -- Supported languages and translations
 local LANGUAGES = {
@@ -559,7 +559,7 @@ local function handle_react_browsers_left(active_browsers, inactive_browsers, wi
         local source = obs.obs_sceneitem_get_source(browser)
         local source_width = obs.obs_source_get_width(source)
         local source_height = obs.obs_source_get_height(source)
-        local effective_source_width = source_width * REACTION_CROP_RATIO
+        local effective_source_width = source_width
 
         local crop = obs.obs_sceneitem_crop()
         if source_width > 0 then
@@ -587,8 +587,8 @@ local function handle_react_browsers_left(active_browsers, inactive_browsers, wi
         local cam_total_width_on_side = 0
         if total_browsers > 0 and browser_width > 0 then cam_total_width_on_side = browser_width + state.reaction.spacing end
 
-        local window_x = state.reaction.spacing + cam_total_width_on_side + state.reaction.x_offset
-        local window_available_width = state.screen_width - window_x - state.reaction.spacing
+        local window_x = state.reaction.spacing + (cam_total_width_on_side * REACTION_CROP_RATIO) + state.reaction.x_offset
+        local window_available_width = state.screen_width - (window_x - state.reaction.x_offset) - state.reaction.spacing
 
         if total_browsers == 0 then 
             window_available_width = state.screen_width - 2 * state.reaction.spacing
@@ -672,7 +672,7 @@ local function handle_react_browsers_split(active_browsers, inactive_browsers, w
         local x = state.reaction.spacing + state.reaction.x_offset
         local y = current_cam_y_left
         local source = obs.obs_sceneitem_get_source(browser); local sw = obs.obs_source_get_width(source); local sh = obs.obs_source_get_height(source)
-        local effective_sw = sw * REACTION_CROP_RATIO
+        local effective_sw = sw
         local crop = obs.obs_sceneitem_crop(); if sw > 0 then crop.left = sw * (1 - REACTION_CROP_RATIO) / 2; crop.right = sw * (1 - REACTION_CROP_RATIO) / 2; end; obs.obs_sceneitem_set_crop(browser, crop)
         local pos = obs.vec2(); pos.x = x; pos.y = y; obs.obs_sceneitem_set_pos(browser, pos)
         if effective_sw > 0 and sh > 0 and browser_width > 0 and browser_height > 0 then set_scale(browser, browser_width / effective_sw, browser_height / sh) else set_scale(browser, 0, 0) end
@@ -682,10 +682,10 @@ local function handle_react_browsers_split(active_browsers, inactive_browsers, w
     local current_cam_y_right = ((state.screen_height - (cams_right_count * browser_height + (math.max(0, cams_right_count - 1)) * state.reaction.spacing)) / 2) + state.reaction.y_offset
     for i = 1, cams_right_count do
         local browser = active_browsers[cams_left_count + i]
-        local x = state.screen_width - browser_width - state.reaction.spacing + state.reaction.x_offset 
+        local x = state.screen_width - (browser_width * REACTION_CROP_RATIO) - state.reaction.spacing + state.reaction.x_offset
         local y = current_cam_y_right
         local source = obs.obs_sceneitem_get_source(browser); local sw = obs.obs_source_get_width(source); local sh = obs.obs_source_get_height(source)
-        local effective_sw = sw * REACTION_CROP_RATIO
+        local effective_sw = sw
         local crop = obs.obs_sceneitem_crop(); if sw > 0 then crop.left = sw * (1 - REACTION_CROP_RATIO) / 2; crop.right = sw * (1 - REACTION_CROP_RATIO) / 2; end; obs.obs_sceneitem_set_crop(browser, crop)
         local pos = obs.vec2(); pos.x = x; pos.y = y; obs.obs_sceneitem_set_pos(browser, pos)
         if effective_sw > 0 and sh > 0 and browser_width > 0 and browser_height > 0 then set_scale(browser, browser_width / effective_sw, browser_height / sh) else set_scale(browser, 0, 0) end
@@ -695,12 +695,12 @@ local function handle_react_browsers_split(active_browsers, inactive_browsers, w
     for _, browser in ipairs(inactive_browsers) do hide_browser(browser) end
 
     if window_capture then
-        local left_cam_total_width = 0; if cams_left_count > 0 and browser_width > 0 then left_cam_total_width = browser_width + state.reaction.spacing end
-        local right_cam_total_width = 0; if cams_right_count > 0 and browser_width > 0 then right_cam_total_width = browser_width + state.reaction.spacing end
+        local left_cam_total_width = 0; if cams_left_count > 0 and browser_width > 0 then left_cam_total_width = (browser_width * REACTION_CROP_RATIO) + state.reaction.spacing end
+        local right_cam_total_width = 0; if cams_right_count > 0 and browser_width > 0 then right_cam_total_width = (browser_width * REACTION_CROP_RATIO) + state.reaction.spacing end
 
-        local window_x = state.reaction.spacing + left_cam_total_width + state.reaction.x_offset
-        local window_available_width = state.screen_width - left_cam_total_width - right_cam_total_width - 2 * state.reaction.spacing
-        
+        local window_x = left_cam_total_width + state.reaction.x_offset + state.reaction.spacing
+        local window_available_width = state.screen_width - left_cam_total_width - right_cam_total_width - (state.reaction.spacing * 2)
+
         if total_browsers == 0 then 
              window_available_width = state.screen_width - 2 * state.reaction.spacing
              window_x = state.reaction.spacing + state.reaction.x_offset
@@ -822,7 +822,7 @@ local function handle_highlight_browsers_left(active_browsers, inactive_browsers
         local source = obs.obs_sceneitem_get_source(browser)
         local source_width = obs.obs_source_get_width(source)
         local source_height = obs.obs_source_get_height(source)
-        local effective_source_width = source_width * HIGHLIGHT_CROP_RATIO
+        local effective_source_width = source_width -- As in react
 
         local crop = obs.obs_sceneitem_crop()
         if source_width > 0 then
@@ -845,13 +845,17 @@ local function handle_highlight_browsers_left(active_browsers, inactive_browsers
     for _, browser in ipairs(inactive_browsers) do hide_browser(browser) end
 
     if main_source_item then
-        local cam_total_width_on_side = 0
-        if total_browsers > 0 and browser_width > 0 then cam_total_width_on_side = browser_width + state.highlight.spacing end
+        local cam_total_width_on_side = 0 -- As in react
+        if total_browsers > 0 and browser_width > 0 then
+             cam_total_width_on_side = browser_width + state.highlight.spacing -- As in react
+        end
 
-        local main_x = state.highlight.spacing + cam_total_width_on_side + state.highlight.x_offset
-        local main_available_width = state.screen_width - main_x - state.highlight.spacing
+        -- main_x calculation mirroring window_x from react (using main_source_item specific vars)
+        local main_x = state.highlight.spacing + (cam_total_width_on_side * HIGHLIGHT_CROP_RATIO) + state.highlight.x_offset -- As in react
 
-        if total_browsers == 0 then
+        local main_available_width = state.screen_width - (main_x - state.highlight.x_offset) - state.highlight.spacing -- As in react
+
+        if total_browsers == 0 then -- As in react
             main_available_width = state.screen_width - 2 * state.highlight.spacing
             main_x = state.highlight.spacing + state.highlight.x_offset
         end
@@ -863,11 +867,11 @@ local function handle_highlight_browsers_left(active_browsers, inactive_browsers
         if main_height > state.screen_height - 2 * state.highlight.spacing then
             main_height = state.screen_height - 2 * state.highlight.spacing
             main_width = main_height * ASPECT_RATIO
-            main_x = cam_total_width_on_side + state.highlight.spacing + ((main_available_width - main_width) / 2) + state.highlight.x_offset
-            if total_browsers == 0 then main_x = (state.screen_width - main_width) / 2 + state.highlight.x_offset end
+            main_x = cam_total_width_on_side + state.highlight.spacing + state.highlight.x_offset -- As in react
+            if total_browsers == 0 then main_x = (state.screen_width - main_width) / 2 + state.highlight.x_offset end -- As in react
         end
         if main_width <=0 then main_width = 1 end; if main_height <=0 then main_height = 1/ASPECT_RATIO end
-        
+
         local main_y = (state.screen_height - main_height) / 2 + state.highlight.y_offset
 
         local crop = obs.obs_sceneitem_crop(); obs.obs_sceneitem_set_crop(main_source_item, crop)
@@ -881,83 +885,93 @@ local function handle_highlight_browsers_split(active_browsers, inactive_browser
     local total_browsers = #active_browsers
     if total_browsers == 0 then
         if main_source_item then
-            local main_width = state.screen_width - 2 * state.highlight.spacing
-            local main_height = main_width / ASPECT_RATIO
-            if main_height > state.screen_height - 2 * state.highlight.spacing then
-                main_height = state.screen_height - 2 * state.highlight.spacing
-                main_width = main_height * ASPECT_RATIO
+            -- Using "window_width/height" for variable names to mirror react logic structure
+            local window_width = state.screen_width - 2 * state.highlight.spacing
+            local window_height = window_width / ASPECT_RATIO
+            if window_height > state.screen_height - 2 * state.highlight.spacing then
+                window_height = state.screen_height - 2 * state.highlight.spacing
+                window_width = window_height * ASPECT_RATIO
             end
-            if main_width <=0 then main_width = 1 end; if main_height <=0 then main_height = 1/ASPECT_RATIO end
-            local x = (state.screen_width - main_width) / 2 + state.highlight.x_offset
-            local y = (state.screen_height - main_height) / 2 + state.highlight.y_offset
-            local p = obs.vec2(); p.x=x; p.y=y; obs.obs_sceneitem_set_pos(main_source_item, p)
+            if window_width <=0 then window_width = 1 end; if window_height <=0 then window_height = 1/ASPECT_RATIO end
+
+            local x_pos = (state.screen_width - window_width) / 2 + state.highlight.x_offset
+            local y_pos = (state.screen_height - window_height) / 2 + state.highlight.y_offset
+            local p = obs.vec2(); p.x=x_pos; p.y=y_pos; obs.obs_sceneitem_set_pos(main_source_item, p)
             local cr = obs.obs_sceneitem_crop(); obs.obs_sceneitem_set_crop(main_source_item, cr)
             local ms_s = obs.obs_sceneitem_get_source(main_source_item); local ms_w = obs.obs_source_get_width(ms_s); local ms_h = obs.obs_source_get_height(ms_s)
-            if ms_w > 0 and ms_h > 0 and main_width > 0 and main_height > 0 then set_scale(main_source_item, main_width/ms_w, main_height/ms_h) else set_scale(main_source_item,0,0) end
+            if ms_w > 0 and ms_h > 0 and window_width > 0 and window_height > 0 then set_scale(main_source_item, window_width/ms_w, window_height/ms_h) else set_scale(main_source_item,0,0) end
         end
         for _,b in ipairs(inactive_browsers) do hide_browser(b) end
         return
     end
 
-    local cams_l_count = math.ceil(total_browsers / 2)
-    local cams_r_count = math.floor(total_browsers / 2)
-    local cams_col_max = math.max(cams_l_count, cams_r_count)
+    local cams_left_count = math.ceil(total_browsers / 2)
+    local cams_right_count = math.floor(total_browsers / 2)
+    local cams_per_column = math.max(cams_left_count, cams_right_count)
 
-    local avail_h_cams = state.screen_height - state.highlight.spacing * (cams_col_max + 1)
-    local cam_h = 0; if cams_col_max > 0 then cam_h = avail_h_cams / cams_col_max end
-    local cam_w = cam_h * ASPECT_RATIO
+    local available_height_for_cams = state.screen_height - state.highlight.spacing * (cams_per_column + 1)
+    local browser_height = 0
+    if cams_per_column > 0 then browser_height = available_height_for_cams / cams_per_column end
+    local browser_width = browser_height * ASPECT_RATIO
 
-    if cam_w > state.screen_width / 4 then cam_w = state.screen_width / 4; cam_h = cam_w / ASPECT_RATIO; end
-    if cam_w <= 0 or cam_h <= 0 then cam_w = 0; cam_h = 0; end
+    if browser_width > state.screen_width / 4 then browser_width = state.screen_width / 4; browser_height = browser_width / ASPECT_RATIO; end
+    if browser_width <= 0 or browser_height <= 0 then browser_width = 0; browser_height = 0; end
 
-    local cur_cam_y_l = ((state.screen_height - (cams_l_count*cam_h + (math.max(0,cams_l_count-1))*state.highlight.spacing))/2) + state.highlight.y_offset
-    for i=1, cams_l_count do
-        local cam = active_browsers[i]
-        local x = state.highlight.spacing + state.highlight.x_offset; local y = cur_cam_y_l
-        local s = obs.obs_sceneitem_get_source(cam); local sw=obs.obs_source_get_width(s); local sh=obs.obs_source_get_height(s)
-        local effective_sw = sw * HIGHLIGHT_CROP_RATIO
-        local cr = obs.obs_sceneitem_crop(); if sw>0 then cr.left=sw*(1-HIGHLIGHT_CROP_RATIO)/2; cr.right=sw*(1-HIGHLIGHT_CROP_RATIO)/2; end; obs.obs_sceneitem_set_crop(cam,cr)
-        local p=obs.vec2();p.x=x;p.y=y; obs.obs_sceneitem_set_pos(cam,p)
-        if effective_sw >0 and sh>0 and cam_w>0 and cam_h>0 then set_scale(cam, cam_w/effective_sw, cam_h/sh) else set_scale(cam,0,0) end
-        cur_cam_y_l = cur_cam_y_l + cam_h + state.highlight.spacing
+    local current_cam_y_left = ((state.screen_height - (cams_left_count*browser_height + (math.max(0,cams_left_count-1))*state.highlight.spacing))/2) + state.highlight.y_offset
+    for i=1, cams_left_count do
+        local browser = active_browsers[i]
+        local x = state.highlight.spacing + state.highlight.x_offset
+        local y = current_cam_y_left
+        local s = obs.obs_sceneitem_get_source(browser); local sw=obs.obs_source_get_width(s); local sh=obs.obs_source_get_height(s)
+        local effective_sw = sw
+        local cr = obs.obs_sceneitem_crop(); if sw>0 then cr.left=sw*(1-HIGHLIGHT_CROP_RATIO)/2; cr.right=sw*(1-HIGHLIGHT_CROP_RATIO)/2; end; obs.obs_sceneitem_set_crop(browser,cr)
+        local p=obs.vec2();p.x=x;p.y=y; obs.obs_sceneitem_set_pos(browser,p)
+        if effective_sw >0 and sh>0 and browser_width>0 and browser_height>0 then set_scale(browser, browser_width/effective_sw, browser_height/sh) else set_scale(browser,0,0) end
+        current_cam_y_left = current_cam_y_left + browser_height + state.highlight.spacing
     end
 
-    local cur_cam_y_r = ((state.screen_height - (cams_r_count*cam_h + (math.max(0,cams_r_count-1))*state.highlight.spacing))/2) + state.highlight.y_offset
-    for i=1, cams_r_count do
-        local cam = active_browsers[cams_l_count+i]
-        local x = state.screen_width - cam_w - state.highlight.spacing + state.highlight.x_offset
-        local y = cur_cam_y_r
-        local s = obs.obs_sceneitem_get_source(cam); local sw=obs.obs_source_get_width(s); local sh=obs.obs_source_get_height(s)
-        local effective_sw = sw * HIGHLIGHT_CROP_RATIO
-        local cr = obs.obs_sceneitem_crop(); if sw>0 then cr.left=sw*(1-HIGHLIGHT_CROP_RATIO)/2; cr.right=sw*(1-HIGHLIGHT_CROP_RATIO)/2; end; obs.obs_sceneitem_set_crop(cam,cr)
-        local p=obs.vec2();p.x=x;p.y=y; obs.obs_sceneitem_set_pos(cam,p)
-        if effective_sw>0 and sh>0 and cam_w>0 and cam_h>0 then set_scale(cam, cam_w/effective_sw, cam_h/sh) else set_scale(cam,0,0) end
-        cur_cam_y_r = cur_cam_y_r + cam_h + state.highlight.spacing
+    local current_cam_y_right = ((state.screen_height - (cams_right_count*browser_height + (math.max(0,cams_right_count-1))*state.highlight.spacing))/2) + state.highlight.y_offset
+    for i=1, cams_right_count do
+        local browser = active_browsers[cams_left_count+i]
+        local x = state.screen_width - (browser_width * HIGHLIGHT_CROP_RATIO) - state.highlight.spacing + state.highlight.x_offset
+        local y = current_cam_y_right
+        local s = obs.obs_sceneitem_get_source(browser); local sw=obs.obs_source_get_width(s); local sh=obs.obs_source_get_height(s)
+        local effective_sw = sw
+        local cr = obs.obs_sceneitem_crop(); if sw>0 then cr.left=sw*(1-HIGHLIGHT_CROP_RATIO)/2; cr.right=sw*(1-HIGHLIGHT_CROP_RATIO)/2; end; obs.obs_sceneitem_set_crop(browser,cr)
+        local p=obs.vec2();p.x=x;p.y=y; obs.obs_sceneitem_set_pos(browser,p)
+        if effective_sw>0 and sh>0 and browser_width>0 and browser_height>0 then set_scale(browser, browser_width/effective_sw, browser_height/sh) else set_scale(browser,0,0) end
+        current_cam_y_right = current_cam_y_right + browser_height + state.highlight.spacing
     end
 
     for _,b in ipairs(inactive_browsers) do hide_browser(b) end
 
     if main_source_item then
-        local l_cam_total_w = 0; if cams_l_count>0 and cam_w>0 then l_cam_total_w = cam_w + state.highlight.spacing end
-        local r_cam_total_w = 0; if cams_r_count>0 and cam_w>0 then r_cam_total_w = cam_w + state.highlight.spacing end
-        local main_x = state.highlight.spacing + l_cam_total_w + state.highlight.x_offset
-        local main_avail_w = state.screen_width - l_cam_total_w - r_cam_total_w - 2*state.highlight.spacing
-        if total_browsers == 0 then main_avail_w = state.screen_width - 2*state.highlight.spacing; main_x = state.highlight.spacing + state.highlight.x_offset; end
-        if main_avail_w <=0 then main_avail_w = 1 end
+        local left_cam_total_width = 0; if cams_left_count>0 and browser_width>0 then left_cam_total_width = (browser_width * HIGHLIGHT_CROP_RATIO) + state.highlight.spacing end
+        local right_cam_total_width = 0; if cams_right_count>0 and browser_width>0 then right_cam_total_width = (browser_width * HIGHLIGHT_CROP_RATIO) + state.highlight.spacing end
 
-        local main_w = main_avail_w
-        local main_h = main_w / ASPECT_RATIO
-        if main_h > state.screen_height - 2*state.highlight.spacing then
-            main_h = state.screen_height - 2*state.highlight.spacing; main_w = main_h*ASPECT_RATIO
-            main_x = l_cam_total_w + state.highlight.spacing + ((main_avail_w - main_w)/2) + state.highlight.x_offset
-            if total_browsers == 0 then main_x = (state.screen_width - main_w)/2 + state.highlight.x_offset end
+        -- Using "window_x/width/height" for variable names to mirror react logic structure
+        local window_x = left_cam_total_width + state.highlight.x_offset + state.highlight.spacing
+        local window_available_width = state.screen_width - left_cam_total_width - right_cam_total_width - (state.highlight.spacing * 2)
+
+        if total_browsers == 0 then -- This case mirrors the react function's internal handling
+             window_available_width = state.screen_width - 2 * state.highlight.spacing
+             window_x = state.highlight.spacing + state.highlight.x_offset
         end
-        if main_w <=0 then main_w = 1 end; if main_h <=0 then main_h = 1/ASPECT_RATIO end
-        local main_y = (state.screen_height - main_h)/2 + state.highlight.y_offset
+        if window_available_width <=0 then window_available_width = 1 end
+
+        local window_width = window_available_width
+        local window_height = window_width / ASPECT_RATIO
+        if window_height > state.screen_height - 2*state.highlight.spacing then
+            window_height = state.screen_height - 2*state.highlight.spacing; window_width = window_height*ASPECT_RATIO
+            window_x = left_cam_total_width + state.highlight.spacing + ((window_available_width - window_width)/2) + state.highlight.x_offset
+            if total_browsers == 0 then window_x = (state.screen_width - window_width)/2 + state.highlight.x_offset end
+        end
+        if window_width <=0 then window_width = 1 end; if window_height <=0 then window_height = 1/ASPECT_RATIO end
+        local window_y = (state.screen_height - window_height)/2 + state.highlight.y_offset
         local cr = obs.obs_sceneitem_crop(); obs.obs_sceneitem_set_crop(main_source_item, cr)
         local ms_s = obs.obs_sceneitem_get_source(main_source_item); local ms_w = obs.obs_source_get_width(ms_s); local ms_h = obs.obs_source_get_height(ms_s)
-        local p=obs.vec2();p.x=main_x;p.y=main_y; obs.obs_sceneitem_set_pos(main_source_item,p)
-        if ms_w>0 and ms_h>0 and main_w>0 and main_h>0 then set_scale(main_source_item,main_w/ms_w, main_h/ms_h) else set_scale(main_source_item,0,0) end
+        local p=obs.vec2();p.x=window_x;p.y=window_y; obs.obs_sceneitem_set_pos(main_source_item,p)
+        if ms_w>0 and ms_h>0 and window_width>0 and window_height>0 then set_scale(main_source_item,window_width/ms_w, window_height/ms_h) else set_scale(main_source_item,0,0) end
     end
 end
 
