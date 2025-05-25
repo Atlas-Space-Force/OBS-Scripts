@@ -1,6 +1,6 @@
 # Advanced OBS Studio Automation Suite
 
-> For an interactive guide with visuals: [view online](https://morsethecode.github.io/OBS-Scripts/guide.html))
+> For an interactive guide with visuals: [view online](https://morsethecode.github.io/OBS-Scripts/guide.html)
 
 ---
 
