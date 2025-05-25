@@ -1,89 +1,138 @@
 # Advanced OBS Studio Automation Suite
 
-This repository provides a powerful set of tools to dynamically manage and organize your scenes within OBS Studio, significantly enhancing automation and control for streamers and content creators. It features a robust Lua script for advanced scene management and a modified web-based OBS Control Dock for seamless VDO.Ninja integration.
+> For an interactive guide with visuals: [Open guide.html](./guide.html) (or [view online](https://morsethecode.github.io/OBS-Scripts/guide.html))
 
 ---
 
-## OBS Lua Script - Advanced Scene Layouts for OBS Studio: Grid, Reaction and Highlight
+## 📖 Index
 
-Overview:
+- [Overview](#overview)
+- [VDO.Ninja OBS Control Dock (Modified)](#vdoninja-obs-control-dock-modified)
+  - [Key Features](#key-features-of-the-control-dock)
+  - [Installation and Setup](#installation-and-setup-for-control-dock)
+- [Advanced Scene Layouts Lua Script](#advanced-scene-layouts-lua-script)
+  - [Key Features](#key-features-of-the-lua-script)
+  - [Installation and Configuration](#installation-and-configuration-for-lua-script)
+- [Integrated Workflow](#integrated-workflow)
+  - [How They Integrate](#how-they-integrate)
+  - [Example Workflow: Using the Highlight Feature](#example-workflow-using-the-highlight-feature)
+- [Requirements](#requirements)
+- [Credits & Original Resources](#credits--original-resources)
 
-This robust Lua script offers a powerful set of tools to dynamically manage and organize your scenes within OBS Studio. It integrates four core functionalities: Grid Layout, Reaction Layout and Highlight Layout, all with multi-language support.
+---
 
-### Key Features:
+## Overview
 
-Dynamic Grid Layout:
-* Organize multiple video sources into a customizable grid pattern. Ideal for multi-participant presentations, team gaming streams, or varied content displays.
-* Flexible Settings: Adjust spacing, margins, and X/Y offsets to tailor the grid to your scene design.
-* Split-Screen Mode: A special mode for exactly two cameras optimizes the view, perfect for interviews or paired reactions.
+This repository provides a suite of tools for advanced automation in OBS Studio, focusing on dynamic scene layouts and seamless integration with VDO.Ninja. It includes:
 
-Immersive Reaction Layout:
-* Create engaging reaction layouts with your cameras intelligently positioned relative to the main content (window capture).
-* Camera Distribution: Choose between having all reaction cameras on a single side or symmetrically distributed on both sides of the screen.
-* Custom Positioning: Control spacing and X/Y offsets for a perfect fit with your content window.
-* Adjust Spacing: Change the spacing between cameras and the main content at will.
-* Dedicated Prefix: Define prefixes for the main content window capture (Reacted Content Prefix), ensuring the script identifies and positions elements correctly.
-
-Dynamic Highlight Layout (NEW):
-* This layout is designed to highlight a specific source while other reaction cameras are positioned relative to it.
-* Same appeance as the Reaction Layout, but the highlighted camera is placed where the screen capture would be.
-* Dedicated Prefix: Define prefixes for the main source (Highlight Main Source Prefix).
-* Camera Distribution: Option to distribute highlight cameras on both sides of the screen.
-* Fine Adjustments: Control spacing and X/Y offsets for optimal positioning.
-
-Comprehensive Multi-Language Support:
-* The script provides support for several languages for a more accessible and intuitive user experience.
-* Available Languages: English, Portuguese, Spanish, Chinese (中文), Russian (Русский), Japanese (日本語), and German (Deutsch).
-
-Integrated User Interface:
-* All settings are easily accessible and adjustable via a dedicated user interface in the OBS script properties panel.
-* Intuitive Controls: Enable/disable each feature independently and adjust parameters with sliders and checkboxes.
-* Real-time Updates: Changes to settings are applied dynamically, allowing you to see the results instantly.
-This script is a powerful solution for streamers, content creators, and anyone seeking greater control and automation over their scene organization in OBS Studio.
-
-### Technical Details:
-
-* Recommended Integration: This functionality works best with tools that offer automatic creation, deletion and dynamically renaming of sources with specific prefixes, such as VDO.Ninja in conjunction with the modified OBS Controller page by Morse: [VDO.Ninja OBS Controller](https://morsethecode.github.io/vdo.ninja/obs). The original version of the controller can be found here, in case it interests you: [Original VDO.Ninja OBS Controller](https://vdo.ninja/obs)
-
-* When no screen share link or highlighted user is found, the Screen Share and the Highlight layouts fall back to the Grid Layout, so it's recommended that you configured spacing, margins and choose between normal or split screen mode in the Grid Section, even if you don't plan to use it.
-* The script is configured to treat your OBS and the sources as if they're 1920x1080, but you can always change the resolution in the script (line 333). Just remember to always give the browser sources the same base resolution defined in Settings > Video.
-* Sources are cropped, scaled, and positioned dynamically to ensure they fit perfectly into the layout.
-* Inactive sources are hidden from view but can be re-enabled at any time.
-
-### Requirements:
-
-* OBS Studio (version 27.0 or higher recommended).
-* Lua scripting support (included with OBS Studio).
-* [Click here](https://obsproject.com/forum/resources/advanced-scene-layouts-grid-reaction-and-highlight.2152/) to go to the OBS Forum page.
+- A robust **Lua script** for dynamic scene management (Grid, Reaction, and Highlight layouts).
+- A **modified VDO.Ninja OBS Control Dock** for streamlined source management and deep OBS integration.
+- Multi-language support and an intuitive user interface.
+- An [interactive HTML guide](./guide.html) for step-by-step onboarding.
 
 ---
 
 ## VDO.Ninja OBS Control Dock (Modified)
 
-This page provides a modified version of the OBS Control Dock originally developed by **Steve Seguin**, the creator of VDO.Ninja. This version aims to offer enhanced control and integration specifically for VDO.Ninja users managing their OBS Studio scenes.
+This is a customized version of the OBS Control Dock by **Steve Seguin** (creator of VDO.Ninja). It functions as a web-based interface for managing VDO.Ninja sources in OBS Studio via the OBS WebSocket plugin.
 
-**Original OBS Controller by Steve Seguin:**
-You can find the original OBS Controller page and more information about Steve Seguin's work with VDO.Ninja here: [VDO.Ninja OBS Controller](https://vdo.ninja/obs)
-**[Steve Seguin's GitHub](https://github.com/steveseguin)**
+### Key Features of the Control Dock
 
-### How It Works
+- **VDO.Ninja Room Integration:** Connect to your VDO.Ninja room and manage participants.
+- **Dynamic Source Management:** Automatically add, remove, and rename VDO.Ninja video sources in your chosen OBS scenes.
+- **Screen Share Integration:** Dedicated features for handling and switching VDO.Ninja screen share sources in OBS.
+- **Highlight Source Management:** Designate and control a "highlighted" VDO.Ninja source, perfect for dynamic layouts.
+- **Stream Mapping:** Advanced rules for routing specific streams to scenes or layouts.
 
-This modified VDO.Ninja OBS Control Dock allows for streamlined management of VDO.Ninja sources within your OBS Studio scenes. It leverages the OBS WebSocket plugin to communicate with OBS Studio, enabling dynamic actions directly from your browser.
+### Installation and Setup for Control Dock
 
-The page is designed to work in conjunction with the `Advanced Scene Layouts: Grid, Reaction and Highlight` script. When used together, this controller can facilitate automated source naming and organization.
+1. **Access the Page:**
+   - **Local Option:** Download `obs.html` and open it locally.
+   - **Hosted Option:** Use [https://morsethecode.github.io/OBS-Scripts/obs](https://morsethecode.github.io/OBS-Scripts/obs).
 
-### Key Features (Includes Additions!)
+2. **Add as an OBS Dock:**
+   - In OBS: Go to **Docks → Custom Browser Docks...**.
+   - Choose a Dock Name (e.g., "VDO.Ninja Control").
+   - Enter the local file path or the hosted URL.
+   - Click **Apply**, then **Close**.
 
-* **VDO.Ninja Room Integration:** Connect to your VDO.Ninja room and manage participants.
-* **Dynamic Source Creation/Deletion:** Automatically add and delete VDO.Ninja video sources in your specified OBS scenes.
-* **Source Sizing and Positioning:** While the page itself provides some controls, it's particularly powerful when combined with OBS scripts that handle complex layouts.
-* **🆕 Screen Share Integration:** Dedicated features for managing and switching VDO.Ninja screen share sources within your OBS scenes, providing more refined control over shared content. (This feature is an inclusion not present in the original OBS Controller by Steve Seguin).
-* **🆕 Highlight Source Management:** Enhanced capabilities to designate and control a "highlighted" VDO.Ninja source, which is especially useful when paired with advanced OBS scripts that dynamically adjust layouts based on specific source prefixes. (This feature is an inclusion not present in the original OBS Controller by Steve Seguin).
-
-### Integration with `Advanced Scene Layouts`
-
-This modified OBS Controller is particularly effective when used with OBS Lua scripts that process source names for dynamic layouts. For instance, if you're using a script like the `Advanced Scene Layouts` (which includes Grid, Reaction, and Highlight Layouts), you can leverage this controller, as it automatically creates your VDO.Ninja sources with specific prefixes.
+3. **Configure the Dock:**
+   - **OBS WebSocket:** Enter URL (default: `ws://localhost:4455`) and password. Click Connect.
+   - **Prefixes:** Set Camera, Reaction, and Highlight prefixes (must match those in the Lua script).
+   - **VDO.Ninja:** Enter your room name and password (if any), then connect.
+   - **Target Scenes:** Select main, highlight, and screen share scenes as needed.
 
 ---
 
-Feel free to explore and integrate this tool into your VDO.Ninja and OBS Studio workflow for a more automated and efficient streaming experience.
+## Advanced Scene Layouts Lua Script
+
+This Lua script adds dynamic scene management and layout automation to OBS Studio. It works best with sources named and managed by the Control Dock.
+
+### Key Features of the Lua Script
+
+- **Dynamic Grid Layout:** Organize multiple video sources in a customizable grid. Supports split-screen for two cameras.
+- **Immersive Reaction Layout:** Place reaction cameras relative to a main content window. Choose side/symmetrical camera distribution and custom spacing.
+- **Dynamic Highlight Layout:** Feature a specific source ("highlighted" participant) in the main area, with other cameras arranged around it.
+- **Multi-Language Support:** UI in English, Portuguese, Spanish, Chinese, Russian, Japanese, and German.
+- **Integrated UI:** All settings are available in the OBS script properties panel. Changes apply in real-time.
+
+### Installation and Configuration for Lua Script
+
+1. **Download the Script:** Get `Advanced Scene Layouts.lua` from this repo.
+2. **Open OBS Studio:** Start OBS.
+3. **Add the Script:**
+   - Go to **Tools → Scripts**.
+   - Click the **"+"** button and select the `.lua` file.
+4. **Configure the Script:**
+   - Select the script in the list to show properties.
+   - Enable/disable layouts as needed.
+   - Assign target scenes for each layout.
+   - Set source name prefixes (must match the Control Dock).
+   - Adjust spacing, margins, and offsets using sliders.
+
+---
+
+## Integrated Workflow
+
+When used together, the Control Dock and Lua script create a highly automated streaming environment. The Dock manages VDO.Ninja connections and source naming, while the Lua script arranges scenes and applies dynamic layouts.
+
+### How They Integrate
+
+- The Control Dock adds new VDO.Ninja participants to OBS with a **Camera Prefix** (e.g., `VDO_guest1`).
+- Using the Highlight feature, the Dock renames a participant's source to the **Highlight Prefix** (e.g., `VDO.Highlight_guest2`) and transitions to the highlight scene.
+- The Lua script monitors source names and applies the correct layout based on prefixes.
+- Consistent prefix configuration between the Dock and Lua script is essential for automation.
+
+### Example Workflow: Using the Highlight Feature
+
+1. **Configuration:**
+   - Set `Camera Prefix` and `Highlight Prefix` in both the Control Dock and Lua script.
+   - Assign the highlight scene in both tools.
+
+2. **In Action:**
+   - Guests join your VDO.Ninja room and are added to OBS as, e.g., `VDO_guest1`, `VDO_guest2`.
+   - Click "Highlight" on a guest in the Control Dock. The source is renamed to `VDO.Highlight_guest2` and the scene transitions.
+   - The Lua script detects the prefix and applies the highlight layout.
+   - "Unhighlight" reverses the process and returns to grid layout.
+
+---
+
+## Requirements
+
+- OBS Studio (version 27.0 or higher recommended)
+- OBS WebSocket plugin (for Control Dock)
+- Lua scripting support (included with OBS Studio)
+- [VDO.Ninja](https://vdo.ninja/) for browser-based guest video
+
+---
+
+## Credits & Original Resources
+
+- **Control Dock based on work by [Steve Seguin](https://github.com/steveseguin) ([original OBS Controller](https://vdo.ninja/obs)).**
+- [OBS Studio](https://obsproject.com/)
+- [VDO.Ninja](https://vdo.ninja/)
+- [Interactive Guide (guide.html)](./guide.html) ([view online](https://morsethecode.github.io/OBS-Scripts/guide.html))
+
+---
+
+Feel free to explore, use, and adapt these tools to automate and optimize your OBS Studio + VDO.Ninja workflow!
