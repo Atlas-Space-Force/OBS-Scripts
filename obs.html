@@ -3,6 +3,8 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://unpkg.com/i18next/dist/umd/i18next.min.js"></script>
+    <script src="https://unpkg.com/i18next-http-backend/i18nextHttpBackend.js"></script>
     <title>VDO.Ninja OBS Control Dock</title>
     <style>
       body {
@@ -760,26 +762,16 @@
       const obsStatusIndicator = document.getElementById("obsStatusIndicator");
 
       const cameraPrefixInput = document.getElementById("cameraPrefix");
-      const reactionSubPrefixInput =
-        document.getElementById("reactionSubPrefix");
-      const highlightSubPrefixInput = document.getElementById(
-        "highlightSubPrefix"
-      );
-      const cameraSubPrefixLabelText = document.getElementById(
-        "cameraSubPrefixLabelText"
-      ); // For dynamic label updates
-      const reactionSubPrefixLabelText = document.getElementById(
-        "reactionSubPrefixLabelText"
-      ); // For dynamic label updates
-      const highlightSubPrefixLabelText = document.getElementById(
-        "highlightSubPrefixLabelText"
-      ); // For dynamic label updates
+      const reactionSubPrefixInput =document.getElementById("reactionSubPrefix");
+      const highlightSubPrefixInput = document.getElementById("highlightSubPrefix");
+      const cameraSubPrefixLabelText = document.getElementById("cameraSubPrefixLabelText"); // For dynamic label updates
+      const reactionSubPrefixLabelText = document.getElementById("reactionSubPrefixLabelText"); // For dynamic label updates
+      const highlightSubPrefixLabelText = document.getElementById("highlightSubPrefixLabelText"); // For dynamic label updates
 
       const vdoNinjaBaseUrlInput = document.getElementById("vdoNinjaBaseUrl");
       const vdoNinjaRoomInput = document.getElementById("vdoNinjaRoom");
       const vdoNinjaPasswordInput = document.getElementById("vdoNinjaPassword");
-      const vdoNinjaStreamIdsInput =
-        document.getElementById("vdoNinjaStreamIds");
+      const vdoNinjaStreamIdsInput = document.getElementById("vdoNinjaStreamIds");
       const vdoNinjaIframe = document.getElementById("vdoNinjaIframe");
 
       const obsSceneNameInput = document.getElementById("obsSceneNameInput"); // Hidden input, mirrors obsSceneSelect
@@ -787,9 +779,10 @@
       const sourceSizingSelect = document.getElementById("sourceSizing");
       const sourceCodecSelect = document.getElementById("sourceCodec");
       const autoAddSourcesCheckbox = document.getElementById("autoAddSources");
-      const autoRemoveSourcesCheckbox =
-        document.getElementById("autoRemoveSources");
+      const autoRemoveSourcesCheckbox = document.getElementById("autoRemoveSources");
+
       const streamListContainer = document.getElementById("streamList");
+
       const logArea = document.getElementById("logArea");
       const loadScenesBtn = document.getElementById("loadScenesBtn");
       const highlightSceneSelect = document.getElementById("highlightSceneSelect");
