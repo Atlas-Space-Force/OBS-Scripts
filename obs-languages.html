@@ -103,6 +103,7 @@
          /* Will be set by JS */
       }
       .collapsible::before {
+        content: var(--before-text, "Click"); /* Use CSS variable for dynamic text */
         position: absolute;
         right: 40px;
         font-size: 10px;
@@ -794,7 +795,7 @@
     </div>
 
     <script>
-
+      // i18next initialization and language change logic
       const loadPath = 'https://raw.githubusercontent.com/MorseTheCode/OBS-Scripts/refs/heads/main/locales/{{lng}}.json';
 
       i18next
@@ -809,7 +810,7 @@
         }, function(err, t) {
           if (err) return console.error('Error initializing i18next:', err);
           updateContent(); // Initial translation
-          setupCollapsibleTooltips();
+          // setupCollapsibleTooltips(); // Called within updateContent now
         });
 
       function updateContent() {
@@ -824,31 +825,21 @@
             element.innerHTML = i18next.t(key);
           }
         });
-        // Update dynamic elements that are not covered by data-i18n, if any
-        // For example, if button text changes dynamically, update it here too.
         updateObsConnectButtonText();
-        updateVdoNinjaButtonState(vdoNinjaConnected); // To re-translate button and status
-        updateStreamList(); // To re-translate dynamic parts of the stream list
-        updatePrefixLabels(); // To re-translate prefix labels
-        setupCollapsibleTooltips(); // To re-translate collapsible tooltips
+        updateVdoNinjaButtonState(vdoNinjaConnected);
+        updateStreamList();
+        updatePrefixLabels();
+        setupCollapsibleTooltips(); // Ensure this is called to update dynamic tooltips
+        updateSceneDropdowns(); // Ensure dropdowns are repopulated with translated placeholders
       }
 
       function setupCollapsibleTooltips() {
           document.querySelectorAll(".collapsible").forEach(header => {
               const isCollapsed = header.classList.contains("collapsed");
               const tooltipKey = isCollapsed ? "collapsible.clickToExpand" : "collapsible.clickToCollapse";
-              header.setAttribute("data-before-text", i18next.t(tooltipKey));
-              header.style.setProperty('--before-content', `"${i18next.t(tooltipKey)}"`);
-              // For CSS generated content, we might need to update a class or data attribute
-              // that CSS can then use, or directly set a custom property if style allows.
-              // Simpler: update a data attribute and use attr() in CSS if possible, or set text directly if ::before is empty.
-              if (header.dataset.state === "expand") {
-                header.setAttribute('aria-label', i18next.t("collapsible.clickToExpand"));
-                header.style.setProperty('--before-text', `"${i18next.t("collapsible.clickToExpand")}"`);
-              } else {
-                header.setAttribute('aria-label', i18next.t("collapsible.clickToCollapse"));
-                header.style.setProperty('--before-text', `"${i18next.t("collapsible.clickToCollapse")}"`);
-              }
+              // Use CSS custom property to set the content of ::before
+              header.style.setProperty('--before-text', `"${i18next.t(tooltipKey)}"`);
+              header.setAttribute('aria-label', i18next.t(tooltipKey)); // For accessibility
           });
       }
 
@@ -921,22 +912,14 @@
           content.classList.add("collapsed");
           header.setAttribute("data-state", "expand");
         }
+        // Initial tooltip setup is now handled by setupCollapsibleTooltips called from updateContent
 
         header.addEventListener("click", function () {
           const isCollapsed = header.classList.toggle("collapsed");
           content.classList.toggle("collapsed");
           const newState = isCollapsed ? "expand" : "collapse";
           header.setAttribute("data-state", newState);
-          // Update tooltip text on click
-          const tooltipKey = isCollapsed ? "collapsible.clickToExpand" : "collapsible.clickToCollapse";
-          header.setAttribute("data-before-text", i18next.t(tooltipKey));
-           if (header.dataset.state === "expand") {
-            header.setAttribute('aria-label', i18next.t("collapsible.clickToExpand"));
-             header.style.setProperty('--before-text', `"${i18next.t("collapsible.clickToExpand")}"`);
-          } else {
-            header.setAttribute('aria-label', i18next.t("collapsible.clickToCollapse"));
-             header.style.setProperty('--before-text', `"${i18next.t("collapsible.clickToCollapse")}"`);
-          }
+          setupCollapsibleTooltips(); // Update tooltips on click as well
         });
       });
 
@@ -944,7 +927,6 @@
       // Create and inject VDO.Ninja connection controls dynamically
       const vdoNinjaConnectBtn = document.createElement("button");
       vdoNinjaConnectBtn.id = "vdoNinjaConnectBtn";
-      // vdoNinjaConnectBtn.textContent = "Connect"; // Will be set by updateVdoNinjaButtonState
       vdoNinjaConnectBtn.style.marginTop = "5px";
 
       const vdoNinjaStatusIndicator = document.createElement("span");
@@ -953,11 +935,10 @@
 
       const vdoNinjaConnectionStatus = document.createElement("span");
       vdoNinjaConnectionStatus.id = "vdoNinjaConnectionStatus";
-      // vdoNinjaConnectionStatus.textContent = "Status: Disconnected"; // Will be set by updateVdoNinjaButtonState
       vdoNinjaConnectionStatus.style.marginLeft = "5px";
 
       const vdoNinjaSettingsContainer = document.querySelector(
-        "div.container:nth-child(3) .collapsible-content" // Adjusted selector for VDO.Ninja Settings
+        "div.container:nth-child(3) .collapsible-content"
       );
       const buttonsDiv = document.createElement("div");
       buttonsDiv.style.marginTop = "10px";
@@ -988,11 +969,10 @@
         if (i18nKey && i18next.exists(i18nKey)) {
             translatedMessage = i18next.t(i18nKey, i18nParams);
         } else if (i18nKey) {
-            // Fallback to the original message if key doesn't exist, but log a warning
             console.warn(`i18next key not found: ${i18nKey}. Falling back to: ${message}`);
         }
 
-        console.log(translatedMessage); // Log to browser console
+        console.log(translatedMessage);
         const timestamp = new Date().toLocaleTimeString();
         logArea.innerHTML += `[${timestamp}] ${translatedMessage}\n`;
         logArea.scrollTop = logArea.scrollHeight;
@@ -1116,7 +1096,6 @@
 
         const mappings = getStreamMappings();
         localStorage.setItem("obsNinjaStreamMappings", JSON.stringify(mappings));
-        // logMessage("Settings saved.", "logMessages.settingsSaved");
       }
 
       function calculateGridPositions(totalSources, canvasWidth, canvasHeight) {
@@ -1241,8 +1220,7 @@
                           <option value="either" ${matchType === "either" ? "selected" : ""} data-i18n="streamIdMappings.matchType.eitherMatch">Either Match</option>
                       </select>
                       <select class="mapping-scene-name" data-i18n="[title]streamIdMappings.targetSceneTooltip" title="Target OBS Scene">
-                          <option value="" data-i18n="streamIdMappings.selectSceneOption">Select a scene...</option>
-                      </select>
+                          </select>
                       <button class="remove-mapping-btn" data-i18n="[title]streamIdMappings.removeRuleTooltip" title="Remove this mapping rule">×</button>
                   </div>
                   <div class="flex-row" style="gap: 15px;">
@@ -1260,7 +1238,6 @@
                   </small>
               </div>
           `;
-        // Translate the newly added mapping rule
         mappingDiv.querySelectorAll('[data-i18n]').forEach(element => {
             const key = element.getAttribute('data-i18n');
             if (key.startsWith('[placeholder]')) {
@@ -1276,7 +1253,7 @@
         streamMappingsDiv.appendChild(mappingDiv);
         const sceneDropdown = mappingDiv.querySelector(".mapping-scene-name");
 
-        populateSceneDropdown(obsScenes, sceneDropdown, i18next.t("streamIdMappings.selectSceneOption"));
+        populateSceneDropdown(obsScenes, sceneDropdown); // Removed third argument
         if (
           sceneName &&
           obsScenes.some((scene) => scene.sceneName === sceneName)
@@ -1345,7 +1322,7 @@
               screenShareHeightInput.value =
                 settings.screenShareHeight || "1080";
 
-            updatePrefixLabels();
+            // updatePrefixLabels(); // Called by updateContent after i18next is ready
             logMessage("Settings loaded from localStorage.", "logMessages.settingsLoaded");
           } catch (e) {
             logMessage(
@@ -1355,7 +1332,7 @@
             cameraPrefixInput.value = "VDO";
             reactionSubPrefixInput.value = "Screen";
             highlightSubPrefixInput.value = "Highlight";
-            updatePrefixLabels();
+            // updatePrefixLabels(); // Called by updateContent
             vdoNinjaBaseUrlInput.value = "https://vdo.ninja";
             sourceSizingSelect.value = "defaultSize";
             sourceCodecSelect.value = "";
@@ -1365,12 +1342,12 @@
           cameraPrefixInput.value = "VDO";
           reactionSubPrefixInput.value = "Screen";
           highlightSubPrefixInput.value = "Highlight";
-          updatePrefixLabels();
+          // updatePrefixLabels(); // Called by updateContent
           vdoNinjaBaseUrlInput.value = "https://vdo.ninja";
           sourceSizingSelect.value = "defaultSize";
           sourceCodecSelect.value = "";
         }
-        setupStreamMappingUI();
+        setupStreamMappingUI(); // This also calls loadStreamMappings
       }
 
       function updateOtherScenesList() {
@@ -2121,17 +2098,9 @@
           (select) => select.value
         );
 
-        populateSceneDropdown(obsScenes, obsSceneSelect, i18next.t("obsTargetSettings.selectSceneOption"));
-        populateSceneDropdown(
-          obsScenes,
-          document.getElementById("screenShareSceneSelect"),
-          i18next.t("obsTargetSettings.screenShareSettings.sameAsMainOption")
-        );
-        populateSceneDropdown(
-          obsScenes,
-          highlightSceneSelect,
-          i18next.t("obsTargetSettings.highlightScene.selectSceneOption")
-        );
+        populateSceneDropdown(obsScenes, obsSceneSelect);
+        populateSceneDropdown(obsScenes, document.getElementById("screenShareSceneSelect"));
+        populateSceneDropdown(obsScenes, highlightSceneSelect);
 
         if (
           currentMainSceneValue &&
@@ -2159,7 +2128,7 @@
         }
 
         mappingSceneSelects.forEach((select, index) => {
-          populateSceneDropdown(obsScenes, select, i18next.t("streamIdMappings.selectSceneOption"));
+          populateSceneDropdown(obsScenes, select);
           if (
             currentMappingSceneValues[index] &&
             obsScenes.some(
@@ -2360,7 +2329,7 @@
                   "logMessages.obs.authSuccessConnected"
                 );
                 obsConnected = true;
-                updateObsConnectButtonText(); // Use the new function
+                updateObsConnectButtonText();
                 obsConnectBtn.classList.add("connected");
                 obsConnectBtn.classList.remove("disconnected");
                 obsConnectionStatus.textContent = i18next.t("obsConnection.statusConnected");
@@ -2634,7 +2603,7 @@
             obsScenes = response.scenes;
             logMessage(`Fetched ${obsScenes.length} scenes from OBS.`, "logMessages.obs.fetchedScenesCount", { count: obsScenes.length });
 
-            updateSceneDropdowns();
+            updateSceneDropdowns(); // This will now use the refined populateSceneDropdown
 
             if (
               settings.obsSceneName &&
@@ -2649,7 +2618,7 @@
             }
 
             if (
-              settings.screenShareScene === "" ||
+              settings.screenShareScene === "" || // "Same as main"
               (settings.screenShareScene &&
                 obsScenes.some((s) => s.sceneName === settings.screenShareScene))
             ) {
@@ -2660,7 +2629,9 @@
                 `Previously selected screen share scene "${settings.screenShareScene}" no longer found. Defaulting to "Same as main".`,
                 "logMessages.obs.screenShareSceneNotFound", { sceneName: settings.screenShareScene }
               );
+               document.getElementById("screenShareSceneSelect").value = ""; // Default to "Same as main"
             }
+
 
             if (
               settings.highlightScene &&
@@ -2719,40 +2690,48 @@
 
       function populateSceneDropdown(
         scenesData,
-        selectElement,
-        placeholderTextKey = "obsTargetSettings.selectSceneOption" // Default key
+        selectElement
       ) {
         const currentValue = selectElement.value;
-        const placeholderText = i18next.t(placeholderTextKey);
+        selectElement.innerHTML = ''; // Clear existing options first
 
+        let placeholderKeyToUse;
 
-        if (selectElement.id === "screenShareSceneSelect") {
-          selectElement.innerHTML = `<option value="">${i18next.t("obsTargetSettings.screenShareSettings.sameAsMainOption")}</option>`;
+        if (selectElement.id === "obsSceneSelect") {
+          placeholderKeyToUse = "obsTargetSettings.selectSceneOption";
+        } else if (selectElement.id === "screenShareSceneSelect") {
+          placeholderKeyToUse = "obsTargetSettings.screenShareSettings.sameAsMainOption";
+        } else if (selectElement.id === "highlightSceneSelect") {
+          placeholderKeyToUse = "obsTargetSettings.highlightScene.selectSceneOption";
+        } else if (selectElement.classList.contains("mapping-scene-name")) {
+          placeholderKeyToUse = "streamIdMappings.selectSceneOption";
         } else {
-          selectElement.innerHTML = `<option value="">${placeholderText}</option>`;
+          placeholderKeyToUse = "obsTargetSettings.selectSceneOption"; // Generic default
+          console.warn("populateSceneDropdown called with an unhandled select element:", selectElement.id || selectElement.className);
         }
 
+        const placeholderOption = document.createElement('option');
+        placeholderOption.value = "";
+        placeholderOption.textContent = i18next.t(placeholderKeyToUse);
+        selectElement.appendChild(placeholderOption);
 
-        if (!scenesData || scenesData.length === 0) {
-          return;
+        if (scenesData && scenesData.length > 0) {
+          scenesData.forEach((scene) => {
+            const option = document.createElement("option");
+            option.value = scene.sceneName;
+            option.textContent = scene.sceneName; // Scene names are typically not translated
+            selectElement.appendChild(option);
+          });
         }
 
-        scenesData.forEach((scene) => {
-          const option = document.createElement("option");
-          option.value = scene.sceneName;
-          option.textContent = scene.sceneName;
-          selectElement.appendChild(option);
-        });
-
-        if (
-          currentValue &&
-          Array.from(selectElement.options).some(
-            (opt) => opt.value === currentValue
-          )
-        ) {
+        // Restore previously selected value if it's still valid
+        if (currentValue && Array.from(selectElement.options).some(opt => opt.value === currentValue)) {
           selectElement.value = currentValue;
+        } else {
+           selectElement.value = ""; // Default to the placeholder (empty value)
         }
       }
+
 
       function getTargetScene() {
         return obsSceneSelect.value || "";
@@ -4182,13 +4161,9 @@
         screenShareHeightInput.addEventListener("change", saveSettings);
 
       document.addEventListener("DOMContentLoaded", () => {
-        // i18next is initialized earlier, so updateContent will be called in its callback
-        loadSettings(); // Load saved settings first
-        // logMessage is now handled by i18next init callback or updateContent
-        // logMessage("VDO.Ninja OBS Control Dock Initialized. Welcome!", "logMessages.appInitialized");
-
-        updateVdoNinjaButtonState(false); // Set initial button state
-        toggleVdoNinjaInputs(false);     // Set initial input field state
+        loadSettings();
+        updateVdoNinjaButtonState(false);
+        toggleVdoNinjaInputs(false);
 
         const secureFields = document.querySelectorAll(
           "#vdoNinjaRoom, #vdoNinjaStreamIds"
@@ -4204,8 +4179,8 @@
         });
 
         startVdoNinjaConnectionMonitor();
-        // updatePrefixLabels(); // Called by updateContent
-        // updateStreamList(); // Called by updateContent
+        // Initial calls to updateContent, updatePrefixLabels, updateStreamList, etc.,
+        // are now primarily driven by the i18next.init callback to ensure translations are ready.
       });
     </script>
   </body>
