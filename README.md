@@ -55,11 +55,17 @@ This is a customized version of the OBS Control Dock by **Steve Seguin** (creato
    - Enter the local file path or the hosted URL.
    - Click **Apply**, then **Close**.
 
-3. **Configure the Dock:**
-   - **OBS WebSocket:** Enter URL (default: `ws://localhost:4455`) and password. Click Connect.
+3. **Configure the Websocket:**
+   - **Connection Adress:** Enter URL (default: `ws://localhost:4455`) and password. Click Connect.
    - **Prefixes:** Set Camera, Reaction, and Highlight prefixes (must match those in the Lua script).
+   - **Click Connect.**
+4. **Configure the VDO.Ninja Connection:**
    - **VDO.Ninja:** Enter your room name and password (if any), then connect.
+
+5. **Configure Scenes:**
    - **Target Scenes:** Select main, highlight, and screen share scenes as needed.
+   - **Resolution:** Select resolution of new cameras e screen shares.
+   - **Automation:** Choose wether the Dock will automatically add/remove sources upon connection/disconnection.
 
 ---
 
