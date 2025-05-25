@@ -9,14 +9,14 @@
     "clickToCollapse": "Clique para recolher"
   },
   "obsConnection": {
-    "title": "Conexão OBS WebSocket",
+    "title": "Conexão com OBS WebSocket",
     "websocketUrlLabel": "URL WebSocket:",
     "passwordLabel": "Senha:",
-    "cameraPrefixLabel": "Prefixo geral da câmera:",
-    "reactionPrefixLabel": "Prefixo de reação: VDO.",
-    "highlightPrefixLabel": "Prefixo de destaque: VDO.",
-    "reactionPrefixDynamicLabel": "Prefixo de reação: {{prefix}}{{separator}}{{subPrefix}}",
-    "highlightPrefixDynamicLabel": "Prefixo de destaque: {{prefix}}{{separator}}{{subPrefix}}",
+    "cameraPrefixLabel": "Prefixo Geral das Câmeras:",
+    "reactionPrefixLabel": "Prefixo de Reação: VDO.",
+    "highlightPrefixLabel": "Prefixo de Destaque: VDO.",
+    "reactionPrefixDynamicLabel": "Prefixo de Reação: {{prefix}}{{separator}}{{subPrefix}}",
+    "highlightPrefixDynamicLabel": "Prefixo de Destaque: {{prefix}}{{separator}}{{subPrefix}}",
     "connectButton": "Conectar",
     "disconnectButton": "Desconectar",
     "statusDisconnected": "Status: Desconectado",
@@ -28,8 +28,8 @@
     "statusErrorTimeout": "Status: Erro - Tempo de conexão esgotado"
   },
   "vdoNinjaSettings": {
-    "title": "Configurações VDO.Ninja",
-    "baseUrlLabel": "URL Base VDO.Ninja:",
+    "title": "Configurações do VDO.Ninja",
+    "baseUrlLabel": "URL Base do VDO.Ninja:",
     "baseUrlPlaceholder": "https://vdo.ninja",
     "roomNameLabel": "Nome da Sala:",
     "roomNamePlaceholder": "ex: MinhaSalaNinja",
@@ -55,7 +55,7 @@
     "streamIdTooltip": "ID do Stream VDO.Ninja",
     "labelPlaceholder": "Rótulo (opcional)",
     "labelTooltip": "Rótulo do Stream VDO.Ninja",
-    "matchTypeTooltip": "Como combinar o stream",
+    "matchTypeTooltip": "Como reconhecer o stream",
     "matchType": {
         "idOnly": "Apenas ID",
         "labelOnly": "Apenas Rótulo",
@@ -70,7 +70,7 @@
     "ruleDescription": "Defina como os streams de entrada são roteados para as cenas do OBS."
   },
   "obsTargetSettings": {
-    "title": "Configurações de Alvo OBS",
+    "title": "Configurações de Alvo do OBS",
     "targetSceneLabel": "Cena Alvo:",
     "selectSceneOption": "Selecione uma cena...",
     "refetchScenesButton": "Buscar Cenas Novamente",
@@ -84,7 +84,7 @@
     },
     "highlightScene": {
         "title": "Cena de Destaque:",
-        "selectSceneOption": "Selecione uma cena para destaques..."
+        "selectSceneOption": "Selecione uma cena de Destaque..."
     },
     "autoAddSourcesLabel": "Adicionar automaticamente novos streams como fontes",
     "autoRemoveSourcesLabel": "Remover automaticamente fontes ao desconectar",
