@@ -1,6 +1,6 @@
 # Advanced OBS Studio Automation Suite
 
-> For an interactive guide with visuals: [Open guide.html](./guide.html) (or [view online](https://morsethecode.github.io/OBS-Scripts/guide.html))
+> For an interactive guide with visuals: [view online](https://morsethecode.github.io/OBS-Scripts/guide.html))
 
 ---
 
@@ -28,7 +28,6 @@ This repository provides a suite of tools for advanced automation in OBS Studio,
 - A robust **Lua script** for dynamic scene management (Grid, Reaction, and Highlight layouts).
 - A **modified VDO.Ninja OBS Control Dock** for streamlined source management and deep OBS integration.
 - Multi-language support and an intuitive user interface.
-- An [interactive HTML guide](./guide.html) for step-by-step onboarding.
 
 ---
 
