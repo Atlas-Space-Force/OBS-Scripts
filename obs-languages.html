@@ -17,21 +17,15 @@
         line-height: 1.6; /* Improved readability */
       }
       .language-switcher {
-        position: fixed;
-        top: 10px;
-        right: 15px;
-        z-index: 1000;
-        background-color: #2c2e33;
-        padding: 8px;
-        border-radius: 6px;
-        border: 1px solid #3e4147;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-        width: 200px;
+        display: flex; /* For better alignment of label and select */
+        align-items: center;
+        gap: 8px; /* Space between label and select */
       }
       .language-switcher label {
-        margin-right: 5px;
+        margin-right: 0; /* Reset margin as gap is used */
         color: #c0c0c0;
         font-size: 0.9em;
+        margin-bottom: 0; /* Align with select */
       }
       .language-switcher select {
         padding: 5px 8px;
@@ -40,10 +34,13 @@
         color: #e0e0e0;
         border: 1px solid #4a4d54;
         font-size: 0.9em;
+        margin-bottom: 0; /* Align with label */
+        width: auto; /* Allow select to size based on content */
+        min-width: 120px; /* Ensure a minimum decent width */
       }
       h1 {
         color: #d0d0d0;
-        margin: 50px 0 20px 0; /* Adjusted h1 margin for language switcher */
+        margin: 20px 0 20px 0; /* Adjusted h1 margin */
         padding-bottom: 15px;
         font-size: 1.8em; /* h1 size */
         font-weight: 600;
@@ -402,12 +399,10 @@
         margin-left: 5px;
         vertical-align: top; /* Align with select if they were side-by-side */
       }
-      /* Adjusted for new container holding Active Streams - This rule allows it to expand fully. */
-      .container:nth-child(7) /* Adjusted index due to language switcher */
-        .collapsible-content
-        + .collapsible:not(.collapsed) {
-        max-height: none !important;
-        overflow: visible !important;
+      .container:nth-child(6) /* Container for Active Streams */
+        .collapsible-content:not(.collapsed) {
+        /* This rule might need adjustment if it was for allowing the stream list to expand fully.
+           With 1000px max-height, it's usually enough. Consider removing if not strictly needed. */
       }
       .prefix-input-label {
         margin-bottom: 4px; /* Slightly more margin */
@@ -540,18 +535,18 @@
     </style>
   </head>
   <body>
-    <div class="language-switcher">
-      <label for="languageSelector" data-i18n="languageSwitcher.label">Language:</label>
-      <select id="languageSelector">
-        <option value="en">English</option>
-        <option value="pt">Português</option>
-        </select>
-    </div>
-
     <h1 data-i18n="mainHeading">VDO.Ninja OBS Control</h1>
 
-    <div class="container">
-      <h2 class="collapsible" data-state="expand" data-i18n="obsConnection.title">OBS WebSocket Connection</h2>
+    <div class="container"> <div class="language-switcher">
+            <label for="languageSelector" data-i18n="languageSwitcher.label">Language:</label>
+            <select id="languageSelector">
+                <option value="en">English</option>
+                <option value="pt">Português</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="container"> <h2 class="collapsible" data-state="expand" data-i18n="obsConnection.title">OBS WebSocket Connection</h2>
       <div class="collapsible-content">
         <label for="obsWsUrl" data-i18n="obsConnection.websocketUrlLabel">WebSocket URL:</label>
         <input type="text" id="obsWsUrl" value="ws://localhost:4455" />
@@ -595,8 +590,7 @@
       </div>
     </div>
 
-    <div class="container">
-      <h2 class="collapsible" data-state="expand" data-i18n="vdoNinjaSettings.title">VDO.Ninja Settings</h2>
+    <div class="container"> <h2 class="collapsible" data-state="expand" data-i18n="vdoNinjaSettings.title">VDO.Ninja Settings</h2>
       <div class="collapsible-content">
         <label for="vdoNinjaBaseUrl" data-i18n="vdoNinjaSettings.baseUrlLabel">VDO.Ninja Base URL:</label>
         <input
@@ -633,8 +627,7 @@
         </div>
     </div>
 
-    <div class="container">
-      <h2 class="collapsible" data-state="collapse" data-i18n="streamIdMappings.title">Stream ID Mappings</h2>
+    <div class="container"> <h2 class="collapsible" data-state="collapse" data-i18n="streamIdMappings.title">Stream ID Mappings</h2>
       <div class="collapsible-content collapsed">
         <div id="streamMappingContainer">
           <div id="streamMappings"></div>
@@ -645,8 +638,7 @@
       </div>
     </div>
 
-    <div class="container">
-      <h2 class="collapsible" data-state="expand" data-i18n="obsTargetSettings.title">OBS Target Settings</h2>
+    <div class="container"> <h2 class="collapsible" data-state="expand" data-i18n="obsTargetSettings.title">OBS Target Settings</h2>
       <div class="collapsible-content">
         <div class="settings-group">
           <label for="obsSceneSelect" data-i18n="obsTargetSettings.targetSceneLabel">Target Scene:</label>
@@ -762,8 +754,7 @@
       </div>
     </div>
 
-    <div class="container">
-      <h2 class="collapsible" data-state="expand" data-i18n="activeStreams.title">Active Streams</h2>
+    <div class="container"> <h2 class="collapsible" data-state="expand" data-i18n="activeStreams.title">Active Streams</h2>
       <div class="collapsible-content">
         <div id="streamList" class="stream-list">
           <div
@@ -787,8 +778,7 @@
       allow="encrypted-media;sync-xhr;usb;web-share;cross-origin-isolated;midi *;geolocation;camera *;microphone *;fullscreen;picture-in-picture;display-capture;accelerometer;autoplay;gyroscope;screen-wake-lock;"
     ></iframe>
 
-    <div class="container">
-      <h2 class="collapsible" data-state="expand" data-i18n="log.title">Log</h2>
+    <div class="container"> <h2 class="collapsible" data-state="expand" data-i18n="log.title">Log</h2>
       <div class="collapsible-content">
         <div id="logArea" class="log-area"></div>
       </div>
@@ -797,23 +787,37 @@
     <script>
       // i18next initialization and language change logic
       const loadPath = 'https://raw.githubusercontent.com/MorseTheCode/OBS-Scripts/refs/heads/main/locales/{{lng}}.json';
+      let logEntries = []; // Array to store log entry data
+      const languageSelector = document.getElementById('languageSelector'); // Define globally
 
-      i18next
-        .use(i18nextHttpBackend)
-        .init({
-          lng: 'en', // Default language
-          fallbackLng: 'en',
-          debug: true, // Set to false in production
-          backend: {
-            loadPath: loadPath
-          }
-        }, function(err, t) {
-          if (err) return console.error('Error initializing i18next:', err);
-          updateContent(); // Initial translation
-          // setupCollapsibleTooltips(); // Called within updateContent now
-        });
+      function initializeApp() {
+        let savedLanguage = localStorage.getItem('vdoNinjaObsControlLanguage') || 'en';
+        languageSelector.value = savedLanguage; // Set dropdown to saved/default language
+
+        i18next
+          .use(i18nextHttpBackend)
+          .init({
+            lng: savedLanguage,
+            fallbackLng: 'en',
+            debug: true,
+            backend: {
+              loadPath: loadPath
+            }
+          }, function(err, t) {
+            if (err) return console.error('Error initializing i18next:', err);
+            loadSettings(); // Load other settings
+            updateContent(); // Translate page
+            logMessage("VDO.Ninja OBS Control Dock Initialized. Welcome!", "logMessages.appInitialized");
+            updateVdoNinjaButtonState(false);
+            toggleVdoNinjaInputs(false);
+            setupSecureFieldsBlur();
+            startVdoNinjaConnectionMonitor();
+          });
+      }
+
 
       function updateContent() {
+        // Translate elements with data-i18n attribute
         document.querySelectorAll('[data-i18n]').forEach(element => {
           const key = element.getAttribute('data-i18n');
           if (key.startsWith('[placeholder]')) {
@@ -825,29 +829,44 @@
             element.innerHTML = i18next.t(key);
           }
         });
+
+        // Specifically re-translate placeholders and titles for dynamically added mapping inputs
+        document.querySelectorAll('.stream-mapping .mapping-stream-id').forEach(input => {
+            input.placeholder = i18next.t('streamIdMappings.streamIdPlaceholder');
+            input.title = i18next.t('streamIdMappings.streamIdTooltip');
+        });
+        document.querySelectorAll('.stream-mapping .mapping-label').forEach(input => {
+            input.placeholder = i18next.t('streamIdMappings.labelPlaceholder');
+            input.title = i18next.t('streamIdMappings.labelTooltip');
+        });
+
+        // Call other update functions
         updateObsConnectButtonText();
         updateVdoNinjaButtonState(vdoNinjaConnected);
         updateStreamList();
         updatePrefixLabels();
-        setupCollapsibleTooltips(); // Ensure this is called to update dynamic tooltips
-        updateSceneDropdowns(); // Ensure dropdowns are repopulated with translated placeholders
+        setupCollapsibleTooltips();
+        updateSceneDropdowns();
+        renderLog(); // Re-render the log with the new language
       }
 
       function setupCollapsibleTooltips() {
           document.querySelectorAll(".collapsible").forEach(header => {
               const isCollapsed = header.classList.contains("collapsed");
               const tooltipKey = isCollapsed ? "collapsible.clickToExpand" : "collapsible.clickToCollapse";
-              // Use CSS custom property to set the content of ::before
               header.style.setProperty('--before-text', `"${i18next.t(tooltipKey)}"`);
-              header.setAttribute('aria-label', i18next.t(tooltipKey)); // For accessibility
+              header.setAttribute('aria-label', i18next.t(tooltipKey));
           });
       }
 
-      const languageSelector = document.getElementById('languageSelector');
       languageSelector.addEventListener('change', (event) => {
-        i18next.changeLanguage(event.target.value, (err, t) => {
+        const newLang = event.target.value;
+        i18next.changeLanguage(newLang, (err, t) => {
           if (err) return console.error('Error changing language:', err);
+          localStorage.setItem('vdoNinjaObsControlLanguage', newLang); // Save new language
           updateContent();
+          // No need to call saveSettings() here just for language,
+          // as other settings are saved on their respective input changes.
         });
       });
 
@@ -898,7 +917,6 @@
       let highlightedStreamId = null;
       let loadedSelectedOtherScenes = [];
 
-      // Collapsible sections
       document.querySelectorAll(".collapsible").forEach((header) => {
         const content = header.nextElementSibling;
         const startsExpanded = header.dataset.state === "expand";
@@ -912,19 +930,17 @@
           content.classList.add("collapsed");
           header.setAttribute("data-state", "expand");
         }
-        // Initial tooltip setup is now handled by setupCollapsibleTooltips called from updateContent
 
         header.addEventListener("click", function () {
           const isCollapsed = header.classList.toggle("collapsed");
           content.classList.toggle("collapsed");
           const newState = isCollapsed ? "expand" : "collapse";
           header.setAttribute("data-state", newState);
-          setupCollapsibleTooltips(); // Update tooltips on click as well
+          setupCollapsibleTooltips();
         });
       });
 
 
-      // Create and inject VDO.Ninja connection controls dynamically
       const vdoNinjaConnectBtn = document.createElement("button");
       vdoNinjaConnectBtn.id = "vdoNinjaConnectBtn";
       vdoNinjaConnectBtn.style.marginTop = "5px";
@@ -938,7 +954,7 @@
       vdoNinjaConnectionStatus.style.marginLeft = "5px";
 
       const vdoNinjaSettingsContainer = document.querySelector(
-        "div.container:nth-child(3) .collapsible-content"
+        "div.container:nth-child(4) .collapsible-content" // Adjusted to 3rd container
       );
       const buttonsDiv = document.createElement("div");
       buttonsDiv.style.marginTop = "10px";
@@ -964,19 +980,36 @@
         return new Promise((resolve) => setTimeout(resolve, ms));
       }
 
-      function logMessage(message, i18nKey, i18nParams = {}) {
-        let translatedMessage = message;
-        if (i18nKey && i18next.exists(i18nKey)) {
-            translatedMessage = i18next.t(i18nKey, i18nParams);
-        } else if (i18nKey) {
-            console.warn(`i18next key not found: ${i18nKey}. Falling back to: ${message}`);
-        }
-
-        console.log(translatedMessage);
-        const timestamp = new Date().toLocaleTimeString();
-        logArea.innerHTML += `[${timestamp}] ${translatedMessage}\n`;
-        logArea.scrollTop = logArea.scrollHeight;
+      function logMessage(fallbackMessage, i18nKey, i18nParams = {}) {
+          const timestamp = new Date().toLocaleTimeString();
+          logEntries.push({
+              timestamp,
+              i18nKey,
+              i18nParams,
+              fallbackMessage
+          });
+          renderLog();
       }
+
+      function renderLog() {
+          if (!logArea || (typeof i18next !== 'undefined' && !i18next.isInitialized)) {
+             return;
+          }
+          let logContent = "";
+          logEntries.forEach(entry => {
+              let translatedMessage = entry.fallbackMessage;
+              if (entry.i18nKey && i18next.exists(entry.i18nKey)) {
+                  translatedMessage = i18next.t(entry.i18nKey, entry.i18nParams);
+              } else if (entry.i18nKey) {
+                //   console.warn(`i18next key not found for log: ${entry.i18nKey}. Falling back to: ${entry.fallbackMessage}`);
+              }
+              const safeTranslatedMessage = translatedMessage.replace(/</g, "&lt;").replace(/>/g, "&gt;");
+              logContent += `[${entry.timestamp}] ${safeTranslatedMessage}\n`;
+          });
+          logArea.innerHTML = logContent;
+          logArea.scrollTop = logArea.scrollHeight;
+      }
+
 
       function generateRequestId(type) {
         return `${type}-${Date.now()}-${Math.floor(Math.random() * 1000)}`;
@@ -998,6 +1031,7 @@
       }
 
       function updatePrefixLabels() {
+        if (!i18next.isInitialized) return;
         const cameraPrefixVal = getFullCameraPrefix();
         const reactionSubPrefixVal = reactionSubPrefixInput.value.trim();
         const highlightSubPrefixVal = highlightSubPrefixInput.value.trim();
@@ -1036,7 +1070,7 @@
       }
 
       function updateObsConnectButtonText() {
-        if (obsConnectBtn) {
+        if (obsConnectBtn && i18next.isInitialized) {
             obsConnectBtn.textContent = obsConnected ? i18next.t("obsConnection.disconnectButton") : i18next.t("obsConnection.connectButton");
         }
       }
@@ -1044,6 +1078,8 @@
 
       function updateVdoNinjaButtonState(isVdoConnected) {
         vdoNinjaConnected = isVdoConnected;
+        if (!i18next.isInitialized) return;
+
         if (vdoNinjaConnected) {
           vdoNinjaConnectBtn.textContent = i18next.t("vdoNinjaSettings.disconnectButton");
           vdoNinjaConnectBtn.classList.remove("disconnected");
@@ -1059,7 +1095,7 @@
           vdoNinjaStatusIndicator.classList.remove("connected", "error");
         }
         toggleVdoNinjaInputs(vdoNinjaConnected);
-        saveSettings();
+        // saveSettings(); // Save settings is called by individual input changes
       }
 
       function saveSettings() {
@@ -1091,6 +1127,7 @@
           screenShareScene:
             document.getElementById("screenShareSceneSelect").value,
           highlightScene: highlightSceneSelect.value,
+          language: i18next.language // Save current language
         };
         localStorage.setItem("obsNinjaSettings", JSON.stringify(settings));
 
@@ -1163,8 +1200,11 @@
         }
 
         initializeVdoNinjaIframe();
-        vdoNinjaConnectionStatus.textContent = i18next.t("vdoNinjaSettings.statusConnecting");
-        vdoNinjaConnectBtn.textContent = i18next.t("vdoNinjaSettings.cancelButton");
+        if (i18next.isInitialized) {
+            vdoNinjaConnectionStatus.textContent = i18next.t("vdoNinjaSettings.statusConnecting");
+            vdoNinjaConnectBtn.textContent = i18next.t("vdoNinjaSettings.cancelButton");
+        }
+
 
         if (vdoNinjaConnectionCheckTimer) {
           clearTimeout(vdoNinjaConnectionCheckTimer);
@@ -1178,9 +1218,11 @@
               "VDO.Ninja connection timed out. No activity received from iframe.",
               "logMessages.vdoNinja.connectionTimeout"
             );
-            vdoNinjaConnectionStatus.textContent = i18next.t("vdoNinjaSettings.statusConnectionFailed");
+            if (i18next.isInitialized) {
+                vdoNinjaConnectionStatus.textContent = i18next.t("vdoNinjaSettings.statusConnectionFailed");
+                vdoNinjaConnectBtn.textContent = i18next.t("vdoNinjaSettings.connectButton");
+            }
             vdoNinjaStatusIndicator.classList.add("error");
-            vdoNinjaConnectBtn.textContent = i18next.t("vdoNinjaSettings.connectButton");
             toggleVdoNinjaInputs(false);
           }
         }, 10000);
@@ -1211,8 +1253,8 @@
               <div style="margin-bottom: 5px;">
                   <label style="font-size: 1em; margin-bottom: 6px; display: block; font-weight:500;" data-i18n="streamIdMappings.ruleTitle">Stream Mapping Rule</label>
                   <div class="flex-row" style="align-items: center; margin-bottom: 6px;">
-                      <input type="text" data-i18n="[placeholder]streamIdMappings.streamIdPlaceholder" placeholder="Stream ID" value="${initialStreamId}" class="mapping-stream-id" data-i18n="[title]streamIdMappings.streamIdTooltip" title="VDO.Ninja Stream ID">
-                      <input type="text" data-i18n="[placeholder]streamIdMappings.labelPlaceholder" placeholder="Label (optional)" value="${label}" class="mapping-label" data-i18n="[title]streamIdMappings.labelTooltip" title="VDO.Ninja Stream Label">
+                      <input type="text" value="${initialStreamId}" class="mapping-stream-id">
+                      <input type="text" value="${label}" class="mapping-label">
                       <select class="mapping-match-type" data-i18n="[title]streamIdMappings.matchTypeTooltip" title="How to match stream">
                           <option value="streamId" ${matchType === "streamId" ? "selected" : ""} data-i18n="streamIdMappings.matchType.idOnly">ID Only</option>
                           <option value="label" ${matchType === "label" ? "selected" : ""} data-i18n="streamIdMappings.matchType.labelOnly">Label Only</option>
@@ -1238,22 +1280,36 @@
                   </small>
               </div>
           `;
-        mappingDiv.querySelectorAll('[data-i18n]').forEach(element => {
-            const key = element.getAttribute('data-i18n');
-            if (key.startsWith('[placeholder]')) {
-                element.placeholder = i18next.t(key.substring('[placeholder]'.length));
-            } else if (key.startsWith('[title]')) {
-                element.title = i18next.t(key.substring('[title]'.length));
-            } else {
-                element.innerHTML = i18next.t(key);
+        if (i18next.isInitialized) {
+            mappingDiv.querySelectorAll('[data-i18n]').forEach(element => {
+                const key = element.getAttribute('data-i18n');
+                if (key.startsWith('[placeholder]')) {
+                    element.placeholder = i18next.t(key.substring('[placeholder]'.length));
+                } else if (key.startsWith('[title]')) {
+                    element.title = i18next.t(key.substring('[title]'.length));
+                } else {
+                    element.innerHTML = i18next.t(key);
+                }
+            });
+
+            const streamIdInputElement = mappingDiv.querySelector('.mapping-stream-id');
+            if (streamIdInputElement) {
+                streamIdInputElement.placeholder = i18next.t('streamIdMappings.streamIdPlaceholder');
+                streamIdInputElement.title = i18next.t('streamIdMappings.streamIdTooltip');
             }
-        });
+
+            const labelInputElement = mappingDiv.querySelector('.mapping-label');
+            if (labelInputElement) {
+                labelInputElement.placeholder = i18next.t('streamIdMappings.labelPlaceholder');
+                labelInputElement.title = i18next.t('streamIdMappings.labelTooltip');
+            }
+        }
 
 
         streamMappingsDiv.appendChild(mappingDiv);
         const sceneDropdown = mappingDiv.querySelector(".mapping-scene-name");
 
-        populateSceneDropdown(obsScenes, sceneDropdown); // Removed third argument
+        populateSceneDropdown(obsScenes, sceneDropdown);
         if (
           sceneName &&
           obsScenes.some((scene) => scene.sceneName === sceneName)
@@ -1285,6 +1341,8 @@
 
       function loadSettings() {
         const settingsJson = localStorage.getItem("obsNinjaSettings");
+        let savedLanguage = 'en'; // Default language
+
         if (settingsJson) {
           try {
             const settings = JSON.parse(settingsJson);
@@ -1322,32 +1380,53 @@
               screenShareHeightInput.value =
                 settings.screenShareHeight || "1080";
 
-            // updatePrefixLabels(); // Called by updateContent after i18next is ready
-            logMessage("Settings loaded from localStorage.", "logMessages.settingsLoaded");
+            // Load saved language but don't apply it here yet.
+            // i18next.init will handle the initial language.
+            savedLanguage = settings.language || 'en';
+            languageSelector.value = savedLanguage;
+
+
+            // Log after i18next is initialized
+            if (i18next.isInitialized) {
+                logMessage("Settings loaded from localStorage.", "logMessages.settingsLoaded");
+            } else {
+                console.log("Settings loaded from localStorage (i18next not ready for log).");
+            }
+
           } catch (e) {
-            logMessage(
-              `Error loading settings from localStorage: ${e.message}. Using defaults.`,
-              "logMessages.errorLoadingSettings", { message: e.message }
-            );
+            if (i18next.isInitialized) {
+                logMessage(
+                `Error loading settings from localStorage: ${e.message}. Using defaults.`,
+                "logMessages.errorLoadingSettings", { message: e.message }
+                );
+            } else {
+                console.error(`Error loading settings from localStorage: ${e.message}. Using defaults.`);
+            }
+
             cameraPrefixInput.value = "VDO";
             reactionSubPrefixInput.value = "Screen";
             highlightSubPrefixInput.value = "Highlight";
-            // updatePrefixLabels(); // Called by updateContent
             vdoNinjaBaseUrlInput.value = "https://vdo.ninja";
             sourceSizingSelect.value = "defaultSize";
             sourceCodecSelect.value = "";
           }
         } else {
-          logMessage("No saved settings found. Using default values.", "logMessages.noSavedSettings");
+           if (i18next.isInitialized) {
+                logMessage("No saved settings found. Using default values.", "logMessages.noSavedSettings");
+           } else {
+                console.log("No saved settings found. Using default values.");
+           }
           cameraPrefixInput.value = "VDO";
           reactionSubPrefixInput.value = "Screen";
           highlightSubPrefixInput.value = "Highlight";
-          // updatePrefixLabels(); // Called by updateContent
           vdoNinjaBaseUrlInput.value = "https://vdo.ninja";
           sourceSizingSelect.value = "defaultSize";
           sourceCodecSelect.value = "";
         }
-        setupStreamMappingUI(); // This also calls loadStreamMappings
+
+        setupStreamMappingUI(); // This also calls loadStreamMappings which might need i18next
+        // updatePrefixLabels(); // Will be called by updateContent
+        return savedLanguage; // Return for i18next init
       }
 
       function updateOtherScenesList() {
@@ -1399,6 +1478,7 @@
       }
 
       function updateStreamList() {
+        if (!i18next.isInitialized) return;
         if (Object.keys(activeStreams).length === 0) {
           streamListContainer.innerHTML =
             `<div class="stream-item" style="text-align:center; background-color:transparent; border:none; color:#888;">${i18next.t("activeStreams.noActiveStreams")}</div>`;
@@ -1552,7 +1632,7 @@
               await sendRequest("SetCurrentPreviewScene", {
                 sceneName: newHighlightScene,
               });
-              await sleep(200);
+              await sleep(100);
               await sendRequest("TriggerStudioModeTransition");
             } else {
               logMessage(
@@ -1621,7 +1701,7 @@
                 await sendRequest("SetCurrentPreviewScene", {
                   sceneName: screenShareScene,
                 });
-                await sleep(200);
+                await sleep(100);
                 await sendRequest("TriggerStudioModeTransition");
               } else {
                 logMessage(
@@ -2087,6 +2167,8 @@
       }
 
       function updateSceneDropdowns() {
+        if (!i18next.isInitialized) return; // Ensure i18next is ready
+
         const currentMainSceneValue = obsSceneSelect.value;
         const currentScreenShareSceneValue = document.getElementById(
           "screenShareSceneSelect"
@@ -2161,12 +2243,20 @@
             if (obsScenes && obsScenes.length > 0) {
               updateSceneDropdowns();
             }
-            logMessage(`Loaded ${mappings.length} stream mappings.`, "logMessages.loadedStreamMappings", { count: mappings.length });
+            if (i18next.isInitialized) {
+                logMessage(`Loaded ${mappings.length} stream mappings.`, "logMessages.loadedStreamMappings", { count: mappings.length });
+            } else {
+                console.log(`Loaded ${mappings.length} stream mappings (i18next not ready for log).`);
+            }
           } catch (e) {
-            logMessage(
-              `Error loading stream mappings from localStorage: ${e.message}`,
-              "logMessages.errorLoadingStreamMappings", { message: e.message }
-            );
+             if (i18next.isInitialized) {
+                logMessage(
+                `Error loading stream mappings from localStorage: ${e.message}`,
+                "logMessages.errorLoadingStreamMappings", { message: e.message }
+                );
+            } else {
+                console.error(`Error loading stream mappings from localStorage: ${e.message}`);
+            }
           }
         }
       }
@@ -2230,7 +2320,7 @@
             "logMessages.obs.errorPrefixesRequired"
           );
           obsStatusIndicator.classList.add("error");
-          obsConnectionStatus.textContent = i18next.t("obsConnection.statusErrorPrefixesMissing");
+          if (i18next.isInitialized) obsConnectionStatus.textContent = i18next.t("obsConnection.statusErrorPrefixesMissing");
           return;
         }
 
@@ -2240,15 +2330,14 @@
         if (!url) {
           logMessage("Error: OBS WebSocket URL is required.", "logMessages.obs.errorUrlRequired");
           obsStatusIndicator.classList.add("error");
-          obsConnectionStatus.textContent = i18next.t("obsConnection.statusErrorUrlMissing");
+          if (i18next.isInitialized) obsConnectionStatus.textContent = i18next.t("obsConnection.statusErrorUrlMissing");
           return;
         }
         if (!url.startsWith("ws://") && !url.startsWith("wss://")) {
           url = "ws://" + url;
           obsWsUrlInput.value = url;
         }
-
-        obsConnectionStatus.textContent = i18next.t("obsConnection.statusConnecting");
+        if (i18next.isInitialized) obsConnectionStatus.textContent = i18next.t("obsConnection.statusConnecting");
         obsStatusIndicator.classList.remove("connected", "error");
         logMessage(`Attempting to connect to OBS WebSocket at ${url}...`, "logMessages.obs.attemptingConnection", { url });
 
@@ -2265,10 +2354,11 @@
               } catch (e) {}
               obs = null;
             }
-            obsConnectionStatus.textContent =
-              i18next.t("obsConnection.statusErrorTimeout");
+            if (i18next.isInitialized) {
+                obsConnectionStatus.textContent = i18next.t("obsConnection.statusErrorTimeout");
+                obsConnectBtn.textContent = i18next.t("obsConnection.connectButton");
+            }
             obsStatusIndicator.classList.add("error");
-            obsConnectBtn.textContent = i18next.t("obsConnection.connectButton");
             obsConnectBtn.classList.remove("connected");
             obsConnectBtn.classList.add("disconnected");
           }
@@ -2332,7 +2422,7 @@
                 updateObsConnectButtonText();
                 obsConnectBtn.classList.add("connected");
                 obsConnectBtn.classList.remove("disconnected");
-                obsConnectionStatus.textContent = i18next.t("obsConnection.statusConnected");
+                if (i18next.isInitialized) obsConnectionStatus.textContent = i18next.t("obsConnection.statusConnected");
                 obsStatusIndicator.classList.add("connected");
                 obsStatusIndicator.classList.remove("error");
                 onObsConnected();
@@ -2400,8 +2490,10 @@
             }
             logMessage(`OBS WebSocket Error: ${errorMsg}`, "logMessages.obs.webSocketError", { error: errorMsg });
             obsStatusIndicator.classList.add("error");
-            obsConnectionStatus.textContent = i18next.t("obsConnection.statusError");
-            obsConnectBtn.textContent = i18next.t("obsConnection.connectButton");
+            if (i18next.isInitialized) {
+                obsConnectionStatus.textContent = i18next.t("obsConnection.statusError");
+                obsConnectBtn.textContent = i18next.t("obsConnection.connectButton");
+            }
             obsConnectBtn.classList.remove("connected");
             obsConnectBtn.classList.add("disconnected");
             obsConnected = false;
@@ -2410,13 +2502,17 @@
           obs.onclose = (event) => {
             clearTimeout(connectionTimeoutId);
             let reason = "";
-            if (event.code === 4009) {
-              reason =
-                i18next.t("logMessages.obs.authFailedReason");
-            } else if (event.reason) {
-              reason = event.reason;
-            } else {
-              reason = i18next.t("logMessages.obs.connectionClosedReasonCode", {code: event.code || "Unknown", wasClean: event.wasClean ? "" : i18next.t("logMessages.obs.uncleanDisconnection") });
+            if (i18next.isInitialized) {
+                if (event.code === 4009) {
+                reason =
+                    i18next.t("logMessages.obs.authFailedReason");
+                } else if (event.reason) {
+                reason = event.reason;
+                } else {
+                reason = i18next.t("logMessages.obs.connectionClosedReasonCode", {code: event.code || "Unknown", wasClean: event.wasClean ? "" : i18next.t("logMessages.obs.uncleanDisconnection") });
+                }
+            } else { // Fallback if i18next not ready
+                reason = `Code ${event.code}`;
             }
             logMessage(`OBS WebSocket Connection Closed. Reason: ${reason}`, "logMessages.obs.connectionClosed", { reason });
             onObsDisconnected();
@@ -2427,9 +2523,11 @@
             `Error creating OBS WebSocket connection: ${error.message}`,
             "logMessages.obs.errorCreatingConnection", { message: error.message }
           );
-          obsConnectionStatus.textContent = i18next.t("obsConnection.statusError");
+          if (i18next.isInitialized) {
+            obsConnectionStatus.textContent = i18next.t("obsConnection.statusError");
+            obsConnectBtn.textContent = i18next.t("obsConnection.connectButton");
+          }
           obsStatusIndicator.classList.add("error");
-          obsConnectBtn.textContent = i18next.t("obsConnection.connectButton");
           obsConnectBtn.classList.remove("connected");
           obsConnectBtn.classList.add("disconnected");
           obsConnected = false;
@@ -2575,7 +2673,7 @@
         updateObsConnectButtonText();
         obsConnectBtn.classList.remove("connected");
         obsConnectBtn.classList.add("disconnected");
-        obsConnectionStatus.textContent = i18next.t("obsConnection.statusDisconnected");
+        if (i18next.isInitialized) obsConnectionStatus.textContent = i18next.t("obsConnection.statusDisconnected");
         obsStatusIndicator.classList.remove("connected", "error");
 
         Object.values(activeStreams).forEach(
@@ -2603,7 +2701,7 @@
             obsScenes = response.scenes;
             logMessage(`Fetched ${obsScenes.length} scenes from OBS.`, "logMessages.obs.fetchedScenesCount", { count: obsScenes.length });
 
-            updateSceneDropdowns(); // This will now use the refined populateSceneDropdown
+            updateSceneDropdowns();
 
             if (
               settings.obsSceneName &&
@@ -2618,7 +2716,7 @@
             }
 
             if (
-              settings.screenShareScene === "" || // "Same as main"
+              settings.screenShareScene === "" ||
               (settings.screenShareScene &&
                 obsScenes.some((s) => s.sceneName === settings.screenShareScene))
             ) {
@@ -2629,7 +2727,7 @@
                 `Previously selected screen share scene "${settings.screenShareScene}" no longer found. Defaulting to "Same as main".`,
                 "logMessages.obs.screenShareSceneNotFound", { sceneName: settings.screenShareScene }
               );
-               document.getElementById("screenShareSceneSelect").value = ""; // Default to "Same as main"
+               document.getElementById("screenShareSceneSelect").value = "";
             }
 
 
@@ -2692,8 +2790,9 @@
         scenesData,
         selectElement
       ) {
+        if (!i18next.isInitialized) return;
         const currentValue = selectElement.value;
-        selectElement.innerHTML = ''; // Clear existing options first
+        selectElement.innerHTML = '';
 
         let placeholderKeyToUse;
 
@@ -2706,7 +2805,7 @@
         } else if (selectElement.classList.contains("mapping-scene-name")) {
           placeholderKeyToUse = "streamIdMappings.selectSceneOption";
         } else {
-          placeholderKeyToUse = "obsTargetSettings.selectSceneOption"; // Generic default
+          placeholderKeyToUse = "obsTargetSettings.selectSceneOption";
           console.warn("populateSceneDropdown called with an unhandled select element:", selectElement.id || selectElement.className);
         }
 
@@ -2719,16 +2818,15 @@
           scenesData.forEach((scene) => {
             const option = document.createElement("option");
             option.value = scene.sceneName;
-            option.textContent = scene.sceneName; // Scene names are typically not translated
+            option.textContent = scene.sceneName;
             selectElement.appendChild(option);
           });
         }
 
-        // Restore previously selected value if it's still valid
         if (currentValue && Array.from(selectElement.options).some(opt => opt.value === currentValue)) {
           selectElement.value = currentValue;
         } else {
-           selectElement.value = ""; // Default to the placeholder (empty value)
+           selectElement.value = "";
         }
       }
 
@@ -2944,7 +3042,7 @@
               "VDO.Ninja connection lost (no activity from iframe). Attempting to reset.",
               "logMessages.vdoNinja.connectionLostResetting"
             );
-            vdoNinjaConnectionStatus.textContent = i18next.t("vdoNinjaSettings.statusConnectionLost");
+            if (i18next.isInitialized) vdoNinjaConnectionStatus.textContent = i18next.t("vdoNinjaSettings.statusConnectionLost");
             vdoNinjaStatusIndicator.classList.add("error");
             vdoNinjaStatusIndicator.classList.remove("connected");
             disconnectFromVdoNinja();
@@ -3324,7 +3422,7 @@
               await sendRequest("SetCurrentPreviewScene", {
                 sceneName: targetSceneName,
               });
-              await sleep(200);
+              await sleep(100);
               await sendRequest("TriggerStudioModeTransition");
             } else {
               await sendRequest("SetCurrentProgramScene", {
@@ -3894,6 +3992,26 @@
         });
       }
 
+      function setupSecureFieldsBlur() {
+        const secureFields = document.querySelectorAll(
+          "#vdoNinjaRoom, #vdoNinjaStreamIds"
+        );
+        secureFields.forEach((field) => {
+          field.classList.add("blur-field");
+          field.addEventListener("focus", () =>
+            field.classList.remove("blur-field")
+          );
+          field.addEventListener("blur", () => {
+            if (field.value === "") field.classList.add("blur-field");
+          });
+          // Apply blur if field is initially empty
+          if (field.value === "") {
+            field.classList.add("blur-field");
+          }
+        });
+      }
+
+
       const otherScenesContainer = document.getElementById(
         "otherScenesContainer"
       );
@@ -4161,10 +4279,10 @@
         screenShareHeightInput.addEventListener("change", saveSettings);
 
       document.addEventListener("DOMContentLoaded", () => {
-        loadSettings();
-        updateVdoNinjaButtonState(false);
-        toggleVdoNinjaInputs(false);
+        initializeApp(); // Call the new initialization function
+      });
 
+      function setupSecureFieldsBlur() {
         const secureFields = document.querySelectorAll(
           "#vdoNinjaRoom, #vdoNinjaStreamIds"
         );
@@ -4176,12 +4294,11 @@
           field.addEventListener("blur", () => {
             if (field.value === "") field.classList.add("blur-field");
           });
+          if (field.value === "") { // Apply blur if initially empty
+            field.classList.add("blur-field");
+          }
         });
-
-        startVdoNinjaConnectionMonitor();
-        // Initial calls to updateContent, updatePrefixLabels, updateStreamList, etc.,
-        // are now primarily driven by the i18next.init callback to ensure translations are ready.
-      });
+      }
     </script>
   </body>
 </html>
