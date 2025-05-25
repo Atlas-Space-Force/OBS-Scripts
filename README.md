@@ -136,7 +136,7 @@ When used together, the Control Dock and Lua script create a highly automated st
 - **Control Dock based on work by [Steve Seguin](https://github.com/steveseguin) ([original OBS Controller](https://vdo.ninja/obs)).**
 - [OBS Studio](https://obsproject.com/)
 - [VDO.Ninja](https://vdo.ninja/)
-- [Interactive Guide](https://morsethecode.github.io/OBS-Scripts/guide.html))
+- [Interactive Guide](https://morsethecode.github.io/OBS-Scripts/guide.html)
 
 ---
 
