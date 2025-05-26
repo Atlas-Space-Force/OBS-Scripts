@@ -1792,7 +1792,6 @@
           width: width,
           height: height,
           fps: 30, 
-          css: customCssInput.value.trim(), // Aplicar CSS personalizado aqui
           reroute_audio: true,
           restart_when_active: false, 
           shutdown: false, 
@@ -4239,7 +4238,6 @@
               const updatedScreenShareSettings = {
                 ...currentScreenShareSettingsResponse.inputSettings,
                 url: newScreenShareUrl,
-                css: customCssInput.value.trim(), // Adicionar CSS aqui também
               };
 
               await sendRequest("SetInputSettings", {
