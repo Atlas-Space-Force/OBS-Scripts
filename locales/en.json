@@ -135,6 +135,7 @@
   "logMessages": {
     "settingsSaved": "Settings saved.",
     "settingsLoaded": "Settings loaded from localStorage.",
+    "customCssChangedWillApplyToSource": "Custom CSS input changed. It will be applied directly to OBS source settings on next creation/update.",
     "errorLoadingSettings": "Error loading settings from localStorage: {{message}}. Using defaults.",
     "noSavedSettings": "No saved settings found. Using default values.",
     "appInitialized": "VDO.Ninja OBS Control Dock Initialized. Welcome!",

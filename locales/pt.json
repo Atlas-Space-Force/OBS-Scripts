@@ -135,6 +135,7 @@
   "logMessages": {
     "settingsSaved": "Configurações salvas.",
     "settingsLoaded": "Configurações carregadas do localStorage.",
+    "customCssChangedWillApplyToSource": "Entrada de CSS personalizado mudada. Ela será aplicada diretamente à configuração de fontes do OBS na próxima criação/atualização.",
     "errorLoadingSettings": "Erro ao carregar configurações do localStorage: {{message}}. Usando padrões.",
     "noSavedSettings": "Nenhuma configuração salva encontrada. Usando valores padrão.",
     "appInitialized": "Painel de Controle OBS VDO.Ninja Inicializado. Bem-vindo!",
