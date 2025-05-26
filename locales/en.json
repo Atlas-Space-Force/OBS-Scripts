@@ -8,6 +8,11 @@
     "clickToExpand": "Click to expand",
     "clickToCollapse": "Click to collapse"
   },
+  "customCss": {
+    "title": "Custom CSS",
+    "label": "Enter your custom CSS here:",
+    "description": "This CSS will be applied to the page and saved locally."
+  },
   "obsConnection": {
     "title": "OBS WebSocket Connection",
     "websocketUrlLabel": "WebSocket URL:",

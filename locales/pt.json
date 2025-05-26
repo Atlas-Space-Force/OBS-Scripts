@@ -8,6 +8,11 @@
     "clickToExpand": "Clique para expandir",
     "clickToCollapse": "Clique para recolher"
   },
+  "customCss": {
+    "title": "CSS Personalizado",
+    "label": "Insira seu CSS personalizado aqui:",
+    "description": "Este CSS será aplicado à página e salvo localmente."
+  },
   "obsConnection": {
     "title": "Conexão com OBS WebSocket",
     "websocketUrlLabel": "URL WebSocket:",

@@ -8,24 +8,24 @@
     <title data-i18n="pageTitle">VDO.Ninja OBS Control Dock</title>
     <style>
       body {
-        font-family: "Segoe UI", Roboto, Helvetica, Arial, sans-serif; /* Modern font stack */
-        margin: 0; /* Remove default margin */
-        padding: 15px; /* Add some padding around the whole page */
-        background-color: #181a1b; /* Slightly different dark */
+        font-family: "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        margin: 0;
+        padding: 15px;
+        background-color: #181a1b;
         color: #e0e0e0;
-        font-size: 14px; /* Base font size */
-        line-height: 1.6; /* Improved readability */
+        font-size: 14px;
+        line-height: 1.6;
       }
       .language-switcher {
-        display: flex; /* For better alignment of label and select */
+        display: flex;
         align-items: center;
-        gap: 8px; /* Space between label and select */
+        gap: 8px;
       }
       .language-switcher label {
-        margin-right: 0; /* Reset margin as gap is used */
+        margin-right: 0;
         color: #c0c0c0;
         font-size: 0.9em;
-        margin-bottom: 0; /* Align with select */
+        margin-bottom: 0;
       }
       .language-switcher select {
         padding: 5px 8px;
@@ -34,25 +34,25 @@
         color: #e0e0e0;
         border: 1px solid #4a4d54;
         font-size: 0.9em;
-        margin-bottom: 0; /* Align with label */
-        width: auto; /* Allow select to size based on content */
-        min-width: 120px; /* Ensure a minimum decent width */
+        margin-bottom: 0;
+        width: auto;
+        min-width: 120px;
       }
       h1 {
         color: #d0d0d0;
-        margin: 20px 0 20px 0; /* Adjusted h1 margin */
+        margin: 20px 0 20px 0;
         padding-bottom: 15px;
-        font-size: 1.8em; /* h1 size */
+        font-size: 1.8em;
         font-weight: 600;
-        border-bottom: 1px solid #3e4147; /* Separator for main title */
+        border-bottom: 1px solid #3e4147;
       }
       .container {
-        margin-bottom: 15px; /* Increased spacing */
-        padding: 15px; /* Increased padding */
-        background-color: #2c2e33; /* Darker, richer container */
-        border-radius: 8px; /* More rounded */
-        border: 1px solid #3e4147; /* Softer border */
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2); /* Subtle shadow for depth */
+        margin-bottom: 15px;
+        padding: 15px;
+        background-color: #2c2e33;
+        border-radius: 8px;
+        border: 1px solid #3e4147;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
       }
       .collapsible {
         cursor: pointer;
@@ -94,13 +94,11 @@
         transition: transform 0.2s ease;
       }
       .collapsible[data-state="expand"]::before {
-        /* Will be set by JS */
       }
       .collapsible[data-state="collapse"]::before {
-         /* Will be set by JS */
       }
       .collapsible::before {
-        content: var(--before-text, "Click"); /* Use CSS variable for dynamic text */
+        content: var(--before-text, "Click");
         position: absolute;
         right: 40px;
         font-size: 10px;
@@ -127,48 +125,54 @@
       label {
         display: block;
         margin-bottom: 6px;
-        font-weight: 500; /* Slightly bolder labels */
-        color: #c0c0c0; /* Lighter labels */
+        font-weight: 500;
+        color: #c0c0c0;
       }
       input[type="text"],
       input[type="password"],
       input[type="number"],
-      select {
+      select,
+      textarea {
         width: calc(
           100% - 22px
-        ); /* Adjusted width calculation for padding (10px each side + 1px border each side) */
-        padding: 10px; /* More padding */
-        margin-bottom: 12px; /* More spacing */
-        border: 1px solid #4a4d54; /* Softer border */
-        border-radius: 6px; /* More rounded */
-        background-color: #25272c; /* Darker input background */
+        );
+        padding: 10px;
+        margin-bottom: 12px;
+        border: 1px solid #4a4d54;
+        border-radius: 6px;
+        background-color: #25272c;
         color: #e0e0e0;
         font-size: 1em;
-        box-sizing: border-box; /* Ensures padding and border don't increase width */
+        box-sizing: border-box;
         transition: border-color 0.2s ease, box-shadow 0.2s ease;
+      }
+      textarea {
+        min-height: 80px;
+        resize: vertical;
       }
       input[type="text"]:focus,
       input[type="password"]:focus,
       input[type="number"]:focus,
-      select:focus {
-        border-color: #007aff; /* Accent color on focus */
-        box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.25); /* Focus ring */
+      select:focus,
+      textarea:focus {
+        border-color: #007aff;
+        box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.25);
         outline: none;
       }
       select {
-        padding-right: 30px; /* Make space for the arrow */
-        appearance: none; /* For custom arrow */
+        padding-right: 30px;
+        appearance: none;
         background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23A0A0B0'%3E%3Cpath d='M8 11L3 6h10L8 11z'/%3E%3C/svg%3E");
         background-repeat: no-repeat;
         background-position: right 10px center;
         background-size: 12px;
       }
       button {
-        padding: 10px 15px; /* Larger padding */
-        background-color: #4a5060; /* Default button color */
+        padding: 10px 15px;
+        background-color: #4a5060;
         color: white;
         border: none;
-        border-radius: 6px; /* More rounded */
+        border-radius: 6px;
         cursor: pointer;
         margin-right: 5px;
         margin-bottom: 5px;
@@ -177,19 +181,19 @@
         transition: background-color 0.2s ease, transform 0.1s ease;
       }
       button:hover {
-        background-color: #5a6070; /* Darker hover */
+        background-color: #5a6070;
       }
       button:active {
-        transform: translateY(1px); /* Click effect */
+        transform: translateY(1px);
       }
       button.connected {
-        background-color: #007aff; /* Modern blue for connected */
+        background-color: #007aff;
       }
       button.connected:hover {
         background-color: #0056b3;
       }
       button.disconnected {
-        background-color: #6c757d; /* Grey for disconnected */
+        background-color: #6c757d;
       }
       button.disconnected:hover {
         background-color: #5a6268;
@@ -210,147 +214,137 @@
         border: 0;
       }
       .log-area {
-        height: 120px; /* Slightly taller */
-        background-color: #202225; /* Consistent dark background */
-        color: #b0b0b0; /* Softer log text */
+        height: 120px;
+        background-color: #202225;
+        color: #b0b0b0;
         border: 1px solid #4a4d54;
-        border-radius: 6px; /* Rounded */
+        border-radius: 6px;
         overflow-y: scroll;
         padding: 10px;
-        font-family: "Consolas", "Monaco", "Lucida Console", monospace; /* Monospace for logs */
+        font-family: "Consolas", "Monaco", "Lucida Console", monospace;
         font-size: 0.9em;
         margin-top: 10px;
         white-space: pre-wrap;
       }
       .status-indicator {
         display: inline-block;
-        width: 10px; /* Slightly larger */
-        height: 10px; /* Slightly larger */
+        width: 10px;
+        height: 10px;
         border-radius: 50%;
         margin-left: 8px;
         background-color: #555;
         transition: background-color 0.3s ease, box-shadow 0.3s ease;
       }
       .status-indicator.connected {
-        background-color: #007aff; /* Consistent blue */
-        box-shadow: 0 0 8px rgba(0, 122, 255, 0.7); /* Glow effect */
+        background-color: #007aff;
+        box-shadow: 0 0 8px rgba(0, 122, 255, 0.7);
       }
       .status-indicator.error {
-        background-color: #dc3545; /* Standard error red */
-        box-shadow: 0 0 8px rgba(220, 53, 69, 0.7); /* Glow effect */
+        background-color: #dc3545;
+        box-shadow: 0 0 8px rgba(220, 53, 69, 0.7);
       }
       .stream-list {
         background-color: #202225;
         border: 1px solid #4a4d54;
         border-radius: 6px;
-        padding: 5px; /* Reduced overall padding for stream list */
+        padding: 5px;
         margin-top: 5px;
         transition: max-height 0.3s ease;
       }
       .stream-list:empty {
-        min-height: 40px; /* Adjusted height */
+        min-height: 40px;
         display: flex;
         align-items: center;
         justify-content: center;
-        color: #888; /* Softer text for empty state */
-        padding: 10px; /* Padding for empty state text */
+        color: #888;
+        padding: 10px;
       }
       .stream-item {
-        padding: 10px 12px; /* More padding */
-        border-bottom: 1px solid #383b40; /* Softer separator */
-        font-size: 1em; /* Standardized font size */
+        padding: 10px 12px;
+        border-bottom: 1px solid #383b40;
+        font-size: 1em;
         word-break: break-word;
-        background-color: #2c2e33; /* Slightly different background for items */
-        margin: 0 0 8px 0; /* Space between items, remove side margins */
-        border-radius: 4px; /* Rounded items */
+        background-color: #2c2e33;
+        margin: 0 0 8px 0;
+        border-radius: 4px;
       }
       .stream-item:last-child {
         border-bottom: none;
         margin-bottom: 0;
       }
       h2 {
-        /* Base h2 styles, .collapsible will add more */
         color: #c8c8c8;
         margin: 5px 0;
         font-size: 1.1em;
       }
       small {
-        color: #9090a0; /* Softer small text */
+        color: #9090a0;
         font-size: 0.88em;
-        display: block; /* Make small text take its own line often */
+        display: block;
         margin-top: 3px;
         line-height: 1.4;
       }
-      /* Specific Button Color Overrides */
-      /* Note: These rely on the JS setting specific inline background-color styles. */
       .add-stream-btn {
-        /* Default "Add to OBS" */
-        background-color: #28a745 !important; /* Green for add */
+        background-color: #28a745 !important;
       }
       .add-stream-btn:hover {
         background-color: #218838 !important;
       }
-      /* For "Remove from OBS" when JS changes inline style to red */
       button.add-stream-btn[style*="rgb(244, 67, 54)"],
       button.add-stream-btn[style*="#F44336"] {
-        background-color: #dc3545 !important; /* Red for remove */
+        background-color: #dc3545 !important;
       }
       button.add-stream-btn[style*="rgb(244, 67, 54)"]:hover,
       button.add-stream-btn[style*="#F44336"]:hover {
         background-color: #c82333 !important;
       }
       .highlight-btn {
-        /* Default "Highlight" */
-        background-color: #17a2b8 !important; /* Info blue/teal */
+        background-color: #17a2b8 !important;
       }
       .highlight-btn:hover {
         background-color: #138496 !important;
       }
-      /* For "Unhighlight" when JS changes inline style to red */
       button.highlight-btn[style*="rgb(244, 67, 54)"],
       button.highlight-btn[style*="#F44336"] {
-        background-color: #ffc107 !important; /* Warning yellow */
-        color: #212529 !important; /* Dark text for yellow button */
+        background-color: #ffc107 !important;
+        color: #212529 !important;
       }
       button.highlight-btn[style*="rgb(244, 67, 54)"]:hover,
       button.highlight-btn[style*="#F44336"]:hover {
         background-color: #e0a800 !important;
       }
       .screen-share-btn {
-        /* Default "Screen Share" */
-        background-color: #6f42c1 !important; /* Purple */
+        background-color: #6f42c1 !important;
       }
       .screen-share-btn:hover {
         background-color: #5a2aa8 !important;
       }
-      /* For "Stop Screen Share" when JS changes inline style to red */
       button.screen-share-btn[style*="rgb(244, 67, 54)"],
       button.screen-share-btn[style*="#F44336"] {
-        background-color: #fd7e14 !important; /* Orange for stop */
+        background-color: #fd7e14 !important;
       }
       button.screen-share-btn[style*="rgb(244, 67, 54)"]:hover,
       button.screen-share-btn[style*="#F44336"]:hover {
         background-color: #e66c00 !important;
       }
       .status-line {
-        font-size: 1em; /* Consistent font size */
+        font-size: 1em;
         margin-top: 10px;
         display: flex;
         align-items: center;
       }
       #obsConnectionStatus,
       #vdoNinjaConnectionStatus {
-        /* Status text styling */
         margin-left: 8px;
         color: #b0b0b0;
       }
       input[type="checkbox"] {
-        accent-color: #007aff; /* Modern blue */
-        margin-right: 8px; /* More space */
-        width: 15px; /* Custom size */
+        accent-color: #007aff;
+        margin-right: 8px;
+        width: 15px;
         height: 15px;
         vertical-align: middle;
-        flex-shrink: 0; /* Prevent shrinking in flex layouts */
+        flex-shrink: 0;
       }
       .checkbox-label {
         display: flex;
@@ -360,75 +354,69 @@
         font-size: 0.95em;
       }
       .checkbox-label input {
-        /* Target checkbox within our label structure */
-        margin-bottom: 0; /* Align with label text */
+        margin-bottom: 0;
         margin-right: 8px;
       }
-      /* Scrollbar styles - refine with new palette */
       ::-webkit-scrollbar {
-        width: 10px; /* Slightly wider */
+        width: 10px;
         height: 10px;
       }
       ::-webkit-scrollbar-track {
-        background: #202225; /* Dark track */
+        background: #202225;
         border-radius: 5px;
       }
       ::-webkit-scrollbar-thumb {
-        background: #4a4d54; /* Scrollbar thumb */
+        background: #4a4d54;
         border-radius: 5px;
-        border: 2px solid #202225; /* Creates a "padding" effect */
+        border: 2px solid #202225;
       }
       ::-webkit-scrollbar-thumb:hover {
-        background: #007aff; /* Accent on hover */
+        background: #007aff;
       }
       * {
-        /* Firefox scrollbar styling */
-        scrollbar-width: auto; /* Or 'thin' if preferred */
-        scrollbar-color: #4a4d54 #202225; /* thumb track */
+        scrollbar-width: auto;
+        scrollbar-color: #4a4d54 #202225;
       }
       .flex-row {
         display: flex;
-        gap: 8px; /* Increased gap */
+        gap: 8px;
         flex-wrap: wrap;
-        align-items: center; /* Default alignment for flex-rows */
+        align-items: center;
       }
       #obsSceneNameInput {
         display: none !important;
       }
       #loadScenesBtn {
         margin-left: 5px;
-        vertical-align: top; /* Align with select if they were side-by-side */
+        vertical-align: top;
       }
-      .container:nth-child(6) /* Container for Active Streams */
+      .container:nth-child(6)
         .collapsible-content:not(.collapsed) {
-        /* This rule might need adjustment if it was for allowing the stream list to expand fully.
-           With 1000px max-height, it's usually enough. Consider removing if not strictly needed. */
       }
       .prefix-input-label {
-        margin-bottom: 4px; /* Slightly more margin */
+        margin-bottom: 4px;
         display: block;
-        font-size: 0.9em; /* Smaller for these sub-labels */
+        font-size: 0.9em;
         color: #a0a0b0;
       }
       .prefix-group {
-        margin-bottom: 10px; /* More space */
+        margin-bottom: 10px;
       }
-      /* Help icon (?) for codec */
       a[href^="https://docs.vdo.ninja/advanced-settings/video-parameters/codec"] {
-        display: inline-flex; /* Use flex to center content */
+        display: inline-flex;
         align-items: center;
         justify-content: center;
         text-decoration: none;
         color: #a0a0b0;
-        font-size: 12px; /* Keep size */
+        font-size: 12px;
         border: 1px solid #a0a0b0;
         border-radius: 50%;
-        width: 18px; /* Slightly larger for easier click */
+        width: 18px;
         height: 18px;
         font-weight: bold;
         vertical-align: middle;
-        margin-left: 4px; /* More spacing */
-        margin-bottom: 0; /* Align better with select */
+        margin-left: 4px;
+        margin-bottom: 0;
         transition: background-color 0.2s ease, color 0.2s ease,
           border-color 0.2s ease;
       }
@@ -437,37 +425,35 @@
         color: white;
         border-color: #007aff;
       }
-      /* Stream Mapping UI adjustments */
       .stream-mapping {
-        background-color: #25272c; /* Slightly different background */
+        background-color: #25272c;
         padding: 12px;
         border: 1px solid #383b40;
         border-radius: 6px;
-        margin-bottom: 10px; /* Add margin-bottom for spacing between mapping rules */
+        margin-bottom: 10px;
       }
       .stream-mapping .flex-row {
-        margin-bottom: 8px; /* Space between rows of controls in a single mapping */
+        margin-bottom: 8px;
       }
       .stream-mapping .flex-row:last-child {
         margin-bottom: 0;
       }
       .stream-mapping input[type="text"],
       .stream-mapping select {
-        margin-bottom: 0; /* Remove bottom margin for inputs inside mapping, handled by flex gap/row margin */
-        font-size: 0.9em; /* Slightly smaller for compact layout */
+        margin-bottom: 0;
+        font-size: 0.9em;
         padding: 8px;
       }
       .stream-mapping .remove-mapping-btn {
-        padding: 6px 8px; /* Smaller padding for remove button */
-        background-color: #c82333 !important; /* Danger red */
+        padding: 6px 8px;
+        background-color: #c82333 !important;
         font-size: 0.9em;
-        margin-left: auto; /* Push to the right */
+        margin-left: auto;
       }
       .stream-mapping .remove-mapping-btn:hover {
         background-color: #a01c28 !important;
       }
       .stream-mapping small {
-        /* Adjust small text in mappings */
         font-size: 0.8em;
         margin-top: 5px;
       }
@@ -493,30 +479,20 @@
       }
       .remove-mapping-btn {
         flex-shrink: 0;
-      } /* Prevent remove button from shrinking */
+      }
       #addStreamMappingBtn {
-        /* Make it stand out a bit */
-        background-color: #0069d9; /* Bootstrap primary blue */
+        background-color: #0069d9;
         border-color: #0062cc;
       }
       #addStreamMappingBtn:hover {
         background-color: #005cbf;
         border-color: #0056b3;
       }
-      /* Ensure consistent spacing for checkbox labels within stream mappings */
       .stream-mapping .checkbox-label {
-        font-size: 0.9em; /* Smaller to fit */
-        margin-bottom: 0; /* Remove bottom margin as it's in a flex row */
+        font-size: 0.9em;
+        margin-bottom: 0;
       }
-      /* Target OBS Target Settings dropdowns for specific width */
-      #obsSceneSelect,
-      #screenShareSceneSelect,
-      #highlightSceneSelect {
-        /* width handled by inline style, but can be adjusted if needed */
-      }
-      /* Make width of select and button in "Target Scene" line up nicely */
       #obsTargetSettingsFlexContainer > div:first-child {
-        /* Assuming you wrap obsSceneSelect and loadScenesBtn in this */
         flex-grow: 1;
       }
       #obsTargetSettingsFlexContainer > button {
@@ -533,20 +509,23 @@
         padding-top: 0;
       }
     </style>
+    <style id="customUserCss"></style>
   </head>
   <body>
     <h1 data-i18n="mainHeading">VDO.Ninja OBS Control</h1>
 
-    <div class="container"> <div class="language-switcher">
-            <label for="languageSelector" data-i18n="languageSwitcher.label">Language:</label>
-            <select id="languageSelector">
-                <option value="en">English</option>
-                <option value="pt">Português</option>
-            </select>
-        </div>
+    <div class="container">
+      <div class="language-switcher">
+        <label for="languageSelector" data-i18n="languageSwitcher.label">Language:</label>
+        <select id="languageSelector">
+          <option value="en">English</option>
+          <option value="pt">Português</option>
+        </select>
+      </div>
     </div>
 
-    <div class="container"> <h2 class="collapsible" data-state="expand" data-i18n="obsConnection.title">OBS WebSocket Connection</h2>
+    <div class="container">
+      <h2 class="collapsible" data-state="expand" data-i18n="obsConnection.title">OBS WebSocket Connection</h2>
       <div class="collapsible-content">
         <label for="obsWsUrl" data-i18n="obsConnection.websocketUrlLabel">WebSocket URL:</label>
         <input type="text" id="obsWsUrl" value="ws://localhost:4455" />
@@ -590,7 +569,8 @@
       </div>
     </div>
 
-    <div class="container"> <h2 class="collapsible" data-state="expand" data-i18n="vdoNinjaSettings.title">VDO.Ninja Settings</h2>
+    <div class="container">
+      <h2 class="collapsible" data-state="expand" data-i18n="vdoNinjaSettings.title">VDO.Ninja Settings</h2>
       <div class="collapsible-content">
         <label for="vdoNinjaBaseUrl" data-i18n="vdoNinjaSettings.baseUrlLabel">VDO.Ninja Base URL:</label>
         <input
@@ -624,10 +604,11 @@
           class="blur-field"
         />
         <small data-i18n="vdoNinjaSettings.roomOrStreamIdsNeeded">Room Name or Stream ID(s) needed</small>
-        </div>
+      </div>
     </div>
 
-    <div class="container"> <h2 class="collapsible" data-state="collapse" data-i18n="streamIdMappings.title">Stream ID Mappings</h2>
+    <div class="container">
+      <h2 class="collapsible" data-state="collapse" data-i18n="streamIdMappings.title">Stream ID Mappings</h2>
       <div class="collapsible-content collapsed">
         <div id="streamMappingContainer">
           <div id="streamMappings"></div>
@@ -638,7 +619,8 @@
       </div>
     </div>
 
-    <div class="container"> <h2 class="collapsible" data-state="expand" data-i18n="obsTargetSettings.title">OBS Target Settings</h2>
+    <div class="container">
+      <h2 class="collapsible" data-state="expand" data-i18n="obsTargetSettings.title">OBS Target Settings</h2>
       <div class="collapsible-content">
         <div class="settings-group">
           <label for="obsSceneSelect" data-i18n="obsTargetSettings.targetSceneLabel">Target Scene:</label>
@@ -754,7 +736,8 @@
       </div>
     </div>
 
-    <div class="container"> <h2 class="collapsible" data-state="expand" data-i18n="activeStreams.title">Active Streams</h2>
+    <div class="container">
+      <h2 class="collapsible" data-state="expand" data-i18n="activeStreams.title">Active Streams</h2>
       <div class="collapsible-content">
         <div id="streamList" class="stream-list">
           <div
@@ -773,26 +756,35 @@
       </div>
     </div>
 
+    <div class="container">
+        <h2 class="collapsible" data-state="collapse" data-i18n="customCss.title">Custom CSS</h2>
+        <div class="collapsible-content collapsed">
+            <label for="customCssInput" data-i18n="customCss.label">Enter your custom CSS here:</label>
+            <textarea id="customCssInput" rows="10"></textarea>
+            <small data-i18n="customCss.description">This CSS will be applied to the page and saved locally.</small>
+        </div>
+    </div>
+
     <iframe
       id="vdoNinjaIframe"
       allow="encrypted-media;sync-xhr;usb;web-share;cross-origin-isolated;midi *;geolocation;camera *;microphone *;fullscreen;picture-in-picture;display-capture;accelerometer;autoplay;gyroscope;screen-wake-lock;"
     ></iframe>
 
-    <div class="container"> <h2 class="collapsible" data-state="expand" data-i18n="log.title">Log</h2>
+    <div class="container">
+      <h2 class="collapsible" data-state="expand" data-i18n="log.title">Log</h2>
       <div class="collapsible-content">
         <div id="logArea" class="log-area"></div>
       </div>
     </div>
 
     <script>
-      // i18next initialization and language change logic
       const loadPath = 'https://raw.githubusercontent.com/MorseTheCode/OBS-Scripts/refs/heads/main/locales/{{lng}}.json';
-      let logEntries = []; // Array to store log entry data
-      const languageSelector = document.getElementById('languageSelector'); // Define globally
+      let logEntries = [];
+      const languageSelector = document.getElementById('languageSelector');
 
       function initializeApp() {
         let savedLanguage = localStorage.getItem('vdoNinjaObsControlLanguage') || 'en';
-        languageSelector.value = savedLanguage; // Set dropdown to saved/default language
+        languageSelector.value = savedLanguage;
 
         i18next
           .use(i18nextHttpBackend)
@@ -805,8 +797,8 @@
             }
           }, function(err, t) {
             if (err) return console.error('Error initializing i18next:', err);
-            loadSettings(); // Load other settings
-            updateContent(); // Translate page
+            loadSettings();
+            updateContent();
             logMessage("VDO.Ninja OBS Control Dock Initialized. Welcome!", "logMessages.appInitialized");
             updateVdoNinjaButtonState(false);
             toggleVdoNinjaInputs(false);
@@ -817,7 +809,6 @@
 
 
       function updateContent() {
-        // Translate elements with data-i18n attribute
         document.querySelectorAll('[data-i18n]').forEach(element => {
           const key = element.getAttribute('data-i18n');
           if (key.startsWith('[placeholder]')) {
@@ -830,7 +821,6 @@
           }
         });
 
-        // Specifically re-translate placeholders and titles for dynamically added mapping inputs
         document.querySelectorAll('.stream-mapping .mapping-stream-id').forEach(input => {
             input.placeholder = i18next.t('streamIdMappings.streamIdPlaceholder');
             input.title = i18next.t('streamIdMappings.streamIdTooltip');
@@ -840,14 +830,13 @@
             input.title = i18next.t('streamIdMappings.labelTooltip');
         });
 
-        // Call other update functions
         updateObsConnectButtonText();
         updateVdoNinjaButtonState(vdoNinjaConnected);
         updateStreamList();
         updatePrefixLabels();
         setupCollapsibleTooltips();
         updateSceneDropdowns();
-        renderLog(); // Re-render the log with the new language
+        renderLog();
       }
 
       function setupCollapsibleTooltips() {
@@ -863,15 +852,11 @@
         const newLang = event.target.value;
         i18next.changeLanguage(newLang, (err, t) => {
           if (err) return console.error('Error changing language:', err);
-          localStorage.setItem('vdoNinjaObsControlLanguage', newLang); // Save new language
+          localStorage.setItem('vdoNinjaObsControlLanguage', newLang);
           updateContent();
-          // No need to call saveSettings() here just for language,
-          // as other settings are saved on their respective input changes.
         });
       });
 
-      // --- Start of existing script ---
-      // DOM elements
       const obsWsUrlInput = document.getElementById("obsWsUrl");
       const obsWsPasswordInput = document.getElementById("obsWsPassword");
       const obsConnectBtn = document.getElementById("obsConnectBtn");
@@ -903,8 +888,10 @@
       const logArea = document.getElementById("logArea");
       const loadScenesBtn = document.getElementById("loadScenesBtn");
       const highlightSceneSelect = document.getElementById("highlightSceneSelect");
+      const customCssInput = document.getElementById("customCssInput");
+      const customUserCssStyleTag = document.getElementById("customUserCss");
 
-      // State variables
+
       let obs = null;
       let obsConnected = false;
       let vdoNinjaConnected = false;
@@ -954,7 +941,7 @@
       vdoNinjaConnectionStatus.style.marginLeft = "5px";
 
       const vdoNinjaSettingsContainer = document.querySelector(
-        "div.container:nth-child(4) .collapsible-content" // Adjusted to 3rd container
+        "div.container:nth-child(4) .collapsible-content"
       );
       const buttonsDiv = document.createElement("div");
       buttonsDiv.style.marginTop = "10px";
@@ -1001,8 +988,9 @@
               if (entry.i18nKey && i18next.exists(entry.i18nKey)) {
                   translatedMessage = i18next.t(entry.i18nKey, entry.i18nParams);
               } else if (entry.i18nKey) {
-                //   console.warn(`i18next key not found for log: ${entry.i18nKey}. Falling back to: ${entry.fallbackMessage}`);
+                // console.warn(`i18n key not found: ${entry.i18nKey}. Using fallback: "${entry.fallbackMessage}"`);
               }
+              // Sanitize message before inserting into HTML to prevent XSS
               const safeTranslatedMessage = translatedMessage.replace(/</g, "&lt;").replace(/>/g, "&gt;");
               logContent += `[${entry.timestamp}] ${safeTranslatedMessage}\n`;
           });
@@ -1038,12 +1026,12 @@
 
         cameraSubPrefixLabelText.textContent = i18next.t("obsConnection.cameraPrefixLabel");
         reactionSubPrefixLabelText.textContent = i18next.t("obsConnection.reactionPrefixDynamicLabel", {
-            prefix: cameraPrefixVal || "",
+            prefix: cameraPrefixVal || "", // Provide a default empty string if prefix is empty
             separator: (cameraPrefixVal && reactionSubPrefixVal) ? "." : "",
             subPrefix: reactionSubPrefixVal || ""
         });
         highlightSubPrefixLabelText.textContent = i18next.t("obsConnection.highlightPrefixDynamicLabel", {
-            prefix: cameraPrefixVal || "VDO",
+            prefix: cameraPrefixVal || "VDO", // Provide a default if prefix is empty
             separator: (cameraPrefixVal && highlightSubPrefixVal) ? "." : "",
             subPrefix: highlightSubPrefixVal || ""
         });
@@ -1095,8 +1083,20 @@
           vdoNinjaStatusIndicator.classList.remove("connected", "error");
         }
         toggleVdoNinjaInputs(vdoNinjaConnected);
-        // saveSettings(); // Save settings is called by individual input changes
       }
+
+      function applyCustomCss(cssString) {
+        if (customUserCssStyleTag) {
+            customUserCssStyleTag.textContent = cssString;
+        }
+      }
+
+      // MODIFICADO: O event listener de 'input' para customCssInput agora apenas salva as configurações
+      // e loga uma mensagem. A aplicação do CSS ocorrerá em addStreamToObs, addScreenShareToObs, etc.
+      customCssInput.addEventListener('input', () => {
+        saveSettings(); // Salva o CSS no localStorage
+        logMessage("Custom CSS input changed. It will be applied when a source is next created/updated in OBS.", "logMessages.customCssChangedWillApply");
+      });
 
       function saveSettings() {
         const otherSceneCheckboxes = document.querySelectorAll(
@@ -1116,7 +1116,7 @@
           vdoNinjaRoom: vdoNinjaRoomInput.value,
           vdoNinjaPassword: vdoNinjaPasswordInput.value,
           vdoNinjaStreamIds: vdoNinjaStreamIdsInput.value,
-          obsSceneName: obsSceneSelect.value,
+          obsSceneName: obsSceneSelect.value, // Salva o valor do select, não do input escondido
           selectedOtherScenes: selectedOtherScenes,
           sourceSizing: sourceSizingSelect.value,
           sourceCodec: sourceCodecSelect.value,
@@ -1127,7 +1127,8 @@
           screenShareScene:
             document.getElementById("screenShareSceneSelect").value,
           highlightScene: highlightSceneSelect.value,
-          language: i18next.language // Save current language
+          language: i18next.language, // Salva o idioma atual
+          customCSS: customCssInput.value // Salva o CSS personalizado
         };
         localStorage.setItem("obsNinjaSettings", JSON.stringify(settings));
 
@@ -1142,14 +1143,17 @@
         let cols = Math.ceil(Math.sqrt(totalSources));
         let rows = Math.ceil(totalSources / cols);
 
+        // Ajustes para layouts específicos (ex: 3 fontes em uma linha)
         if (totalSources === 3) {
           cols = 3;
           rows = 1;
         }
+        // Adicione mais lógica de ajuste se necessário para outros números
 
         const cellWidth = canvasWidth / cols;
         const cellHeight = canvasHeight / rows;
 
+        // Centralizar a última linha se não estiver completa
         const itemsInLastRow = totalSources - (rows - 1) * cols;
         let lastRowHorizontalOffset = 0;
         if (rows > 1 && itemsInLastRow > 0 && itemsInLastRow < cols) {
@@ -1161,7 +1165,7 @@
           const col = i % cols;
 
           let x = col * cellWidth;
-          if (row === rows - 1) {
+          if (row === rows - 1) { // Se for a última linha
             x += lastRowHorizontalOffset;
           }
           const y = row * cellHeight;
@@ -1176,9 +1180,9 @@
           clearTimeout(vdoNinjaConnectionCheckTimer);
           vdoNinjaConnectionCheckTimer = null;
         }
-        activeStreams = {};
+        activeStreams = {}; // Limpa os streams ativos
         updateStreamList();
-        updateVdoNinjaButtonState(false);
+        updateVdoNinjaButtonState(false); // Atualiza o estado do botão e inputs
         logMessage("Disconnected from VDO.Ninja.", "logMessages.vdoNinja.disconnected");
       }
 
@@ -1199,13 +1203,14 @@
           return;
         }
 
-        initializeVdoNinjaIframe();
+        initializeVdoNinjaIframe(); // Configura e carrega o iframe
         if (i18next.isInitialized) {
             vdoNinjaConnectionStatus.textContent = i18next.t("vdoNinjaSettings.statusConnecting");
-            vdoNinjaConnectBtn.textContent = i18next.t("vdoNinjaSettings.cancelButton");
+            vdoNinjaConnectBtn.textContent = i18next.t("vdoNinjaSettings.cancelButton"); // Ou "Connecting..."
         }
 
 
+        // Inicia um timer para verificar se a conexão foi estabelecida
         if (vdoNinjaConnectionCheckTimer) {
           clearTimeout(vdoNinjaConnectionCheckTimer);
         }
@@ -1214,6 +1219,7 @@
             !vdoNinjaConnected &&
             Date.now() - vdoNinjaLastActivityTime > 10000
           ) {
+            // 10 segundos sem atividade
             logMessage(
               "VDO.Ninja connection timed out. No activity received from iframe.",
               "logMessages.vdoNinja.connectionTimeout"
@@ -1223,11 +1229,11 @@
                 vdoNinjaConnectBtn.textContent = i18next.t("vdoNinjaSettings.connectButton");
             }
             vdoNinjaStatusIndicator.classList.add("error");
-            toggleVdoNinjaInputs(false);
+            toggleVdoNinjaInputs(false); // Reabilita inputs se a conexão falhar
           }
-        }, 10000);
+        }, 10000); // Timeout de 10 segundos
 
-        toggleVdoNinjaInputs(true);
+        toggleVdoNinjaInputs(true); // Desabilita inputs durante a tentativa de conexão
         saveSettings();
       }
 
@@ -1243,6 +1249,7 @@
         const mappingDiv = document.createElement("div");
         mappingDiv.className = "stream-mapping";
 
+        // Garante que streamId não seja um objeto de evento se chamado por um event listener
         const initialStreamId =
           streamId instanceof PointerEvent ||
           (typeof streamId === "object" && streamId !== null && streamId.target)
@@ -1281,6 +1288,7 @@
               </div>
           `;
         if (i18next.isInitialized) {
+            // Traduz elementos dentro do HTML recém-criado
             mappingDiv.querySelectorAll('[data-i18n]').forEach(element => {
                 const key = element.getAttribute('data-i18n');
                 if (key.startsWith('[placeholder]')) {
@@ -1292,6 +1300,7 @@
                 }
             });
 
+            // Placeholders e tooltips específicos que podem não ser cobertos pelo loop geral
             const streamIdInputElement = mappingDiv.querySelector('.mapping-stream-id');
             if (streamIdInputElement) {
                 streamIdInputElement.placeholder = i18next.t('streamIdMappings.streamIdPlaceholder');
@@ -1309,20 +1318,21 @@
         streamMappingsDiv.appendChild(mappingDiv);
         const sceneDropdown = mappingDiv.querySelector(".mapping-scene-name");
 
-        populateSceneDropdown(obsScenes, sceneDropdown);
+        populateSceneDropdown(obsScenes, sceneDropdown); // Popula o dropdown de cenas
         if (
           sceneName &&
           obsScenes.some((scene) => scene.sceneName === sceneName)
         ) {
-          sceneDropdown.value = sceneName;
+          sceneDropdown.value = sceneName; // Define o valor se uma cena válida foi passada
         }
 
         const removeBtn = mappingDiv.querySelector(".remove-mapping-btn");
         removeBtn.addEventListener("click", () => {
           mappingDiv.remove();
-          saveSettings();
+          saveSettings(); // Salva as configurações após remover um mapeamento
         });
 
+        // Adiciona event listeners para salvar automaticamente ao alterar qualquer input/select no mapeamento
         const inputs = mappingDiv.querySelectorAll("input, select");
         inputs.forEach((input) => {
           input.addEventListener("change", saveSettings);
@@ -1334,9 +1344,9 @@
           "addStreamMappingBtn"
         );
         addStreamMappingBtn.addEventListener("click", () => {
-          addNewStreamMapping();
+          addNewStreamMapping(); // Adiciona um novo mapeamento em branco
         });
-        loadStreamMappings();
+        loadStreamMappings(); // Carrega mapeamentos salvos
       }
 
       function loadSettings() {
@@ -1360,33 +1370,45 @@
             vdoNinjaPasswordInput.value = settings.vdoNinjaPassword || "";
             vdoNinjaStreamIdsInput.value = settings.vdoNinjaStreamIds || "";
 
-            loadedSelectedOtherScenes = settings.selectedOtherScenes || [];
+            // obsSceneNameInput.value = settings.obsSceneName || ""; // Input escondido
+            // obsSceneSelect.value = settings.obsSceneName || ""; // O select principal
+            // A seleção do obsSceneSelect será feita após fetchObsScenes
+
+            loadedSelectedOtherScenes = settings.selectedOtherScenes || []; // Carrega cenas selecionadas
 
             sourceSizingSelect.value = settings.sourceSizing || "defaultSize";
             sourceCodecSelect.value = settings.sourceCodec || "";
             autoAddSourcesCheckbox.checked =
-              settings.autoAddSources !== false;
+              settings.autoAddSources !== false; // Default true
             autoRemoveSourcesCheckbox.checked =
-              settings.autoRemoveSources !== false;
+              settings.autoRemoveSources !== false; // Default true
 
             const screenShareWidthInput =
               document.getElementById("screenShareWidth");
             const screenShareHeightInput =
               document.getElementById("screenShareHeight");
+            // const screenShareSceneSelect = document.getElementById("screenShareSceneSelect"); // Será definido após fetchObsScenes
+            // const highlightSceneSelectElement = document.getElementById("highlightSceneSelect"); // Será definido após fetchObsScenes
 
             if (screenShareWidthInput)
               screenShareWidthInput.value = settings.screenShareWidth || "1920";
             if (screenShareHeightInput)
               screenShareHeightInput.value =
                 settings.screenShareHeight || "1080";
+            // if (screenShareSceneSelect) screenShareSceneSelect.value = settings.screenShareScene || "";
+            // if (highlightSceneSelectElement) highlightSceneSelectElement.value = settings.highlightScene || "";
 
-            // Load saved language but don't apply it here yet.
-            // i18next.init will handle the initial language.
             savedLanguage = settings.language || 'en';
-            languageSelector.value = savedLanguage;
+            languageSelector.value = savedLanguage; // Define o seletor de idioma
+
+            // Carrega e aplica o CSS personalizado
+            if (settings.customCSS && customCssInput && customUserCssStyleTag) {
+                customCssInput.value = settings.customCSS;
+                applyCustomCss(settings.customCSS); // Aplica o CSS na carga
+            }
 
 
-            // Log after i18next is initialized
+            // Loga apenas se i18next estiver pronto
             if (i18next.isInitialized) {
                 logMessage("Settings loaded from localStorage.", "logMessages.settingsLoaded");
             } else {
@@ -1394,6 +1416,7 @@
             }
 
           } catch (e) {
+            // Loga apenas se i18next estiver pronto
             if (i18next.isInitialized) {
                 logMessage(
                 `Error loading settings from localStorage: ${e.message}. Using defaults.`,
@@ -1402,7 +1425,7 @@
             } else {
                 console.error(`Error loading settings from localStorage: ${e.message}. Using defaults.`);
             }
-
+            // Define padrões se houver erro
             cameraPrefixInput.value = "VDO";
             reactionSubPrefixInput.value = "Screen";
             highlightSubPrefixInput.value = "Highlight";
@@ -1411,11 +1434,13 @@
             sourceCodecSelect.value = "";
           }
         } else {
+           // Loga apenas se i18next estiver pronto
            if (i18next.isInitialized) {
                 logMessage("No saved settings found. Using default values.", "logMessages.noSavedSettings");
            } else {
                 console.log("No saved settings found. Using default values.");
            }
+          // Define padrões se não houver configurações salvas
           cameraPrefixInput.value = "VDO";
           reactionSubPrefixInput.value = "Screen";
           highlightSubPrefixInput.value = "Highlight";
@@ -1424,9 +1449,8 @@
           sourceCodecSelect.value = "";
         }
 
-        setupStreamMappingUI(); // This also calls loadStreamMappings which might need i18next
-        // updatePrefixLabels(); // Will be called by updateContent
-        return savedLanguage; // Return for i18next init
+        setupStreamMappingUI(); // Configura a UI de mapeamento de streams
+        return savedLanguage; // Retorna o idioma carregado para i18next
       }
 
       function updateOtherScenesList() {
@@ -1434,16 +1458,16 @@
         const otherScenesListDiv = document.getElementById("otherScenesList");
         const container = document.getElementById("otherScenesContainer");
 
-        otherScenesListDiv.innerHTML = "";
+        otherScenesListDiv.innerHTML = ""; // Limpa a lista existente
 
         if (mainSceneName && obsScenes && obsScenes.length > 1) {
-          container.style.display = "block";
+          container.style.display = "block"; // Mostra o container
           obsScenes.forEach((scene) => {
             if (scene.sceneName !== mainSceneName) {
               const checkboxId = `otherScene_${scene.sceneName.replace(
                 /\s+/g,
                 "_"
-              )}`;
+              )}`; // ID único para o checkbox
               const listItem = document.createElement("div");
               listItem.className = "checkbox-label";
               listItem.style.marginBottom = "8px";
@@ -1454,37 +1478,39 @@
               checkbox.value = scene.sceneName;
               checkbox.className = "other-scene-checkbox";
 
+              // Verifica se esta cena estava selecionada anteriormente
               if (loadedSelectedOtherScenes.includes(scene.sceneName)) {
                 checkbox.checked = true;
               }
-              checkbox.addEventListener("change", saveSettings);
+              checkbox.addEventListener("change", saveSettings); // Salva ao alterar
 
               const label = document.createElement("label");
               label.htmlFor = checkboxId;
               label.textContent = scene.sceneName;
-              label.style.marginLeft = "0";
+              label.style.marginLeft = "0"; // Ajuste para o label do checkbox
 
               listItem.appendChild(checkbox);
               listItem.appendChild(label);
               otherScenesListDiv.appendChild(listItem);
             }
           });
+          // Esconde o container se não houver outras cenas para listar
           if (otherScenesListDiv.childElementCount === 0) {
             container.style.display = "none";
           }
         } else {
-          container.style.display = "none";
+          container.style.display = "none"; // Esconde se não houver cena principal ou outras cenas
         }
       }
 
       function updateStreamList() {
-        if (!i18next.isInitialized) return;
+        if (!i18next.isInitialized) return; // Garante que i18next está pronto
         if (Object.keys(activeStreams).length === 0) {
           streamListContainer.innerHTML =
             `<div class="stream-item" style="text-align:center; background-color:transparent; border:none; color:#888;">${i18next.t("activeStreams.noActiveStreams")}</div>`;
           return;
         }
-        streamListContainer.innerHTML = "";
+        streamListContainer.innerHTML = ""; // Limpa a lista
 
         for (const streamId in activeStreams) {
           if (Object.hasOwnProperty.call(activeStreams, streamId)) {
@@ -1494,7 +1520,7 @@
 
             const targetInfo = getTargetSceneForStream(streamId, stream.label);
             const targetSceneName = targetInfo.scene;
-            const isDefaultScene = targetSceneName === getTargetScene();
+            const isDefaultScene = targetSceneName === getTargetScene(); // Cena principal
 
             const isHighlighted = highlightedStreamId === streamId;
             const isCurrentlyScreenSharingThisStream = screenShareId === streamId;
@@ -1523,8 +1549,9 @@
                             : `<span style="color:#FFC107">${i18next.t("activeStreams.notInObs")}</span>`
                         }
                       </div>
-                      <div style="margin-top: 8px;" class="flex-row">`;
+                      <div style="margin-top: 8px;" class="flex-row">`; // flex-row para botões
 
+            // Botão Adicionar/Remover do OBS
             streamItemHTML += `
                       <button class="add-stream-btn" data-stream-id="${streamId}"
                           style="background-color: ${
@@ -1537,6 +1564,7 @@
                               }
                       </button>`;
 
+            // Botão Highlight (apenas se a fonte foi criada)
             if (stream.sourceCreated) {
               streamItemHTML += `
                           <button class="highlight-btn" data-stream-id="${streamId}"
@@ -1551,6 +1579,7 @@
                           </button>`;
             }
 
+            // Botão Screen Share (apenas se a fonte foi criada)
             if (stream.sourceCreated) {
               streamItemHTML += `
                           <button class="screen-share-btn" data-stream-id="${streamId}"
@@ -1566,10 +1595,11 @@
                               }
                           </button>`;
             }
-            streamItemHTML += `</div>`;
+            streamItemHTML += `</div>`; // Fecha flex-row
             streamDiv.innerHTML = streamItemHTML;
             streamListContainer.appendChild(streamDiv);
 
+            // Adiciona event listeners aos botões
             const addRemoveBtn = streamDiv.querySelector(".add-stream-btn");
             if (addRemoveBtn) {
               addRemoveBtn.addEventListener("click", () => {
@@ -1606,21 +1636,23 @@
           return;
         }
 
+        // Se um screen share estiver ativo, pare-o antes de destacar
         if (screenShareId) {
           logMessage(
             `A screen share is active (${screenShareId}). Stopping it before highlighting.`,
             "logMessages.obs.stoppingScreenShareForHighlight", { id: screenShareId }
           );
-          await removeScreenShareFromObs(screenShareId);
+          await removeScreenShareFromObs(screenShareId); // Remove o screen share existente
         }
 
-        const newHighlightScene = highlightSceneSelect.value;
+        const newHighlightScene = highlightSceneSelect.value; // Cena de highlight selecionada
         await toggleHighlight(
           clickedStreamId,
           clickedStreamLabel,
           clickedTargetInfo
-        );
+        ); // Lógica principal de highlight
 
+        // Se um stream foi destacado E uma cena de highlight está definida, mude para ela
         if (highlightedStreamId && newHighlightScene) {
           try {
             const studio = await sendRequest("GetStudioModeEnabled");
@@ -1632,7 +1664,7 @@
               await sendRequest("SetCurrentPreviewScene", {
                 sceneName: newHighlightScene,
               });
-              await sleep(100);
+              await sleep(100); // Pequena pausa para garantir que a preview foi definida
               await sendRequest("TriggerStudioModeTransition");
             } else {
               logMessage(
@@ -1654,16 +1686,19 @@
 
       async function handleScreenShareClick(streamId, streamLabel) {
         const clickedStreamIdForScreenShare = streamId;
-        const currentActiveScreenShareGlobal = screenShareId;
+        const currentActiveScreenShareGlobal = screenShareId; // ID do screen share ativo globalmente
 
         if (currentActiveScreenShareGlobal === clickedStreamIdForScreenShare) {
+          // Se clicou no stream que já está compartilhando, pare o compartilhamento
           await removeScreenShareFromObs(clickedStreamIdForScreenShare);
         } else {
+          // Iniciar um novo screen share ou trocar para um novo
           if (!obsConnected || !obs) {
             logMessage("Cannot start screen share: Not connected to OBS.", "logMessages.obs.cannotScreenShareNotConnected");
             return;
           }
 
+          // Se uma câmera estiver destacada, desfaça o destaque antes de iniciar o screen share
           if (highlightedStreamId) {
             logMessage(
               `A camera is highlighted (${highlightedStreamId}). Unhighlighting it before starting screen share.`,
@@ -1681,15 +1716,17 @@
               highlightedStreamId,
               oldHighlightLabel,
               oldHighlightTargetInfo
-            );
+            ); // Desfaz o highlight
           }
 
+          // Adiciona/atualiza a fonte de screen share no OBS
           const screenShareScene =
             document.getElementById("screenShareSceneSelect").value ||
-            getTargetScene();
+            getTargetScene(); // Usa a cena de screen share ou a principal
 
           await addScreenShareToObs(clickedStreamIdForScreenShare, streamLabel);
 
+          // Se o screen share foi configurado com sucesso E uma cena de screen share está definida, mude para ela
           if (screenShareId && screenShareScene) {
             try {
               const studio = await sendRequest("GetStudioModeEnabled");
@@ -1723,11 +1760,11 @@
       }
 
       async function addScreenShareToObs(streamId, streamLabel) {
-        const previousGlobalScreenShareId = screenShareId;
+        const previousGlobalScreenShareId = screenShareId; // Salva o ID anterior para rollback em caso de erro
 
         if (!obsConnected || !obs) {
           logMessage("Cannot add screen share: Not connected to OBS.", "logMessages.obs.cannotAddScreenShareNotConnected");
-          updateStreamList();
+          updateStreamList(); // Atualiza a UI para refletir o estado
           return;
         }
 
@@ -1741,7 +1778,7 @@
           return;
         }
 
-        screenShareId = streamId;
+        screenShareId = streamId; // Define o streamId globalmente como o que está compartilhando tela
 
         const width =
           parseInt(document.getElementById("screenShareWidth").value) || 1920;
@@ -1751,29 +1788,30 @@
           "screenShareSceneSelect"
         );
         let targetSceneName =
-          screenShareSceneSelect.value || getTargetScene();
+          screenShareSceneSelect.value || getTargetScene(); // Usa a cena de screen share ou a principal
 
         if (!targetSceneName) {
           logMessage(
             "Cannot add screen share: Target OBS scene is required.",
             "logMessages.obs.cannotAddScreenShareNoTargetScene"
           );
-          screenShareId = previousGlobalScreenShareId;
+          screenShareId = previousGlobalScreenShareId; // Restaura o ID anterior
           updateStreamList();
           return;
         }
 
-        const sourceName = `${getFullReactionPrefix()}_${streamId}:s`;
+        const sourceName = `${getFullReactionPrefix()}_${streamId}:s`; // Nome da fonte de screen share
         const baseUrl = getVdoNinjaBaseUrl();
         const selectedCodec = sourceCodecSelect.value;
 
+        // Constrói a URL de screen share do VDO.Ninja
         let screenShareUrl = `${baseUrl}/?view=${encodeURIComponent(
           streamId
         )}:s&solo&room=${encodeURIComponent(room)}`;
         if (selectedCodec && selectedCodec !== "") {
           screenShareUrl += `&codec=${encodeURIComponent(selectedCodec)}`;
         } else {
-          screenShareUrl += `&codec=vp9`;
+          screenShareUrl += `&codec=vp9`; // Default codec para screen share se nenhum for selecionado
         }
 
         if (vdoNinjaPasswordInput.value) {
@@ -1781,16 +1819,16 @@
             vdoNinjaPasswordInput.value
           )}`;
         }
-        screenShareUrl += "&cleanoutput&transparent&proaudio";
+        screenShareUrl += "&cleanoutput&transparent&proaudio"; // Parâmetros comuns
 
         const inputSettings = {
           url: screenShareUrl,
           width: width,
           height: height,
-          fps: 30,
+          fps: 30, // FPS padrão
           reroute_audio: true,
-          restart_when_active: false,
-          shutdown: false,
+          restart_when_active: false, // Não reiniciar ao se tornar ativo
+          shutdown: false, // Não desligar a fonte quando não estiver visível
         };
 
         logMessage(
@@ -1799,16 +1837,18 @@
         );
 
         try {
+          // Verifica se já existe uma fonte de screen share com o mesmo prefixo (de outro stream)
           const sourcesResponse = await sendRequest("GetInputList", {}, { suppressNotFound: true });
           const existingSourceWithSamePrefix = sourcesResponse.inputs.find(
             (input) =>
               input.inputName.startsWith(getFullReactionPrefix() + "_") &&
-              input.inputName.endsWith(":s") &&
-              input.inputName !== sourceName &&
+              input.inputName.endsWith(":s") && // Garante que é um sufixo de screen share
+              input.inputName !== sourceName && // Não é a fonte atual
               input.inputKind === "browser_source"
           );
 
           if (existingSourceWithSamePrefix) {
+            // Se existir, reconfigura a fonte antiga para a nova URL e renomeia
             logMessage(
               `Reconfiguring existing screen share source '${existingSourceWithSamePrefix.inputName}' to be '${sourceName}'.`,
               "logMessages.obs.reconfiguringExistingScreenShare", { oldName: existingSourceWithSamePrefix.inputName, newName: sourceName }
@@ -1828,12 +1868,14 @@
               "logMessages.obs.reconfiguredRenamedScreenShare", { sourceName }
             );
           } else {
+            // Se não houver outra fonte de screen share, verifica se a fonte exata já existe
             const exactSourceExists = sourcesResponse.inputs.find(
               (input) =>
                 input.inputName === sourceName &&
                 input.inputKind === "browser_source"
             );
             if (exactSourceExists) {
+              // Se a fonte exata já existe, apenas atualiza suas configurações
               logMessage(
                 `Screen share source '${sourceName}' already exists. Updating its settings.`,
                 "logMessages.obs.screenShareExistsUpdating", { sourceName }
@@ -1843,23 +1885,25 @@
                 inputSettings: inputSettings,
               });
             } else {
+              // Se a fonte não existe, cria uma nova
               logMessage(`Creating new screen share source '${sourceName}'.`, "logMessages.obs.creatingNewScreenShare", { sourceName });
               await sendRequest("CreateInput", {
                 sceneName: targetSceneName,
                 inputName: sourceName,
                 inputKind: "browser_source",
                 inputSettings,
-                sceneItemEnabled: true,
+                sceneItemEnabled: true, // Torna visível por padrão
               });
             }
           }
 
+          // Garante que o item da cena existe e está habilitado
           let sceneItemId;
           try {
             const itemInfo = await sendRequest(
               "GetSceneItemId",
               { sceneName: targetSceneName, sourceName: sourceName },
-              { suppressNotFound: true }
+              { suppressNotFound: true } // Não logar erro se não encontrar
             );
             sceneItemId = itemInfo.sceneItemId;
             logMessage(
@@ -1872,9 +1916,10 @@
               sceneItemEnabled: true,
             });
           } catch (e) {
+            // Se o item da cena não for encontrado, cria-o
             if (
               e.message.toLowerCase().includes("not found") ||
-              e.message.toLowerCase().includes("600")
+              e.message.toLowerCase().includes("600") // Código de erro para "não encontrado"
             ) {
               logMessage(
                 `Source '${sourceName}' not found as an item in scene '${targetSceneName}'. Creating scene item.`,
@@ -1890,16 +1935,17 @@
                 "logMessages.obs.createdSceneItem", { sourceName, sceneName: targetSceneName, itemId: sceneItemId }
               );
             } else {
-              throw e;
+              throw e; // Relança outros erros
             }
           }
 
+          // Aplica a transformação (tamanho e posição)
           if (sceneItemId) {
             const transform = calculateTransform(
-              "defaultSize",
+              "defaultSize", // Ou outro modo de dimensionamento se necessário para screen share
               width,
               height,
-              width,
+              width, // Usando a largura/altura da fonte para o canvas aqui, pois é um screen share
               height
             );
             await sendRequest("SetSceneItemTransform", {
@@ -1916,14 +1962,21 @@
             `Successfully configured screen share for stream ${streamId} (${streamLabel}).`,
             "logMessages.obs.successConfigScreenShare", { streamId, label: streamLabel }
           );
+
+          // MODIFICADO: Aplicar CSS personalizado após a configuração da fonte de screen share
+          if (customCssInput.value.trim() !== "") {
+            applyCustomCss(customCssInput.value);
+            logMessage("Custom CSS applied after screen share configuration.", "logMessages.customCssAppliedAfterScreenShare");
+          }
+
         } catch (error) {
           logMessage(
             `Error adding/updating screen share source '${sourceName}': ${error.message}.`,
             "logMessages.obs.errorAddingUpdatingScreenShare", { sourceName, message: error.message }
           );
-          screenShareId = previousGlobalScreenShareId;
+          screenShareId = previousGlobalScreenShareId; // Restaura o ID global em caso de erro
         } finally {
-          updateStreamList();
+          updateStreamList(); // Atualiza a UI
         }
       }
 
@@ -1941,6 +1994,7 @@
         const camPrefix = getFullCameraPrefix();
         const hlPrefix = getFullHighlightPrefix();
 
+        // 1. Se outro stream estava destacado, desfaça o highlight dele primeiro
         if (
           previouslyGlobalHighlightedStreamId &&
           previouslyGlobalHighlightedStreamId !== clickedStreamId
@@ -1955,17 +2009,18 @@
           const oldTargetInfo = getTargetSceneForStream(
             previouslyGlobalHighlightedStreamId,
             oldStreamLabel
-          );
+          ); // Pega as informações de cena do stream antigo
 
           const oldHighlightedSourceName = `${hlPrefix}_${previouslyGlobalHighlightedStreamId}`;
           const oldOriginalSourceName = `${camPrefix}_${previouslyGlobalHighlightedStreamId}`;
 
           try {
+            // Tenta renomear de volta para o nome original
             await sendRequest(
               "GetInputSettings",
               { inputName: oldHighlightedSourceName },
               { suppressNotFound: true }
-            );
+            ); // Verifica se a fonte destacada existe
             await sendRequest("SetInputName", {
               inputName: oldHighlightedSourceName,
               newInputName: oldOriginalSourceName,
@@ -1975,9 +2030,11 @@
               "logMessages.obs.streamUnhighlighted", { id: previouslyGlobalHighlightedStreamId, oldName: oldHighlightedSourceName, newName: oldOriginalSourceName }
             );
 
+            // Se estiver usando autoGrid, rearranje as fontes na cena do stream antigo
             if (sourceSizingSelect.value === "autoGrid") {
               if (oldTargetInfo.scene)
                 await rearrangeAllStreamsInScene(oldTargetInfo.scene);
+              // E na cena principal se clonado
               if (
                 oldTargetInfo.mapping?.cloneToMain &&
                 getTargetScene() &&
@@ -1992,20 +2049,23 @@
               e.message.toLowerCase().includes("does not exist") ||
               e.message.toLowerCase().includes("no source") ||
               (e.message.toLowerCase().includes("code") &&
-                e.message.toLowerCase().includes("600"));
+                e.message.toLowerCase().includes("600")); // Código de erro para "não encontrado"
             if (!isNotFoundOrDoesNotExist) {
               logMessage(
                 `Error unhighlighting previous stream ${previouslyGlobalHighlightedStreamId} (from ${oldHighlightedSourceName}): ${e.message}`,
                 "logMessages.obs.errorUnhighlightingPrevious", { id: previouslyGlobalHighlightedStreamId, sourceName: oldHighlightedSourceName, message: e.message }
               );
             }
+            // Mesmo com erro, continue, pois o objetivo é destacar o novo
           }
         }
 
+        // 2. Lida com o stream clicado
         const clickedOriginalSourceName = `${camPrefix}_${clickedStreamId}`;
         const clickedNewHighlightedSourceName = `${hlPrefix}_${clickedStreamId}`;
 
         if (previouslyGlobalHighlightedStreamId === clickedStreamId) {
+          // Clicou no stream que já estava destacado: Desfaça o highlight
           logMessage(`Unhighlighting clicked stream ${clickedStreamId}.`, "logMessages.obs.unhighlightingClicked", { id: clickedStreamId });
           try {
             await sendRequest(
@@ -2017,7 +2077,7 @@
               inputName: clickedNewHighlightedSourceName,
               newInputName: clickedOriginalSourceName,
             });
-            highlightedStreamId = null;
+            highlightedStreamId = null; // Limpa o ID global de highlight
             logMessage(
               `Stream ${clickedStreamId} successfully unhighlighted (renamed to ${clickedOriginalSourceName}).`,
               "logMessages.obs.streamSuccessfullyUnhighlighted", { id: clickedStreamId, newName: clickedOriginalSourceName }
@@ -2047,21 +2107,22 @@
                 "logMessages.obs.errorUnhighlightingClicked", { id: clickedStreamId, sourceName: clickedNewHighlightedSourceName, message: e.message }
               );
             }
-            highlightedStreamId = null;
+            highlightedStreamId = null; // Garante que está limpo mesmo em erro
           }
         } else {
+          // Clicou em um novo stream para destacar (ou nenhum estava destacado antes)
           logMessage(`Highlighting clicked stream ${clickedStreamId}.`, "logMessages.obs.highlightingClicked", { id: clickedStreamId });
           try {
             await sendRequest(
               "GetInputSettings",
               { inputName: clickedOriginalSourceName },
               { suppressNotFound: true }
-            );
+            ); // Verifica se a fonte original existe
             await sendRequest("SetInputName", {
               inputName: clickedOriginalSourceName,
               newInputName: clickedNewHighlightedSourceName,
             });
-            highlightedStreamId = clickedStreamId;
+            highlightedStreamId = clickedStreamId; // Define o novo ID global de highlight
             logMessage(
               `Stream ${clickedStreamId} successfully highlighted (renamed to ${clickedNewHighlightedSourceName}).`,
               "logMessages.obs.streamSuccessfullyHighlighted", { id: clickedStreamId, newName: clickedNewHighlightedSourceName }
@@ -2091,40 +2152,51 @@
                 "logMessages.obs.errorHighlightingClicked", { id: clickedStreamId, sourceName: clickedOriginalSourceName, message: e.message }
               );
             } else {
+              // Se a fonte original não foi encontrada, mas a destacada talvez já exista (estado inconsistente?)
+              // Verifica se a fonte destacada já existe para definir o highlightedStreamId corretamente
               try {
                 await sendRequest(
                   "GetInputSettings",
                   { inputName: clickedNewHighlightedSourceName },
                   { suppressNotFound: true }
                 );
-                highlightedStreamId = clickedStreamId;
+                highlightedStreamId = clickedStreamId; // Assume que já estava destacada
               } catch (e2) {
+                // Se nem a original nem a destacada existem, limpa o highlight
                 if (highlightedStreamId === clickedStreamId)
                   highlightedStreamId = null;
               }
             }
+            // Se o erro não foi "não encontrado", mas o ID de highlight foi definido, limpe-o
             if (
               highlightedStreamId === clickedStreamId &&
               isNotFoundOrDoesNotExist
             ) {
+              // Mantém, pois pode ser que a fonte já estava destacada
             } else if (highlightedStreamId === clickedStreamId) {
-              highlightedStreamId = null;
+              highlightedStreamId = null; // Limpa se houve outro erro
             }
           }
         }
         updateStreamList();
-        saveSettings();
+        saveSettings(); // Salva o estado do highlightedStreamId implicitamente através da UI
+        
+        // MODIFICADO: Aplicar CSS personalizado após a operação de highlight/unhighlight
+        if (customCssInput.value.trim() !== "") {
+            applyCustomCss(customCssInput.value);
+            logMessage("Custom CSS applied after highlight toggle.", "logMessages.customCssAppliedAfterHighlight");
+        }
       }
 
       obsConnectBtn.addEventListener("click", () => {
         if (obsConnected && obs) {
           logMessage("Disconnecting from OBS WebSocket...", "logMessages.obs.disconnecting");
           if (obs) {
-            obs.onclose = null;
+            obs.onclose = null; // Remove o handler para evitar reconexão ou logs duplicados
             obs.close();
             obs = null;
           }
-          onObsDisconnected();
+          onObsDisconnected(); // Chama a função de limpeza de desconexão
         } else {
           connectToOBS();
         }
@@ -2132,7 +2204,7 @@
 
       function getTargetSceneForStream(streamId, streamLabel = "") {
         const mappings = getStreamMappings();
-        const defaultTargetScene = getTargetScene();
+        const defaultTargetScene = getTargetScene(); // Cena principal definida nas configurações
 
         for (const mapping of mappings) {
           let isMatch = false;
@@ -2160,15 +2232,16 @@
               break;
           }
           if (isMatch && mapping.sceneName) {
-            return { scene: mapping.sceneName, mapping: mapping };
+            return { scene: mapping.sceneName, mapping: mapping }; // Retorna a cena mapeada e a regra
           }
         }
-        return { scene: defaultTargetScene, mapping: null };
+        return { scene: defaultTargetScene, mapping: null }; // Retorna a cena padrão se nenhum mapeamento corresponder
       }
 
       function updateSceneDropdowns() {
-        if (!i18next.isInitialized) return; // Ensure i18next is ready
+        if (!i18next.isInitialized) return;
 
+        // Salva os valores atuais para tentar restaurá-los
         const currentMainSceneValue = obsSceneSelect.value;
         const currentScreenShareSceneValue = document.getElementById(
           "screenShareSceneSelect"
@@ -2180,10 +2253,12 @@
           (select) => select.value
         );
 
+        // Popula todos os dropdowns de cena
         populateSceneDropdown(obsScenes, obsSceneSelect);
         populateSceneDropdown(obsScenes, document.getElementById("screenShareSceneSelect"));
         populateSceneDropdown(obsScenes, highlightSceneSelect);
 
+        // Restaura os valores se ainda forem válidos
         if (
           currentMainSceneValue &&
           obsScenes.some((scene) => scene.sceneName === currentMainSceneValue)
@@ -2191,7 +2266,7 @@
           obsSceneSelect.value = currentMainSceneValue;
         }
         if (
-          currentScreenShareSceneValue === "" ||
+          currentScreenShareSceneValue === "" || // Permite "Same as main"
           (currentScreenShareSceneValue &&
             obsScenes.some(
               (scene) => scene.sceneName === currentScreenShareSceneValue
@@ -2209,8 +2284,9 @@
           highlightSceneSelect.value = currentHighlightSceneValue;
         }
 
+        // Restaura valores para os dropdowns de mapeamento
         mappingSceneSelects.forEach((select, index) => {
-          populateSceneDropdown(obsScenes, select);
+          populateSceneDropdown(obsScenes, select); // Popula primeiro
           if (
             currentMappingSceneValues[index] &&
             obsScenes.some(
@@ -2220,7 +2296,7 @@
             select.value = currentMappingSceneValues[index];
           }
         });
-        updateOtherScenesList();
+        updateOtherScenesList(); // Atualiza a lista de "outras cenas" baseada na cena principal
       }
 
       function loadStreamMappings() {
@@ -2234,14 +2310,15 @@
                 mapping.label,
                 mapping.sceneName,
                 mapping.matchType,
-                mapping.cloneToMain !== undefined ? mapping.cloneToMain : true,
+                mapping.cloneToMain !== undefined ? mapping.cloneToMain : true, // Default true
                 mapping.switchToScene !== undefined
                   ? mapping.switchToScene
-                  : false
+                  : false // Default false
               );
             });
+            // Se as cenas do OBS já foram carregadas, atualize os dropdowns dos mapeamentos
             if (obsScenes && obsScenes.length > 0) {
-              updateSceneDropdowns();
+              updateSceneDropdowns(); // Isso repopulará e tentará selecionar os valores corretos
             }
             if (i18next.isInitialized) {
                 logMessage(`Loaded ${mappings.length} stream mappings.`, "logMessages.loadedStreamMappings", { count: mappings.length });
@@ -2289,6 +2366,7 @@
             const cloneToMain = cloneToMainCheckbox.checked;
             const switchToScene = switchToSceneCheckbox.checked;
 
+            // Um mapeamento é válido se tiver uma cena e pelo menos um Stream ID ou Label
             if (sceneName && (streamId || label)) {
               mappings.push({
                 streamId,
@@ -2310,6 +2388,7 @@
       }
 
       async function connectToOBS() {
+        // Validação dos prefixos
         if (
           cameraPrefixInput.value.trim() === "" ||
           reactionSubPrefixInput.value.trim() === "" ||
@@ -2333,14 +2412,16 @@
           if (i18next.isInitialized) obsConnectionStatus.textContent = i18next.t("obsConnection.statusErrorUrlMissing");
           return;
         }
+        // Adiciona ws:// ou wss:// se não estiver presente
         if (!url.startsWith("ws://") && !url.startsWith("wss://")) {
-          url = "ws://" + url;
-          obsWsUrlInput.value = url;
+          url = "ws://" + url; // Default para ws não seguro
+          obsWsUrlInput.value = url; // Atualiza o input
         }
         if (i18next.isInitialized) obsConnectionStatus.textContent = i18next.t("obsConnection.statusConnecting");
-        obsStatusIndicator.classList.remove("connected", "error");
+        obsStatusIndicator.classList.remove("connected", "error"); // Reseta o indicador
         logMessage(`Attempting to connect to OBS WebSocket at ${url}...`, "logMessages.obs.attemptingConnection", { url });
 
+        // Timeout para a tentativa de conexão
         const connectionTimeoutId = setTimeout(() => {
           if (
             obs &&
@@ -2351,9 +2432,10 @@
             if (obs) {
               try {
                 obs.close();
-              } catch (e) {}
+              } catch (e) {} // Ignora erros ao fechar
               obs = null;
             }
+            // Atualiza UI para estado de falha por timeout
             if (i18next.isInitialized) {
                 obsConnectionStatus.textContent = i18next.t("obsConnection.statusErrorTimeout");
                 obsConnectBtn.textContent = i18next.t("obsConnection.connectButton");
@@ -2362,7 +2444,7 @@
             obsConnectBtn.classList.remove("connected");
             obsConnectBtn.classList.add("disconnected");
           }
-        }, 10000);
+        }, 10000); // 10 segundos de timeout
 
         try {
           obs = new WebSocket(url);
@@ -2372,30 +2454,37 @@
               "OBS WebSocket connection opened. Waiting for Server Hello...",
               "logMessages.obs.connectionOpenedWaitingHello"
             );
+            // Não muda o estado para conectado aqui, espera pelo Hello e Identify
           };
 
           obs.onmessage = async (event) => {
             try {
               const message = JSON.parse(event.data);
+              // console.debug("OBS RX:", message); // Log para debug
 
               if (message.op === 0) {
+                // Hello
                 logMessage("Received Hello from OBS. Sending Identify...", "logMessages.obs.receivedHelloSendingIdentify");
                 const identifyPayload = {
-                  op: 1,
+                  op: 1, // Identify
                   d: {
                     rpcVersion: 1,
                     eventSubscriptions:
-                      (1 << 0) |
-                      (1 << 1) |
-                      (1 << 2) |
-                      (1 << 3) |
-                      (1 << 6) |
-                      (1 << 7) |
-                      (1 << 8) |
-                      (1 << 9),
+                      (1 << 0) | // General
+                      (1 << 1) | // Config
+                      (1 << 2) | // Scenes
+                      (1 << 3) | // Inputs
+                      // (1 << 4) | // Transitions (não usado ativamente)
+                      // (1 << 5) | // Filters (não usado ativamente)
+                      (1 << 6) | // Outputs
+                      (1 << 7) | // SceneItems
+                      (1 << 8) | // MediaInputs
+                      (1 << 9), // Vendors (pode ser útil)
+                    // Adicione mais flags de evento conforme necessário
                   },
                 };
                 if (message.d && message.d.authentication) {
+                  // Se o servidor requer autenticação
                   const { challenge, salt } = message.d.authentication;
                   if (password) {
                     identifyPayload.d.authentication =
@@ -2409,11 +2498,13 @@
                       "Warning: OBS server requires authentication, but no password provided.",
                       "logMessages.obs.warningAuthRequiredNoPassword"
                     );
+                    // A conexão provavelmente falhará aqui se a senha for necessária e não fornecida
                   }
                 }
                 obs.send(JSON.stringify(identifyPayload));
               } else if (message.op === 2) {
-                clearTimeout(connectionTimeoutId);
+                // Identified (Autenticação bem-sucedida)
+                clearTimeout(connectionTimeoutId); // Cancela o timeout de conexão
                 logMessage(
                   "OBS WebSocket Authentication successful! Connection established.",
                   "logMessages.obs.authSuccessConnected"
@@ -2425,8 +2516,9 @@
                 if (i18next.isInitialized) obsConnectionStatus.textContent = i18next.t("obsConnection.statusConnected");
                 obsStatusIndicator.classList.add("connected");
                 obsStatusIndicator.classList.remove("error");
-                onObsConnected();
+                onObsConnected(); // Chama a função pós-conexão
               } else if (message.op === 7) {
+                // RequestResponse
                 const entry =
                   message.d && message.d.requestId
                     ? requestCallbacks[message.d.requestId]
@@ -2436,18 +2528,21 @@
                   const responseData = message.d;
                   const requestStatus = responseData.requestStatus;
                   const requestType =
-                    responseData.requestType || entry.requestType;
+                    responseData.requestType || entry.requestType; // Usa o tipo da resposta ou do callback
 
                   if (requestStatus && requestStatus.code === 100) {
-                    entry.resolve(responseData.responseData || {});
+                    // Sucesso (Código 100)
+                    entry.resolve(responseData.responseData || {}); // Resolve com os dados da resposta
                   } else {
+                    // Erro na requisição
                     const errorMessage = requestStatus
                       ? requestStatus.comment
                       : "Unknown error";
                     const errorCode = requestStatus ? requestStatus.code : "N/A";
 
+                    // Suprime o log para erros "não encontrado" se a opção suppressNotFound estiver ativa
                     const suppressLog =
-                      entry.suppressNotFound && errorCode === 600;
+                      entry.suppressNotFound && errorCode === 600; // 600 = ResourceNotFound
 
                     if (!suppressLog) {
                       logMessage(
@@ -2461,16 +2556,19 @@
                       )
                     );
                   }
-                  delete requestCallbacks[responseData.requestId];
+                  delete requestCallbacks[responseData.requestId]; // Remove o callback
                 }
               } else if (message.op === 5) {
+                // Event
+                // console.debug("OBS Event:", message.d.eventType, message.d.eventData);
                 if (message.d && message.d.eventType === "SceneListChanged") {
                   logMessage(
                     "OBS Event: Scene list changed. Re-fetching scenes.",
                     "logMessages.obs.eventSceneListChanged"
                   );
-                  fetchObsScenes();
+                  fetchObsScenes(); // Atualiza a lista de cenas
                 }
+                // Adicione mais handlers de evento aqui conforme necessário
               }
             } catch (error) {
               logMessage(
@@ -2486,6 +2584,7 @@
             if (errorEvent && errorEvent.message) {
               errorMsg = errorEvent.message;
             } else if (typeof errorEvent === "string") {
+              // Alguns navegadores podem passar uma string simples
               errorMsg = errorEvent;
             }
             logMessage(`OBS WebSocket Error: ${errorMsg}`, "logMessages.obs.webSocketError", { error: errorMsg });
@@ -2504,18 +2603,19 @@
             let reason = "";
             if (i18next.isInitialized) {
                 if (event.code === 4009) {
+                // Código específico para falha de autenticação
                 reason =
-                    i18next.t("logMessages.obs.authFailedReason");
+                    i18next.t("logMessages.obs.authFailedReason"); // "Authentication failed."
                 } else if (event.reason) {
                 reason = event.reason;
                 } else {
                 reason = i18next.t("logMessages.obs.connectionClosedReasonCode", {code: event.code || "Unknown", wasClean: event.wasClean ? "" : i18next.t("logMessages.obs.uncleanDisconnection") });
                 }
-            } else { // Fallback if i18next not ready
-                reason = `Code ${event.code}`;
+            } else {
+                reason = `Code ${event.code}`; // Fallback se i18next não estiver pronto
             }
             logMessage(`OBS WebSocket Connection Closed. Reason: ${reason}`, "logMessages.obs.connectionClosed", { reason });
-            onObsDisconnected();
+            onObsDisconnected(); // Chama a função de limpeza
           };
         } catch (error) {
           clearTimeout(connectionTimeoutId);
@@ -2537,31 +2637,40 @@
       async function generateAuthResponse(password, salt, challenge) {
         const encoder = new TextEncoder();
         try {
+          // Passo 1: Concatenar senha e salt
           const secretString = password + salt;
           const secretData = encoder.encode(secretString);
           let secretHash;
 
+          // Passo 2: Hash SHA-256 de (senha + salt)
           if (window.crypto && window.crypto.subtle) {
+            // Usa Web Crypto API se disponível (mais seguro)
             const hashBuffer = await window.crypto.subtle.digest(
               "SHA-256",
               secretData
             );
             secretHash = new Uint8Array(hashBuffer);
           } else {
-            await loadJsShaLibrary();
+            // Fallback para jsSHA se Web Crypto não estiver disponível
+            await loadJsShaLibrary(); // Garante que jsSHA está carregado
             const shaObj = new jsSHA("SHA-256", "TEXT", { encoding: "UTF8" });
             shaObj.update(secretString);
             const hashHex = shaObj.getHash("HEX");
+            // Converte o hash hexadecimal para Uint8Array
             secretHash = new Uint8Array(
               hashHex.match(/.{1,2}/g).map((byte) => parseInt(byte, 16))
             );
           }
 
+          // Passo 3: Codificar o hash em Base64
           const secretBase64 = btoa(String.fromCharCode.apply(null, secretHash));
+
+          // Passo 4: Concatenar o hash Base64 com o challenge
           const authString = secretBase64 + challenge;
           const authData = encoder.encode(authString);
           let authHash;
 
+          // Passo 5: Hash SHA-256 de (hash_base64 + challenge)
           if (window.crypto && window.crypto.subtle) {
             const hashBuffer = await window.crypto.subtle.digest(
               "SHA-256",
@@ -2576,10 +2685,12 @@
               hashHex.match(/.{1,2}/g).map((byte) => parseInt(byte, 16))
             );
           }
+
+          // Passo 6: Codificar o hash final em Base64 - esta é a resposta de autenticação
           return btoa(String.fromCharCode.apply(null, authHash));
         } catch (error) {
           logMessage(`OBS Authentication generation error: ${error.message}`, "logMessages.obs.authGenerationError", { message: error.message });
-          throw error;
+          throw error; // Relança o erro para ser tratado pelo chamador
         }
       }
 
@@ -2593,17 +2704,18 @@
             reject(new Error("Not connected to OBS"));
             return;
           }
-          const requestId = generateRequestId(requestType);
+          const requestId = generateRequestId(requestType); // Gera um ID único para a requisição
 
+          // Armazena os callbacks para esta requisição
           requestCallbacks[requestId] = {
             resolve,
             reject,
             requestType,
-            suppressNotFound: !!options.suppressNotFound,
+            suppressNotFound: !!options.suppressNotFound, // Opção para não logar erros "não encontrado"
           };
 
           const requestPayload = {
-            op: 6,
+            op: 6, // Request
             d: {
               requestType,
               requestId,
@@ -2612,32 +2724,35 @@
           };
 
           try {
+            // console.debug("OBS TX:", requestPayload); // Log para debug
             obs.send(JSON.stringify(requestPayload));
           } catch (error) {
             logMessage(
               `Error sending OBS request '${requestType}': ${error.message}`,
               "logMessages.obs.errorSendingRequest", { requestType, message: error.message }
             );
+            // Se o envio falhar, rejeita a promessa e remove o callback
             if (requestCallbacks[requestId]) {
               const failedEntry = requestCallbacks[requestId];
               delete requestCallbacks[requestId];
               failedEntry.reject(error);
             } else {
-              reject(error);
+              reject(error); // Caso raro onde o callback já foi removido
             }
           }
 
+          // Timeout para a requisição
           setTimeout(() => {
             if (requestCallbacks[requestId]) {
               const entry = requestCallbacks[requestId];
-              delete requestCallbacks[requestId];
+              delete requestCallbacks[requestId]; // Remove o callback
               logMessage(
                 `OBS Request '${entry.requestType}' (ID: ${requestId}) timed out.`,
                 "logMessages.obs.requestTimeout", { requestType: entry.requestType, id: requestId }
               );
               entry.reject(new Error(`Request timeout for ${entry.requestType}`));
             }
-          }, 5000);
+          }, 5000); // Timeout de 5 segundos
         });
       }
 
@@ -2648,6 +2763,7 @@
         );
         fetchObsScenes()
           .then(() => {
+            // Após buscar as cenas, se autoGrid estiver ativo, rearranje a cena principal
             if (sourceSizingSelect.value === "autoGrid" && getTargetScene()) {
               logMessage(
                 "Initial rearrange for auto-grid on main target scene after OBS connection.",
@@ -2656,7 +2772,7 @@
               setTimeout(
                 () => rearrangeAllStreamsInScene(getTargetScene()),
                 1000
-              );
+              ); // Pequeno delay para garantir que tudo está pronto
             }
           })
           .catch((error) => {
@@ -2665,6 +2781,7 @@
               "logMessages.obs.errorPostConnectionSetup", { message: error.message }
             );
           });
+        // Outras ações pós-conexão podem ser adicionadas aqui
       }
 
       function onObsDisconnected() {
@@ -2676,14 +2793,16 @@
         if (i18next.isInitialized) obsConnectionStatus.textContent = i18next.t("obsConnection.statusDisconnected");
         obsStatusIndicator.classList.remove("connected", "error");
 
+        // Marca todas as fontes como não criadas na UI, mas não remove dos activeStreams
         Object.values(activeStreams).forEach(
           (stream) => (stream.sourceCreated = false)
         );
-        updateStreamList();
+        updateStreamList(); // Atualiza a lista de streams para refletir o estado
 
+        // Limpa a lista de cenas do OBS e atualiza os dropdowns
         obsScenes = [];
         updateSceneDropdowns();
-        updateOtherScenesList();
+        updateOtherScenesList(); // Também depende de obsScenes
       }
 
       async function fetchObsScenes() {
@@ -2694,15 +2813,16 @@
         logMessage("Fetching OBS scenes...", "logMessages.obs.fetchingScenes");
         try {
           const response = await sendRequest("GetSceneList");
-          const settingsJson = localStorage.getItem("obsNinjaSettings");
+          const settingsJson = localStorage.getItem("obsNinjaSettings"); // Para restaurar seleções
           const settings = settingsJson ? JSON.parse(settingsJson) : {};
 
           if (response && response.scenes) {
-            obsScenes = response.scenes;
+            obsScenes = response.scenes; // Armazena a lista de cenas globalmente
             logMessage(`Fetched ${obsScenes.length} scenes from OBS.`, "logMessages.obs.fetchedScenesCount", { count: obsScenes.length });
 
-            updateSceneDropdowns();
+            updateSceneDropdowns(); // Atualiza todos os dropdowns de cena
 
+            // Tenta restaurar a cena principal selecionada anteriormente
             if (
               settings.obsSceneName &&
               obsScenes.some((s) => s.sceneName === settings.obsSceneName)
@@ -2715,8 +2835,9 @@
               );
             }
 
+            // Tenta restaurar a cena de screen share
             if (
-              settings.screenShareScene === "" ||
+              settings.screenShareScene === "" || // "Same as main"
               (settings.screenShareScene &&
                 obsScenes.some((s) => s.sceneName === settings.screenShareScene))
             ) {
@@ -2727,10 +2848,11 @@
                 `Previously selected screen share scene "${settings.screenShareScene}" no longer found. Defaulting to "Same as main".`,
                 "logMessages.obs.screenShareSceneNotFound", { sceneName: settings.screenShareScene }
               );
-               document.getElementById("screenShareSceneSelect").value = "";
+               document.getElementById("screenShareSceneSelect").value = ""; // Default para "Same as main"
             }
 
 
+            // Tenta restaurar a cena de highlight
             if (
               settings.highlightScene &&
               obsScenes.some((s) => s.sceneName === settings.highlightScene)
@@ -2743,8 +2865,9 @@
               );
             }
 
-            updateOtherScenesList();
+            updateOtherScenesList(); // Atualiza a lista de "outras cenas"
 
+            // Restaura seleções de cena nos mapeamentos de stream
             const savedMappingsJson =
               localStorage.getItem("obsNinjaStreamMappings");
             if (savedMappingsJson) {
@@ -2771,7 +2894,7 @@
                 );
               }
             }
-            obsSceneNameInput.value = obsSceneSelect.value;
+            obsSceneNameInput.value = obsSceneSelect.value; // Atualiza o input escondido (se ainda usado)
           } else {
             logMessage("Failed to fetch OBS scenes or no scenes returned.", "logMessages.obs.failedToFetchScenes");
             obsScenes = [];
@@ -2780,22 +2903,23 @@
           }
         } catch (error) {
           logMessage(`Error fetching OBS scenes: ${error.message}`, "logMessages.obs.errorFetchingScenes", { message: error.message });
-          obsScenes = [];
+          obsScenes = []; // Limpa em caso de erro
           updateSceneDropdowns();
           updateOtherScenesList();
         }
       }
 
       function populateSceneDropdown(
-        scenesData,
-        selectElement
+        scenesData, // Array de cenas do OBS [{ sceneName: "Nome" }, ...]
+        selectElement // O elemento <select> a ser populado
       ) {
-        if (!i18next.isInitialized) return;
-        const currentValue = selectElement.value;
-        selectElement.innerHTML = '';
+        if (!i18next.isInitialized) return; // Garante que i18next está pronto
+        const currentValue = selectElement.value; // Salva o valor atual para tentar restaurar
+        selectElement.innerHTML = ''; // Limpa opções existentes
 
         let placeholderKeyToUse;
 
+        // Determina a chave de tradução para o placeholder com base no ID/classe do select
         if (selectElement.id === "obsSceneSelect") {
           placeholderKeyToUse = "obsTargetSettings.selectSceneOption";
         } else if (selectElement.id === "screenShareSceneSelect") {
@@ -2805,12 +2929,13 @@
         } else if (selectElement.classList.contains("mapping-scene-name")) {
           placeholderKeyToUse = "streamIdMappings.selectSceneOption";
         } else {
-          placeholderKeyToUse = "obsTargetSettings.selectSceneOption";
+          // Fallback genérico se o select não for reconhecido
+          placeholderKeyToUse = "obsTargetSettings.selectSceneOption"; // Ou um placeholder mais genérico
           console.warn("populateSceneDropdown called with an unhandled select element:", selectElement.id || selectElement.className);
         }
 
         const placeholderOption = document.createElement('option');
-        placeholderOption.value = "";
+        placeholderOption.value = ""; // Valor vazio para o placeholder
         placeholderOption.textContent = i18next.t(placeholderKeyToUse);
         selectElement.appendChild(placeholderOption);
 
@@ -2823,16 +2948,17 @@
           });
         }
 
+        // Tenta restaurar o valor selecionado anteriormente, se ainda for uma opção válida
         if (currentValue && Array.from(selectElement.options).some(opt => opt.value === currentValue)) {
           selectElement.value = currentValue;
         } else {
-           selectElement.value = "";
+           selectElement.value = ""; // Se o valor anterior não for mais válido, seleciona o placeholder
         }
       }
 
 
       function getTargetScene() {
-        return obsSceneSelect.value || "";
+        return obsSceneSelect.value || ""; // Retorna o valor da cena principal selecionada
       }
 
       function getVdoNinjaViewUrl(streamId, includeCommonParams = true) {
@@ -2844,10 +2970,12 @@
         let url = `${baseUrl}/?`;
 
         if (room) {
+          // Se um nome de sala for fornecido, use-o para isolar o view
           url += `view=${encodeURIComponent(
             streamId
           )}&solo&room=${encodeURIComponent(room)}`;
         } else {
+          // Se não houver sala, apenas o streamId (pode não funcionar bem para múltiplas conexões sem sala)
           url += `view=${encodeURIComponent(streamId)}`;
         }
 
@@ -2859,7 +2987,7 @@
         }
         if (includeCommonParams) {
           url +=
-            "&cleanoutput&proaudio&ab=160&transparent&autoplay&noheader&webcursor";
+            "&cleanoutput&proaudio&ab=160&transparent&autoplay&noheader&webcursor&sl"; // Parâmetros comuns para uma boa visualização no OBS
         }
         return url;
       }
@@ -2873,7 +3001,7 @@
             "VDO.Ninja: Room Name or specific Stream ID(s) must be provided to connect.",
             "logMessages.vdoNinja.roomOrStreamIdNeededForConnect"
           );
-          updateVdoNinjaButtonState(false);
+          updateVdoNinjaButtonState(false); // Garante que o botão de conexão reflita o estado
           return;
         }
 
@@ -2882,16 +3010,18 @@
 
         if (room) {
           vdoNinjaUrl += `room=${encodeURIComponent(room)}`;
+          // Se streamIds também forem fornecidos, adicione-os como `view` para filtrar
           if (streamIdsInput) {
             const viewStreamIds = streamIdsInput
               .split(",")
               .map((s) => s.trim())
-              .filter((s) => s)
+              .filter((s) => s) // Remove IDs vazios
               .join(",");
             if (viewStreamIds)
-              vdoNinjaUrl += `&view=${encodeURIComponent(viewStreamIds)}&solo`;
+              vdoNinjaUrl += `&view=${encodeURIComponent(viewStreamIds)}&solo`; // &solo para isolar os views
           }
         } else if (streamIdsInput) {
+          // Se apenas streamIds forem fornecidos (sem sala)
           const viewStreamIds = streamIdsInput
             .split(",")
             .map((s) => s.trim())
@@ -2899,6 +3029,8 @@
             .join(",");
           if (viewStreamIds) {
             vdoNinjaUrl += `view=${encodeURIComponent(viewStreamIds)}`;
+            // Adicionar &solo aqui também pode ser útil se múltiplos IDs forem listados
+            if (viewStreamIds.includes(",")) vdoNinjaUrl += "&solo";
           } else {
             logMessage(
               "VDO.Ninja: Stream IDs provided but were empty after trimming.",
@@ -2915,23 +3047,26 @@
           )}`;
         }
 
+        // Parâmetros para o iframe de controle/escuta
         vdoNinjaUrl +=
           "&cleanoutput&dataonly&nocursor&nopush&debug&noaudio&novideo&cors=" +
-          encodeURIComponent(window.location.origin);
+          encodeURIComponent(window.location.origin); // Habilita CORS para mensagens
 
         logMessage(`Initializing VDO.Ninja iframe with URL: ${vdoNinjaUrl}`, "logMessages.vdoNinja.initializingIframe", { url: vdoNinjaUrl });
-        vdoNinjaIframe.src = "about:blank";
-        vdoNinjaIframe.setAttribute("crossorigin", "anonymous");
+        vdoNinjaIframe.src = "about:blank"; // Limpa o iframe antes de carregar
+        vdoNinjaIframe.setAttribute("crossorigin", "anonymous"); // Necessário para algumas interações
 
+        // Pequeno delay para garantir que o src="about:blank" foi processado
         setTimeout(() => {
           vdoNinjaIframe.src = vdoNinjaUrl;
-          vdoNinjaLastActivityTime = Date.now();
+          vdoNinjaLastActivityTime = Date.now(); // Reseta o timer de atividade
         }, 100);
       }
 
       window.addEventListener(
         "message",
         (event) => {
+          // Validação da origem do evento
           const expectedOriginBase = getVdoNinjaBaseUrl();
           let parsedExpectedOrigin;
           try {
@@ -2941,38 +3076,41 @@
               `Invalid VDO.Ninja base URL in settings: ${expectedOriginBase}`,
               "logMessages.vdoNinja.invalidBaseUrl", { url: expectedOriginBase }
             );
-            return;
+            return; // Ignora a mensagem se a URL base for inválida
           }
 
           if (
-            event.origin !== parsedExpectedOrigin.origin ||
-            event.source !== vdoNinjaIframe.contentWindow
+            event.origin !== parsedExpectedOrigin.origin || // Verifica a origem
+            event.source !== vdoNinjaIframe.contentWindow // Verifica se a mensagem veio do iframe correto
           ) {
+            // console.warn("Ignored message from unexpected origin or source:", event.origin, event.source);
             return;
           }
 
           const data = event.data;
-          vdoNinjaLastActivityTime = Date.now();
+          vdoNinjaLastActivityTime = Date.now(); // Atualiza o tempo da última atividade
 
+          // Se não estava conectado, marca como conectado ao receber a primeira mensagem válida
           if (!vdoNinjaConnected) {
             vdoNinjaConnected = true;
-            updateVdoNinjaButtonState(true);
+            updateVdoNinjaButtonState(true); // Atualiza UI
             if (vdoNinjaConnectionCheckTimer) {
-              clearTimeout(vdoNinjaConnectionCheckTimer);
+              clearTimeout(vdoNinjaConnectionCheckTimer); // Cancela o timer de timeout de conexão
               vdoNinjaConnectionCheckTimer = null;
             }
             logMessage("VDO.Ninja iframe connection established and active.", "logMessages.vdoNinja.iframeConnectedActive");
           }
 
+          // Processa os dados da mensagem
           if (data && data.streamID) {
             const streamId = data.streamID;
-            const label = data.label || i18next.t("vdoNinja.defaultStreamLabel", {id: streamId});
+            const label = data.label || i18next.t("vdoNinja.defaultStreamLabel", {id: streamId}); // Usa o label fornecido ou um padrão
 
 
             if (
-              (data.action === "view-connection" && data.value === true) ||
-              data.action === "guest-connected" ||
-              (data.action === "push-connection" && data.value === true)
+              (data.action === "view-connection" && data.value === true) || // Stream de view conectado
+              data.action === "guest-connected" || // Convidado conectado (geralmente implica um stream)
+              (data.action === "push-connection" && data.value === true) // Stream de push conectado
             ) {
               logMessage(
                 `VDO.Ninja stream connected/active: "${label}" (ID: ${streamId})`,
@@ -2980,21 +3118,22 @@
               );
               activeStreams[streamId] = {
                 label,
-                sourceCreated: false,
-                streamId,
-                uuid: data.UUID || null,
-                connected: true,
+                sourceCreated: false, // Inicialmente, a fonte OBS não foi criada/verificada
+                streamId, // Adiciona o streamId ao objeto para fácil acesso
+                uuid: data.UUID || null, // Pode ser útil para identificação mais granular
+                connected: true, // Marca como conectado no VDO.Ninja
               };
-              updateStreamList();
+              updateStreamList(); // Atualiza a UI
 
+              // Adiciona automaticamente ao OBS se a opção estiver marcada
               if (autoAddSourcesCheckbox.checked) {
                 logMessage(`Auto-adding stream ${streamId} to OBS.`, "logMessages.vdoNinja.autoAddingStream", { id: streamId });
                 const targetInfo = getTargetSceneForStream(streamId, label);
                 addStreamToObs(streamId, label, targetInfo);
               }
             } else if (
-              (data.action === "view-connection" && data.value === false) ||
-              (data.action === "push-connection" && data.value === false)
+              (data.action === "view-connection" && data.value === false) || // Stream de view desconectado
+              (data.action === "push-connection" && data.value === false) // Stream de push desconectado
             ) {
               if (activeStreams[streamId]) {
                 logMessage(
@@ -3006,15 +3145,15 @@
                   autoRemoveSourcesCheckbox.checked
                 ) {
                   logMessage(`Auto-removing stream ${streamId} from OBS.`, "logMessages.vdoNinja.autoRemovingStream", { id: streamId });
-                  removeStreamFromObs(streamId);
+                  removeStreamFromObs(streamId); // Remove do OBS se a opção estiver marcada
                 }
-                delete activeStreams[streamId];
-                updateStreamList();
+                delete activeStreams[streamId]; // Remove dos streams ativos
+                updateStreamList(); // Atualiza a UI
               }
             } else if (
               data.action === "view-connection-info" &&
               data.value &&
-              data.value.label
+              data.value.label // Se receber uma atualização de label
             ) {
               if (activeStreams[streamId]) {
                 if (activeStreams[streamId].label !== data.value.label) {
@@ -3023,10 +3162,11 @@
                     "logMessages.vdoNinja.streamLabelUpdated", { id: streamId, newLabel: data.value.label, oldLabel: activeStreams[streamId].label }
                   );
                   activeStreams[streamId].label = data.value.label;
-                  updateStreamList();
+                  updateStreamList(); // Atualiza a UI com o novo label
                 }
               }
             }
+            // console.debug("VDO.Ninja message processed:", data);
           }
         },
         false
@@ -3038,6 +3178,7 @@
             vdoNinjaConnected &&
             Date.now() - vdoNinjaLastActivityTime > 45000
           ) {
+            // 45 segundos sem atividade
             logMessage(
               "VDO.Ninja connection lost (no activity from iframe). Attempting to reset.",
               "logMessages.vdoNinja.connectionLostResetting"
@@ -3045,15 +3186,16 @@
             if (i18next.isInitialized) vdoNinjaConnectionStatus.textContent = i18next.t("vdoNinjaSettings.statusConnectionLost");
             vdoNinjaStatusIndicator.classList.add("error");
             vdoNinjaStatusIndicator.classList.remove("connected");
-            disconnectFromVdoNinja();
+            disconnectFromVdoNinja(); // Tenta desconectar e limpar
+            // Poderia tentar reconectar automaticamente aqui, se desejado
           }
-        }, 30000);
+        }, 30000); // Verifica a cada 30 segundos
       }
 
       async function addStreamToObs(
         streamId,
         streamLabel,
-        targetInfo = null
+        targetInfo = null // targetInfo pode ser { scene: "NomeCena", mapping: {...} }
       ) {
         if (!obsConnected || !obs) {
           logMessage(
@@ -3066,7 +3208,7 @@
         const resolvedTargetInfo =
           targetInfo || getTargetSceneForStream(streamId, streamLabel);
         const targetSceneName = resolvedTargetInfo.scene;
-        const mappingRule = resolvedTargetInfo.mapping;
+        const mappingRule = resolvedTargetInfo.mapping; // A regra de mapeamento, se houver
 
         if (!targetSceneName) {
           logMessage(
@@ -3076,27 +3218,30 @@
           return;
         }
 
+        // Determina o nome da fonte no OBS
         const baseSourceName = `${getFullCameraPrefix()}_${streamId}`;
         const highlightedSourceName = `${getFullHighlightPrefix()}_${streamId}`;
-        let effectiveSourceName = baseSourceName;
-        let sourceReallyExistsGlobally = false;
+        let effectiveSourceName = baseSourceName; // Nome a ser usado para criar/atualizar
+        let sourceReallyExistsGlobally = false; // Flag para saber se a fonte já existe no OBS
 
+        // Verifica se a versão destacada da fonte já existe
         try {
           await sendRequest(
             "GetInputSettings",
             { inputName: highlightedSourceName },
-            { suppressNotFound: true }
+            { suppressNotFound: true } // Não logar erro se não encontrar
           );
           logMessage(
             `Highlighted version '${highlightedSourceName}' found for stream ${streamId}. This will be managed.`,
             "logMessages.obs.highlightedVersionFound", { sourceName: highlightedSourceName, id: streamId }
           );
-          effectiveSourceName = highlightedSourceName;
+          effectiveSourceName = highlightedSourceName; // Usa o nome destacado
           sourceReallyExistsGlobally = true;
           if (activeStreams[streamId])
-            activeStreams[streamId].sourceCreated = true;
-          highlightedStreamId = streamId;
+            activeStreams[streamId].sourceCreated = true; // Marca como criada
+          highlightedStreamId = streamId; // Define como destacado globalmente
         } catch (e) {
+          // Se a destacada não existe, verifica a versão base
           if (
             !(
               e.message.toLowerCase().includes("not found") ||
@@ -3111,6 +3256,7 @@
               "logMessages.obs.errorCheckingHighlightedSource", { sourceName: highlightedSourceName, message: e.message }
             );
           }
+          // Agora verifica a fonte base
           try {
             await sendRequest(
               "GetInputSettings",
@@ -3121,11 +3267,12 @@
               `Base version '${baseSourceName}' found for stream ${streamId}. This will be managed.`,
               "logMessages.obs.baseVersionFound", { sourceName: baseSourceName, id: streamId }
             );
-            effectiveSourceName = baseSourceName;
+            effectiveSourceName = baseSourceName; // Usa o nome base
             sourceReallyExistsGlobally = true;
             if (activeStreams[streamId])
               activeStreams[streamId].sourceCreated = true;
           } catch (e2) {
+            // Se nem a base existe, será criada
             const isNotFoundE2 =
               e2.message.toLowerCase().includes("not found") ||
               e2.message.toLowerCase().includes("does not exist") ||
@@ -3138,17 +3285,18 @@
                 "logMessages.obs.errorCheckingBaseSource", { sourceName: baseSourceName, message: e2.message }
               );
             }
-            effectiveSourceName = baseSourceName;
+            effectiveSourceName = baseSourceName; // Usará o nome base para criar
             sourceReallyExistsGlobally = false;
           }
         }
 
-        const mainDefaultScene = getTargetScene();
+        // Determina se deve clonar para a cena principal e se deve mudar para a cena do stream
+        const mainDefaultScene = getTargetScene(); // Cena principal global
         let shouldCloneThisStreamToMain = false;
         if (
           mappingRule &&
-          mappingRule.sceneName !== mainDefaultScene &&
-          mappingRule.cloneToMain
+          mappingRule.sceneName !== mainDefaultScene && // Se a cena mapeada não é a principal
+          mappingRule.cloneToMain // E a regra diz para clonar
         ) {
           shouldCloneThisStreamToMain = true;
         }
@@ -3157,9 +3305,9 @@
           shouldSwitchToThisScene = true;
         }
 
-        const vdoNinjaStreamUrl = getVdoNinjaViewUrl(streamId);
+        const vdoNinjaStreamUrl = getVdoNinjaViewUrl(streamId); // URL do VDO.Ninja para a fonte
         let canvasWidth = 1920,
-          canvasHeight = 1080;
+          canvasHeight = 1080; // Tamanho padrão do canvas
         try {
           const videoSettings = await sendRequest("GetVideoSettings");
           if (
@@ -3179,8 +3327,8 @@
 
         const inputSettings = {
           url: vdoNinjaStreamUrl,
-          width: canvasWidth,
-          height: canvasHeight,
+          width: canvasWidth, // Usar a largura do canvas para a fonte do navegador
+          height: canvasHeight, // Usar a altura do canvas
           fps: 30,
           reroute_audio: true,
           restart_when_active: false,
@@ -3203,26 +3351,28 @@
           );
 
         try {
-          let initialSceneItemId = null;
-          let clonedSceneItemId = null;
+          let initialSceneItemId = null; // ID do item na cena de destino principal (mapeada ou padrão)
+          let clonedSceneItemId = null; // ID do item na cena principal global, se clonado
 
           if (!sourceReallyExistsGlobally) {
+            // Se a fonte não existe globalmente, crie-a
             logMessage(
               `Source '${baseSourceName}' does not exist globally. Creating it in scene '${targetSceneName}'.`,
               "logMessages.obs.sourceNotGlobalCreating", { sourceName: baseSourceName, sceneName: targetSceneName }
             );
             await sendRequest("CreateInput", {
-              sceneName: targetSceneName,
-              inputName: baseSourceName,
+              sceneName: targetSceneName, // Cria na cena de destino
+              inputName: baseSourceName, // Usa o nome base para criar
               inputKind: "browser_source",
               inputSettings,
-              sceneItemEnabled: true,
+              sceneItemEnabled: true, // Habilita por padrão
             });
-            effectiveSourceName = baseSourceName;
+            effectiveSourceName = baseSourceName; // Garante que estamos usando o nome base
             logMessage(
               `Source '${effectiveSourceName}' created and added to scene '${targetSceneName}'.`,
               "logMessages.obs.sourceCreatedAddedToScene", { sourceName: effectiveSourceName, sceneName: targetSceneName }
             );
+            // Pega o ID do item recém-criado
             try {
               const itemInfo = await sendRequest(
                 "GetSceneItemId",
@@ -3234,16 +3384,19 @@
               );
               initialSceneItemId = itemInfo.sceneItemId;
             } catch (e) {
+              // Erro ao pegar ID, mas a fonte foi criada; log e continue
             }
           } else {
+            // Se a fonte já existe globalmente, apenas atualize suas configurações
             logMessage(
               `Source '${effectiveSourceName}' already exists globally. Updating its settings.`,
               "logMessages.obs.sourceGlobalUpdating", { sourceName: effectiveSourceName }
             );
             await sendRequest("SetInputSettings", {
-              inputName: effectiveSourceName,
+              inputName: effectiveSourceName, // Pode ser o nome base ou destacado
               inputSettings,
             });
+            // Verifica se o item existe na cena de destino; se não, cria
             try {
               const itemInfo = await sendRequest(
                 "GetSceneItemId",
@@ -3259,6 +3412,7 @@
                 "logMessages.obs.sourceFoundAsItemInScene", { sourceName: effectiveSourceName, sceneName: targetSceneName }
               );
             } catch (e) {
+              // Se não encontrado na cena, cria o item da cena
               if (
                 e.message.toLowerCase().includes("not found") ||
                 (e.message.toLowerCase().includes("code") &&
@@ -3277,21 +3431,23 @@
                 );
                 initialSceneItemId = createItemResponse.sceneItemId;
               } else {
-                throw e;
+                throw e; // Relança outros erros
               }
             }
           }
 
+          // Clona para a cena principal se necessário
           if (
             shouldCloneThisStreamToMain &&
             mainDefaultScene &&
-            mainDefaultScene !== targetSceneName
+            mainDefaultScene !== targetSceneName // Evita clonar para a mesma cena
           ) {
             logMessage(
               `Attempting to clone source '${effectiveSourceName}' to main scene '${mainDefaultScene}'.`,
               "logMessages.obs.attemptingCloneToMain", { sourceName: effectiveSourceName, sceneName: mainDefaultScene }
             );
             try {
+              // Verifica se já existe na cena principal
               const itemInfo = await sendRequest(
                 "GetSceneItemId",
                 {
@@ -3306,6 +3462,7 @@
                 "logMessages.obs.sourceExistsInMainScene", { sourceName: effectiveSourceName, sceneName: mainDefaultScene }
               );
             } catch (e) {
+              // Se não existe, cria o item na cena principal
               if (
                 e.message.toLowerCase().includes("not found") ||
                 (e.message.toLowerCase().includes("code") &&
@@ -3332,9 +3489,11 @@
             }
           }
 
+          // Marca a fonte como criada no estado interno
           if (activeStreams[streamId])
             activeStreams[streamId].sourceCreated = true;
 
+          // Aplica transformações e grid
           if (initialSceneItemId) {
             await applyTransformAndGrid(
               targetSceneName,
@@ -3354,11 +3513,13 @@
             );
           }
 
+          // Adiciona/Clona para "outras cenas" selecionadas
           const otherSceneCheckboxes = document.querySelectorAll(
             ".other-scene-checkbox:checked"
           );
           for (const checkbox of otherSceneCheckboxes) {
             const otherSceneName = checkbox.value;
+            // Garante que não está processando a cena de destino principal ou a cena principal global (se já clonada)
             if (
               otherSceneName &&
               otherSceneName !== targetSceneName &&
@@ -3367,6 +3528,7 @@
             ) {
               try {
                 let otherSceneItemId = null;
+                // Verifica se já existe na "outra cena"
                 try {
                   const itemInfo = await sendRequest(
                     "GetSceneItemId",
@@ -3378,9 +3540,11 @@
                   );
                   otherSceneItemId = itemInfo.sceneItemId;
                 } catch (e) {
+                  // Ignora se não encontrado
                 }
 
                 if (!otherSceneItemId) {
+                  // Se não existe, cria
                   logMessage(
                     `Adding source '${effectiveSourceName}' as item to other scene '${otherSceneName}'.`,
                     "logMessages.obs.addingSourceToOtherScene", { sourceName: effectiveSourceName, sceneName: otherSceneName }
@@ -3393,6 +3557,7 @@
                     }
                   );
                   otherSceneItemId = createItemResponse.sceneItemId;
+                  // Aplica transformações se o item foi criado
                   if (otherSceneItemId) {
                     await applyTransformAndGrid(
                       otherSceneName,
@@ -3412,6 +3577,7 @@
             }
           }
 
+          // Muda para a cena se a regra de mapeamento especificar
           if (shouldSwitchToThisScene) {
             logMessage(
               `Switching OBS current program scene to '${targetSceneName}'.`,
@@ -3422,7 +3588,7 @@
               await sendRequest("SetCurrentPreviewScene", {
                 sceneName: targetSceneName,
               });
-              await sleep(100);
+              await sleep(100); // Pequena pausa
               await sendRequest("TriggerStudioModeTransition");
             } else {
               await sendRequest("SetCurrentProgramScene", {
@@ -3435,6 +3601,7 @@
             "logMessages.obs.successfullyProcessedStream", { label: streamLabel, id: streamId, sourceName: effectiveSourceName }
           );
 
+          // Verifica se há uma fonte de screen share associada e atualiza o estado global `screenShareId`
           const screenShareSourceNameToCheck = `${getFullReactionPrefix()}_${streamId}:s`;
           try {
             await sendRequest(
@@ -3446,8 +3613,9 @@
               `Existing screen share source '${screenShareSourceNameToCheck}' found for stream ${streamId}. Associating it.`,
               "logMessages.obs.existingScreenShareFound", { sourceName: screenShareSourceNameToCheck, id: streamId }
             );
-            screenShareId = streamId;
+            screenShareId = streamId; // Associa o screen share a este stream
           } catch (e) {
+            // Se não encontrado, não faz nada, apenas não associa
             const isNotFound =
               e.message.toLowerCase().includes("not found") ||
               (e.message.toLowerCase().includes("code") &&
@@ -3459,15 +3627,22 @@
               );
             }
           }
+
+          // MODIFICADO: Aplicar CSS personalizado após o processamento do stream
+          if (customCssInput.value.trim() !== "") {
+            applyCustomCss(customCssInput.value);
+            logMessage("Custom CSS applied after stream processing.", "logMessages.customCssAppliedAfterStream");
+          }
+
         } catch (error) {
           logMessage(
             `Error managing stream '${effectiveSourceName}' ("${streamLabel}") in OBS: ${error.message}`,
             "logMessages.obs.errorManagingStream", { sourceName: effectiveSourceName, label: streamLabel, message: error.message }
           );
           if (activeStreams[streamId])
-            activeStreams[streamId].sourceCreated = false;
+            activeStreams[streamId].sourceCreated = false; // Marca como não criada em caso de erro
         } finally {
-          updateStreamList();
+          updateStreamList(); // Atualiza a UI
         }
       }
 
@@ -3476,7 +3651,7 @@
         sourceName,
         canvasWidth,
         canvasHeight,
-        sceneItemId = null
+        sceneItemId = null // ID do item da cena, se já conhecido
       ) {
         if (!sceneName) {
           logMessage(
@@ -3487,19 +3662,22 @@
         }
         let itemIdToTransform = sceneItemId;
 
+        // Se o ID do item não foi fornecido, tenta obtê-lo
         if (!itemIdToTransform) {
           try {
             const itemInfo = await sendRequest(
               "GetSceneItemId",
               { sceneName, sourceName },
-              { suppressNotFound: true }
+              { suppressNotFound: true } // Não logar erro se não encontrar
             );
             if (itemInfo && itemInfo.sceneItemId) {
               itemIdToTransform = itemInfo.sceneItemId;
             } else {
-              return;
+              // logMessage(`Source '${sourceName}' not found in scene '${sceneName}' for transform. Skipping.`, "logMessages.obs.sourceNotFoundForTransformSkip", { sourceName, sceneName });
+              return; // Não pode aplicar transform se o item não existe
             }
           } catch (error) {
+            // Se houver erro ao buscar o ID (que não seja "não encontrado"), logue e retorne
             const isNotFound =
               error.message.toLowerCase().includes("not found") ||
               (error.message.toLowerCase().includes("code") &&
@@ -3515,9 +3693,11 @@
         }
 
         if (!itemIdToTransform) {
-          return;
+          // console.warn(`No scene item ID to transform for ${sourceName} in ${sceneName}`);
+          return; // Ainda não há ID, não pode transformar
         }
 
+        // Se autoGrid estiver selecionado, chame a função de rearranjo para toda a cena
         if (sourceSizingSelect.value === "autoGrid") {
           logMessage(
             `Auto-grid enabled for scene '${sceneName}'. Triggering rearrange.`,
@@ -3525,19 +3705,21 @@
           );
           await rearrangeAllStreamsInScene(sceneName);
         } else {
+          // Caso contrário, aplica a transformação individual baseada no modo selecionado
           try {
             const transform = calculateTransform(
-              sourceSizingSelect.value,
-              canvasWidth,
-              canvasHeight,
-              canvasWidth,
-              canvasHeight
+              sourceSizingSelect.value, // Modo de dimensionamento (defaultSize, bestFit, stretchToFill)
+              canvasWidth, // Largura da fonte (usada como base, pode ser sobrescrita por bounds)
+              canvasHeight, // Altura da fonte
+              canvasWidth, // Largura do canvas
+              canvasHeight // Altura do canvas
             );
             await sendRequest("SetSceneItemTransform", {
               sceneName,
               sceneItemId: itemIdToTransform,
               sceneItemTransform: transform,
             });
+            // logMessage(`Applied non-grid transform to '${sourceName}' in '${sceneName}'.`);
           } catch (error) {
             logMessage(
               `Error applying non-grid transform to '${sourceName}' (Item ID: ${itemIdToTransform}) in '${sceneName}': ${error.message}`,
@@ -3552,9 +3734,9 @@
           !obsConnected ||
           !obs ||
           !sceneName ||
-          sourceSizingSelect.value !== "autoGrid"
+          sourceSizingSelect.value !== "autoGrid" // Só executa se autoGrid estiver selecionado
         ) {
-          if (sourceSizingSelect.value !== "autoGrid") return;
+          if (sourceSizingSelect.value !== "autoGrid") return; // Não faz nada se não for autoGrid
           logMessage(
             `Cannot rearrange streams in scene '${sceneName}': OBS not connected, scene name missing, or auto-grid not selected.`,
             "logMessages.obs.cannotRearrangeStreams", { sceneName }
@@ -3592,6 +3774,7 @@
           const camPrefixWithUnderscore = getFullCameraPrefix() + "_";
           const hlPrefixWithUnderscore = getFullHighlightPrefix() + "_";
 
+          // Filtra apenas as fontes VDO.Ninja ativas e criadas na cena
           const vdoNinjaSourcesInScene = sceneItemsResponse.sceneItems.filter(
             (item) => {
               const isRegularCameraSource = item.sourceName.startsWith(
@@ -3612,17 +3795,19 @@
                 );
               }
 
+              // Verifica se o streamId extraído existe nos activeStreams e está marcado como conectado e sourceCreated
               return (
-                (isRegularCameraSource || isHighlightedCameraSource) &&
-                streamIdFromSourceName &&
-                activeStreams[streamIdFromSourceName] &&
-                activeStreams[streamIdFromSourceName].connected &&
-                activeStreams[streamIdFromSourceName].sourceCreated
+                (isRegularCameraSource || isHighlightedCameraSource) && // É uma fonte de câmera ou highlight
+                streamIdFromSourceName && // Conseguiu extrair um ID
+                activeStreams[streamIdFromSourceName] && // O stream está na lista de ativos
+                activeStreams[streamIdFromSourceName].connected && // Está conectado via VDO.Ninja
+                activeStreams[streamIdFromSourceName].sourceCreated // A fonte foi marcada como criada no OBS
               );
             }
           );
 
           if (vdoNinjaSourcesInScene.length === 0) {
+            // logMessage(`No active VDO.Ninja sources to rearrange in scene '${sceneName}'.`);
             return;
           }
 
@@ -3635,12 +3820,12 @@
           for (let i = 0; i < vdoNinjaSourcesInScene.length; i++) {
             const item = vdoNinjaSourcesInScene[i];
             const transform = calculateTransform(
-              "autoGrid",
-              canvasWidth,
-              canvasHeight,
-              canvasWidth,
-              canvasHeight,
-              positions[i]
+              "autoGrid", // Força o modo autoGrid para esta função
+              canvasWidth, // Largura base da fonte (será ajustada pelo grid)
+              canvasHeight, // Altura base da fonte
+              canvasWidth, // Largura do canvas
+              canvasHeight, // Altura do canvas
+              positions[i] // Posição calculada do grid
             );
             await sendRequest("SetSceneItemTransform", {
               sceneName,
@@ -3662,20 +3847,20 @@
 
       function calculateTransform(
         sizingMode,
-        sourceWidth,
-        sourceHeight,
-        canvasWidth,
-        canvasHeight,
-        gridPosition = null
+        sourceWidth, // Largura original da fonte (geralmente do canvas do OBS)
+        sourceHeight, // Altura original da fonte
+        canvasWidth, // Largura do canvas de destino do OBS
+        canvasHeight, // Altura do canvas de destino
+        gridPosition = null // Objeto { x, y, width, height } para modo grid
       ) {
         let transform = {
-          alignment: 5,
-          boundsType: "OBS_BOUNDS_NONE",
-          boundsAlignment: 0,
-          boundsWidth: sourceWidth,
-          boundsHeight: sourceHeight,
-          positionX: (canvasWidth - sourceWidth) / 2,
-          positionY: (canvasHeight - sourceHeight) / 2,
+          alignment: 5, // Centralizado (OBS_ALIGN_CENTER)
+          boundsType: "OBS_BOUNDS_NONE", // Sem bounds por padrão
+          boundsAlignment: 0, // Não relevante sem bounds
+          boundsWidth: sourceWidth, // Largura dos bounds igual à da fonte
+          boundsHeight: sourceHeight, // Altura dos bounds igual à da fonte
+          positionX: (canvasWidth - sourceWidth) / 2, // Posição X para centralizar
+          positionY: (canvasHeight - sourceHeight) / 2, // Posição Y para centralizar
           scaleX: 1.0,
           scaleY: 1.0,
           rotation: 0.0,
@@ -3683,10 +3868,10 @@
           cropBottom: 0,
           cropLeft: 0,
           cropRight: 0,
-          sourceWidth: sourceWidth,
-          sourceHeight: sourceHeight,
-          width: sourceWidth,
-          height: sourceHeight,
+          sourceWidth: sourceWidth, // Largura da fonte original (para referência do OBS)
+          sourceHeight: sourceHeight, // Altura da fonte original
+          width: sourceWidth, // Largura renderizada (pode ser alterada por bounds/scale)
+          height: sourceHeight, // Altura renderizada
         };
 
         switch (sizingMode) {
@@ -3694,30 +3879,31 @@
             transform.boundsType = "OBS_BOUNDS_STRETCH";
             transform.boundsWidth = canvasWidth;
             transform.boundsHeight = canvasHeight;
-            transform.width = canvasWidth;
+            transform.width = canvasWidth; // Estica para preencher
             transform.height = canvasHeight;
-            transform.positionX = 0;
+            transform.positionX = 0; // Alinha no canto superior esquerdo
             transform.positionY = 0;
             break;
-          case "bestFit":
-            transform.boundsType = "OBS_BOUNDS_SCALE_INNER";
+          case "bestFit": // Scale to fit (mantendo aspect ratio, pode ter letterbox/pillarbox)
+            transform.boundsType = "OBS_BOUNDS_SCALE_INNER"; // OBS_BOUNDS_SCALE_ASPECT_RATIO_FIT
             transform.boundsWidth = canvasWidth;
             transform.boundsHeight = canvasHeight;
-            transform.width = canvasWidth;
+            transform.width = canvasWidth; // Define a área de renderização para o canvas inteiro
             transform.height = canvasHeight;
-            transform.positionX = 0;
+            transform.positionX = 0; // Alinha no canto superior esquerdo
             transform.positionY = 0;
             break;
           case "autoGrid":
             if (gridPosition) {
-              transform.boundsType = "OBS_BOUNDS_SCALE_INNER";
+              transform.boundsType = "OBS_BOUNDS_SCALE_INNER"; // Ou OBS_BOUNDS_STRETCH se preferir preencher a célula
               transform.positionX = gridPosition.x;
               transform.positionY = gridPosition.y;
               transform.boundsWidth = gridPosition.width;
               transform.boundsHeight = gridPosition.height;
-              transform.width = gridPosition.width;
-              transform.height = gridPosition.height;
+              transform.width = gridPosition.width; // Define a largura da célula do grid
+              transform.height = gridPosition.height; // Define a altura da célula
             } else {
+              // Fallback se gridPosition não for fornecido (deve ser logado como aviso)
               logMessage(
                 "Warning: autoGrid sizing mode called without gridPosition. Falling back to 'bestFit'.",
                 "logMessages.obs.warningAutoGridNoPosition"
@@ -3731,31 +3917,21 @@
               transform.positionY = 0;
             }
             break;
-          case "defaultSize":
+          case "defaultSize": // Tamanho padrão (1920x1080) centralizado, ou scaledown se maior que canvas
           default:
-            transform.positionX = (canvasWidth - sourceWidth) / 2;
-            transform.positionY = (canvasHeight - sourceHeight) / 2;
-            if (sourceWidth > canvasWidth) {
-              transform.width = canvasWidth;
-              transform.positionX = 0;
-              transform.boundsType = "OBS_BOUNDS_SCALE_TO_WIDTH";
-              transform.boundsWidth = canvasWidth;
+            // A posição já está centralizada pelo default de transform
+            // Se a fonte for maior que o canvas, ajuste para caber (bestFit implícito para fontes grandes)
+            if (sourceWidth > canvasWidth || sourceHeight > canvasHeight) {
+                const scaleRatioX = canvasWidth / sourceWidth;
+                const scaleRatioY = canvasHeight / sourceHeight;
+                const scale = Math.min(scaleRatioX, scaleRatioY);
+
+                transform.width = sourceWidth * scale;
+                transform.height = sourceHeight * scale;
+                transform.positionX = (canvasWidth - transform.width) / 2;
+                transform.positionY = (canvasHeight - transform.height) / 2;
             }
-            if (sourceHeight > canvasHeight) {
-              transform.height = canvasHeight;
-              transform.positionY = 0;
-              transform.boundsType = "OBS_BOUNDS_SCALE_TO_HEIGHT";
-              transform.boundsHeight = canvasHeight;
-            }
-            if (sourceWidth > canvasWidth && sourceHeight > canvasHeight) {
-              transform.boundsType = "OBS_BOUNDS_SCALE_INNER";
-              transform.boundsWidth = canvasWidth;
-              transform.boundsHeight = canvasHeight;
-              transform.width = canvasWidth;
-              transform.height = canvasHeight;
-              transform.positionX = 0;
-              transform.positionY = 0;
-            }
+            // Se for menor, já está centralizada com seu tamanho original
             break;
         }
         return transform;
@@ -3769,11 +3945,17 @@
           );
           return;
         }
+        // Mesmo que o stream não esteja em activeStreams (ex: se a página foi recarregada),
+        // tente remover a fonte se ela existir no OBS com os prefixos corretos.
         if (
           !activeStreams[streamId] &&
-          streamId !== screenShareId &&
-          streamId !== highlightedStreamId
+          streamId !== screenShareId && // Não é o screen share ativo
+          streamId !== highlightedStreamId // Não é o highlight ativo
         ) {
+          // Se não há registro local, não há muito o que fazer a menos que queiramos
+          // varrer o OBS por fontes com esse ID, o que pode ser perigoso.
+          // Por ora, só remove se houver um registro ou for um dos globais.
+          // logMessage(`Stream ${streamId} not found in active local records. Removal might be incomplete if source exists in OBS.`);
         }
 
         const baseSourceName = `${getFullCameraPrefix()}_${streamId}`;
@@ -3786,25 +3968,28 @@
         const streamInfo = activeStreams[streamId];
         const currentLabel = streamInfo
           ? streamInfo.label
-          : i18next.t("vdoNinja.defaultStreamLabel", {id: streamId});
+          : i18next.t("vdoNinja.defaultStreamLabel", {id: streamId}); // Fallback para label
         const targetInfo = getTargetSceneForStream(streamId, currentLabel);
 
+        // Se o stream a ser removido estiver destacado, desfaça o highlight primeiro
         if (highlightedStreamId === streamId) {
           logMessage(
             `Stream ${streamId} is currently highlighted. Unhighlighting before removal.`,
             "logMessages.obs.streamHighlightedUnhighlightingBeforeRemove", { id: streamId }
           );
-          await toggleHighlight(streamId, currentLabel, targetInfo);
+          await toggleHighlight(streamId, currentLabel, targetInfo); // Isso deve renomear de volta para baseSourceName
         }
 
+        // Coleta todas as cenas onde a fonte (baseSourceName) pode existir
         const scenesToClean = new Set();
         if (targetInfo && targetInfo.scene) {
-          scenesToClean.add(targetInfo.scene);
+          scenesToClean.add(targetInfo.scene); // Cena mapeada/padrão do stream
         }
-        const globalMainScene = getTargetScene();
+        const globalMainScene = getTargetScene(); // Cena principal global
         if (globalMainScene) {
           scenesToClean.add(globalMainScene);
         }
+        // Adiciona "outras cenas" selecionadas
         document
           .querySelectorAll(".other-scene-checkbox:checked")
           .forEach((checkbox) => {
@@ -3813,22 +3998,26 @@
 
         let itemRemovedThisRun = false;
 
+        // Tenta remover o item da cena (baseSourceName) de todas as cenas coletadas
         for (const sceneName of scenesToClean) {
-          if (!sceneName) continue;
+          if (!sceneName) continue; // Pula se o nome da cena for inválido
 
           if (await tryRemoveFromScene(baseSourceName, sceneName)) {
             itemRemovedThisRun = true;
           }
+          // Não tentamos remover highlightedSourceName daqui, pois toggleHighlight já deve ter revertido
         }
 
+        // Se o stream era um screen share ativo, remova-o completamente
         if (screenShareId === streamId) {
           logMessage(
             `Stream ${streamId} was actively screen sharing. Initiating screen share removal.`,
             "logMessages.obs.streamScreenSharingRemoving", { id: streamId }
           );
-          await removeScreenShareFromObs(streamId);
+          await removeScreenShareFromObs(streamId); // Função específica para limpar screen share
         }
 
+        // Atualiza o estado local
         if (activeStreams[streamId]) {
           activeStreams[streamId].sourceCreated = false;
         }
@@ -3840,23 +4029,25 @@
           );
         }
 
+        // Se autoGrid estiver ativo, rearranje as cenas afetadas
         if (sourceSizingSelect.value === "autoGrid") {
           const uniqueScenesProcessed = new Set(
-            Array.from(scenesToClean).filter((s) => s)
+            Array.from(scenesToClean).filter((s) => s) // Filtra nomes de cena válidos
           );
           for (const sceneName of uniqueScenesProcessed) {
             logMessage(
               `Auto-grid: Triggering rearrange for scene '${sceneName}' after stream removal.`,
               "logMessages.obs.autoGridRearrangeAfterRemove", { sceneName }
             );
-            setTimeout(() => rearrangeAllStreamsInScene(sceneName), 250);
+            setTimeout(() => rearrangeAllStreamsInScene(sceneName), 250); // Pequeno delay
           }
         }
 
+        // Atualiza a lista de streams na UI, a menos que seja um screen share (já tratado)
         if (screenShareId !== streamId) {
           updateStreamList();
         }
-        saveSettings();
+        saveSettings(); // Salva o estado (embora não haja mudança direta de settings aqui)
       }
 
       async function removeScreenShareFromObs(streamIdToRemove) {
@@ -3865,14 +4056,15 @@
           return;
         }
         if (!streamIdToRemove) {
-          if (screenShareId === streamIdToRemove) {
+          // Se nenhum ID for fornecido, mas screenShareId global é igual, limpe o global
+          if (screenShareId === streamIdToRemove) { // Isso será true se streamIdToRemove for null/undefined e screenShareId também
             screenShareId = null;
             updateStreamList();
           }
           return;
         }
 
-        const sourceName = `${getFullReactionPrefix()}_${streamIdToRemove}:s`;
+        const sourceName = `${getFullReactionPrefix()}_${streamIdToRemove}:s`; // Nome da fonte de screen share
         logMessage(
           `Attempting to fully remove screen share source '${sourceName}' from OBS (all scenes and input).`,
           "logMessages.obs.attemptingRemoveScreenShareSource", { sourceName }
@@ -3880,6 +4072,7 @@
 
         let itemRemovedFromAnyScene = false;
         try {
+          // 1. Remove o item de todas as cenas onde possa existir
           const scenesResponse = await sendRequest("GetSceneList");
           if (scenesResponse && scenesResponse.scenes) {
             for (const scene of scenesResponse.scenes) {
@@ -3889,16 +4082,21 @@
             }
           }
 
+          // 2. Remove a fonte (input) globalmente, se existir e não estiver em uso por outra cena (OBS pode impedir)
           try {
+            // Verifica se a fonte existe antes de tentar remover
             await sendRequest(
               "GetInputSettings",
               { inputName: sourceName },
-              { suppressNotFound: true }
+              { suppressNotFound: true } // Não logar erro se não encontrar
             );
+            // Se chegou aqui, a fonte existe
             logMessage(`Removing global input '${sourceName}' from OBS.`, "logMessages.obs.removingGlobalInput", { sourceName });
             await sendRequest("RemoveInput", { inputName: sourceName });
             logMessage(`Successfully removed input '${sourceName}'.`, "logMessages.obs.successfullyRemovedInput", { sourceName });
           } catch (e) {
+            // Se a fonte não foi encontrada, não há o que remover globalmente.
+            // Outros erros podem indicar que a fonte está em uso e não pode ser removida.
             const isNotFound =
               e.message.toLowerCase().includes("not found") ||
               e.message.toLowerCase().includes("does not exist") ||
@@ -3912,6 +4110,7 @@
                 "logMessages.obs.globalInputRemovalFailed", { sourceName, message: e.message }
               );
             }
+            // Mesmo que a remoção global falhe, o item da cena pode ter sido removido.
           }
         } catch (error) {
           logMessage(
@@ -3919,22 +4118,24 @@
             "logMessages.obs.errorScreenShareRemovalProcess", { sourceName, message: error.message }
           );
         } finally {
+          // Limpa o ID global de screen share se for o que foi removido
           if (screenShareId === streamIdToRemove) {
             screenShareId = null;
           }
-          updateStreamList();
+          updateStreamList(); // Atualiza a UI
         }
       }
 
       async function tryRemoveFromScene(sourceName, sceneName) {
         if (!sceneName) {
+          // logMessage(`Cannot remove source '${sourceName}': Scene name not provided.`);
           return false;
         }
         try {
           const itemInfo = await sendRequest(
             "GetSceneItemId",
             { sceneName, sourceName },
-            { suppressNotFound: true }
+            { suppressNotFound: true } // Não logar erro se não encontrar
           );
           if (itemInfo && itemInfo.sceneItemId) {
             logMessage(
@@ -3945,35 +4146,37 @@
               sceneName,
               sceneItemId: itemInfo.sceneItemId,
             });
-            return true;
+            return true; // Item removido com sucesso
           }
-          return false;
+          return false; // Item não encontrado na cena
         } catch (error) {
+          // Loga apenas erros que não sejam "não encontrado"
           const isNotFound =
             error.message.toLowerCase().includes("not found") ||
-            error.message.toLowerCase().includes("no scene items were found") ||
-            error.message.toLowerCase().includes("could not find") ||
+            error.message.toLowerCase().includes("no scene items were found") || // OBS v28+
+            error.message.toLowerCase().includes("could not find") || // OBS v27
             (error.message.toLowerCase().includes("code") &&
-              error.message.toLowerCase().includes("600"));
+              error.message.toLowerCase().includes("600")); // Código de erro para "não encontrado"
           if (!isNotFound) {
             logMessage(
               `Error trying to remove source item '${sourceName}' from scene '${sceneName}': ${error.message}`,
               "logMessages.obs.errorTryingRemoveSourceItem", { sourceName, sceneName, message: error.message }
             );
           }
-          return false;
+          return false; // Erro ou item não encontrado
         }
       }
 
       function loadJsShaLibrary() {
         return new Promise((resolve, reject) => {
           if (typeof jsSHA !== "undefined") {
+            // Biblioteca já carregada
             resolve();
             return;
           }
           const script = document.createElement("script");
           script.src =
-            "https://cdnjs.cloudflare.com/ajax/libs/jsSHA/3.3.0/sha256.js";
+            "https://cdnjs.cloudflare.com/ajax/libs/jsSHA/3.3.0/sha256.js"; // CDN para jsSHA
           script.onload = () => {
             logMessage(
               "jsSHA library loaded successfully (fallback for Web Crypto).",
@@ -3995,16 +4198,17 @@
       function setupSecureFieldsBlur() {
         const secureFields = document.querySelectorAll(
           "#vdoNinjaRoom, #vdoNinjaStreamIds"
-        );
+        ); // Adicione outros IDs se necessário
         secureFields.forEach((field) => {
-          field.classList.add("blur-field");
+          field.classList.add("blur-field"); // Aplica o blur inicialmente
           field.addEventListener("focus", () =>
             field.classList.remove("blur-field")
           );
           field.addEventListener("blur", () => {
+            // Reaplica o blur se o campo estiver vazio ao perder o foco
             if (field.value === "") field.classList.add("blur-field");
           });
-          // Apply blur if field is initially empty
+          // Garante que o blur seja aplicado na carga se o campo estiver vazio
           if (field.value === "") {
             field.classList.add("blur-field");
           }
@@ -4012,6 +4216,7 @@
       }
 
 
+      // Event listeners para salvar configurações em mudanças
       const otherScenesContainer = document.getElementById(
         "otherScenesContainer"
       );
@@ -4021,10 +4226,11 @@
       );
 
       obsSceneSelect.addEventListener("change", () => {
-        obsSceneNameInput.value = obsSceneSelect.value;
+        obsSceneNameInput.value = obsSceneSelect.value; // Atualiza o input escondido (se ainda usado)
         saveSettings();
-        updateOtherScenesList();
-        updateStreamList();
+        updateOtherScenesList(); // Atualiza a lista de "outras cenas"
+        updateStreamList(); // Atualiza a lista de streams para refletir a nova cena padrão
+        // Se autoGrid estiver ativo, rearranje a nova cena principal
         if (sourceSizingSelect.value === "autoGrid" && getTargetScene()) {
           rearrangeAllStreamsInScene(getTargetScene());
         }
@@ -4033,6 +4239,9 @@
       [
         obsWsUrlInput,
         obsWsPasswordInput,
+        // cameraPrefixInput, // Já tem listener individual
+        // reactionSubPrefixInput, // Já tem listener individual
+        // highlightSubPrefixInput, // Já tem listener individual
         vdoNinjaBaseUrlInput,
         vdoNinjaRoomInput,
         vdoNinjaPasswordInput,
@@ -4041,23 +4250,33 @@
         autoRemoveSourcesCheckbox,
         highlightSceneSelect,
         screenShareSceneSelect,
+        // customCssInput // Já tem listener individual modificado
       ].forEach((el) => {
-        if (el) el.addEventListener("change", saveSettings);
+        if (el) el.addEventListener("change", saveSettings); // 'change' é melhor para selects e checkboxes
       });
 
       sourceSizingSelect.addEventListener("change", () => {
         saveSettings();
         if (sourceSizingSelect.value === "autoGrid") {
+          // Se mudou para autoGrid, rearranje todas as cenas relevantes
           const mainTargetScene = getTargetScene();
           if (mainTargetScene) {
             rearrangeAllStreamsInScene(mainTargetScene);
           }
+          // Rearranja "outras cenas" selecionadas
           document
             .querySelectorAll(".other-scene-checkbox:checked")
             .forEach((checkbox) => {
               if (checkbox.value) rearrangeAllStreamsInScene(checkbox.value);
             });
+          // Rearranja cenas de mapeamentos
+          getStreamMappings().forEach(mapping => {
+            if(mapping.sceneName) rearrangeAllStreamsInScene(mapping.sceneName);
+          });
+
         } else {
+          // Se mudou de autoGrid para outro modo, aplique a transformação padrão
+          // a todas as fontes gerenciadas em todas as cenas relevantes.
           const scenesToUpdate = new Set();
           if (getTargetScene()) scenesToUpdate.add(getTargetScene());
           document
@@ -4076,7 +4295,7 @@
         sceneName
       ) {
         if (!obsConnected || !sceneName || sourceSizingSelect.value === "autoGrid")
-          return;
+          return; // Só aplica se não for autoGrid
         logMessage(
           `Applying standard transform ('${sourceSizingSelect.value}') to VDO.Ninja sources in scene '${sceneName}'.`,
           "logMessages.obs.applyingStandardTransform", { sizing: sourceSizingSelect.value, sceneName }
@@ -4102,12 +4321,14 @@
           const hlPrefixWithUnderscore = getFullHighlightPrefix() + "_";
 
           for (const item of sceneItemsResponse.sceneItems) {
+            // Verifica se é uma fonte gerenciada por este script
             const isManagedSource =
               (item.sourceName.startsWith(camPrefixWithUnderscore) ||
                 item.sourceName.startsWith(hlPrefixWithUnderscore)) &&
-              item.inputKind === "browser_source";
+              item.inputKind === "browser_source"; // Garante que é uma fonte de navegador
 
             if (isManagedSource) {
+              // Verifica se o stream correspondente está ativo e criado
               const streamIdGuess = item.sourceName
                 .replace(camPrefixWithUnderscore, "")
                 .replace(hlPrefixWithUnderscore, "");
@@ -4116,7 +4337,7 @@
                 activeStreams[streamIdGuess].sourceCreated
               ) {
                 const transform = calculateTransform(
-                  sourceSizingSelect.value,
+                  sourceSizingSelect.value, // Modo de dimensionamento atual
                   canvasWidth,
                   canvasHeight,
                   canvasWidth,
@@ -4154,13 +4375,15 @@
           return;
         }
 
+        // Atualiza todas as fontes de câmera ativas
         for (const streamId in activeStreams) {
           if (
             Object.hasOwnProperty.call(activeStreams, streamId) &&
-            activeStreams[streamId].sourceCreated
+            activeStreams[streamId].sourceCreated // Só atualiza se a fonte OBS foi criada
           ) {
             let effectiveSourceName = `${getFullCameraPrefix()}_${streamId}`;
             if (highlightedStreamId === streamId) {
+              // Se estiver destacada, usa o nome de destaque
               effectiveSourceName = `${getFullHighlightPrefix()}_${streamId}`;
             }
 
@@ -4168,16 +4391,16 @@
               const currentSettingsResponse = await sendRequest(
                 "GetInputSettings",
                 { inputName: effectiveSourceName },
-                { suppressNotFound: true }
+                { suppressNotFound: true } // Não logar erro se não encontrar
               );
               if (
                 currentSettingsResponse &&
                 currentSettingsResponse.inputSettings
               ) {
-                const newViewUrl = getVdoNinjaViewUrl(streamId);
+                const newViewUrl = getVdoNinjaViewUrl(streamId); // Gera a nova URL com o codec atualizado
                 const updatedSettings = {
                   ...currentSettingsResponse.inputSettings,
-                  url: newViewUrl,
+                  url: newViewUrl, // Atualiza apenas a URL
                 };
 
                 await sendRequest("SetInputSettings", {
@@ -4190,6 +4413,7 @@
                 );
               }
             } catch (error) {
+              // Loga apenas erros que não sejam "não encontrado"
               const isNotFound =
                 error.message.toLowerCase().includes("not found") ||
                 (error.message.toLowerCase().includes("code") &&
@@ -4204,6 +4428,7 @@
           }
         }
 
+        // Atualiza a fonte de screen share ativa, se houver
         if (screenShareId) {
           const screenShareSourceName = `${getFullReactionPrefix()}_${screenShareId}:s`;
           try {
@@ -4216,7 +4441,7 @@
               currentScreenShareSettingsResponse &&
               currentScreenShareSettingsResponse.inputSettings
             ) {
-              const room = vdoNinjaRoomInput.value.trim();
+              const room = vdoNinjaRoomInput.value.trim(); // Necessário para URL de screen share
               const baseUrl = getVdoNinjaBaseUrl();
               let newScreenShareUrl = `${baseUrl}/?view=${encodeURIComponent(
                 screenShareId
@@ -4225,7 +4450,7 @@
               if (newCodec && newCodec !== "") {
                 newScreenShareUrl += `&codec=${encodeURIComponent(newCodec)}`;
               } else {
-                newScreenShareUrl += `&codec=vp9`;
+                newScreenShareUrl += `&codec=vp9`; // Codec padrão para screen share
               }
               if (vdoNinjaPasswordInput.value) {
                 newScreenShareUrl += `&password=${encodeURIComponent(
@@ -4266,6 +4491,7 @@
 
       loadScenesBtn.addEventListener("click", fetchObsScenes);
 
+      // Event listeners para salvar configurações de screen share
       if (screenShareSceneSelect) {
         screenShareSceneSelect.addEventListener("change", saveSettings);
       }
@@ -4278,10 +4504,12 @@
       if (screenShareHeightInput)
         screenShareHeightInput.addEventListener("change", saveSettings);
 
+      // Inicialização da aplicação quando o DOM estiver pronto
       document.addEventListener("DOMContentLoaded", () => {
-        initializeApp(); // Call the new initialization function
+        initializeApp(); // Função principal de inicialização
       });
 
+      // Função para ofuscar campos seguros (movida para o final para melhor organização)
       function setupSecureFieldsBlur() {
         const secureFields = document.querySelectorAll(
           "#vdoNinjaRoom, #vdoNinjaStreamIds"
@@ -4294,7 +4522,7 @@
           field.addEventListener("blur", () => {
             if (field.value === "") field.classList.add("blur-field");
           });
-          if (field.value === "") { // Apply blur if initially empty
+          if (field.value === "") {
             field.classList.add("blur-field");
           }
         });
