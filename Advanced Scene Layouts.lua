@@ -244,6 +244,8 @@ local LANGUAGE_NAMES = {"English", "Português", "Español", "中文", "Русс
 -- STATE MANAGEMENT
 -- =============================================
 
+local global_props_ref = nil
+
 local state = {
     -- Language settings
     current_language = "English",
@@ -284,15 +286,15 @@ local state = {
         enabled = false -- Actual operational state
     },
 
-    -- Temporary UI state & last known checkbox states
+    -- Temporary UI state & last known checkbox states from settings
     ui = {
         temp_general_camera_prefix = "",
         temp_content_prefix = "",
         temp_highlight_main_prefix = "",
-        elements = {},
-        grid_checkbox_latest = false,
-        reaction_checkbox_latest = false,
-        highlight_checkbox_latest = false
+        elements = {}, 
+        grid_checkbox_latest = false,    -- Stores the boolean value of "grid_enabled" setting
+        reaction_checkbox_latest = false, -- Stores the boolean value of "reaction_enabled" setting
+        highlight_checkbox_latest = false -- Stores the boolean value of "highlight_enabled" setting
     },
 
     -- System state
@@ -326,13 +328,15 @@ local function set_scale(scene_item, x, y)
     obs.obs_sceneitem_set_scale(scene_item, scale)
 end
 
-local function update_ui_texts(props)
+local function update_ui_texts(props_obj)
+    if not props_obj then return end 
     for i = 1, #state.translations do
-        if state.ui.elements[i] then
+        if state.ui.elements[i] then 
             obs.obs_property_set_description(state.ui.elements[i], state.translations[i])
         end
     end
 end
+
 
 -- =============================================
 -- LAYOUT OPERATIONAL STATE DETERMINATION
@@ -341,21 +345,21 @@ local function update_actual_layout_operational_states(grid_checkbox_on, reactio
     -- Grid
     if grid_checkbox_on and state.source_prefix ~= "" then
         state.grid.enabled = true
-    else -- Simplified this condition
+    else
         state.grid.enabled = false
     end
 
     -- Reaction
     if reaction_checkbox_on and state.source_prefix ~= "" and state.reaction.content_prefix ~= "" then
         state.reaction.enabled = true
-    else -- Simplified this condition
+    else
         state.reaction.enabled = false
     end
 
     -- Highlight
     if highlight_checkbox_on and state.source_prefix ~= "" and state.highlight.main_source_prefix ~= "" then
         state.highlight.enabled = true
-    else -- Simplified this condition
+    else
         state.highlight.enabled = false
     end
 end
@@ -363,21 +367,16 @@ end
 
 -- =============================================
 -- LAYOUT FUNCTIONS (process_grid_browsers, process_react_browsers, process_highlight_browsers and helpers)
+-- (No changes in this section for the reported UI visibility issue)
 -- =============================================
 local function process_grid_browsers(target_scene_name_override)
-    -- If grid layout is not enabled (checkbox off or prefix missing), or script inactive, do nothing to scene items.
     if not state.script_active or not state.grid.enabled then
         return
     end
     
     local scene_name_to_use = target_scene_name_override or state.grid.scene_name
-
-    -- At this point, state.grid.enabled is true, implying:
-    -- 1. Grid checkbox is ON.
-    -- 2. state.source_prefix is NOT empty (due to update_actual_layout_operational_states).
-    -- Check if a scene is specified for this layout.
     if scene_name_to_use == "" then
-        return -- If no scene is specified for this layout (neither override nor default), do nothing.
+        return
     end
 
     local scene = obs.obs_get_scene_by_name(scene_name_to_use)
@@ -736,7 +735,7 @@ local function process_react_browsers()
     end
 
     local scene = obs.obs_get_scene_by_name(state.reaction.scene_name)
-    if not scene then return end -- Não precisa de obs_scene_release se scene for nil
+    if not scene then return end
     local scene_items = obs.obs_scene_enum_items(scene)
     if not scene_items then obs.obs_scene_release(scene); return end
 
@@ -771,17 +770,15 @@ local function process_react_browsers()
         return name_a < name_b
     end)
     
-    -- Fallback para grade se o conteúdo principal da reação não for encontrado E o layout de grade estiver habilitado
     if not window_capture then
         if state.grid.enabled then
             obs.sceneitem_list_release(scene_items)
             obs.obs_scene_release(scene)
-            process_grid_browsers(state.reaction.scene_name) -- MODIFICADO AQUI
-            return -- Sair após o fallback para grade
+            process_grid_browsers(state.reaction.scene_name) 
+            return 
         end
     end
 
-    -- Se não houver câmeras de reação E nenhuma captura de janela, ocultar navegadores inativos e retornar
     if #active_reaction_browsers == 0 and not window_capture then
          for _, browser_item in ipairs(inactive_reaction_browsers) do hide_browser(browser_item) end
          obs.sceneitem_list_release(scene_items)
@@ -822,7 +819,7 @@ local function handle_highlight_browsers_left(active_browsers, inactive_browsers
         local source = obs.obs_sceneitem_get_source(browser)
         local source_width = obs.obs_source_get_width(source)
         local source_height = obs.obs_source_get_height(source)
-        local effective_source_width = source_width -- As in react
+        local effective_source_width = source_width 
 
         local crop = obs.obs_sceneitem_crop()
         if source_width > 0 then
@@ -845,17 +842,15 @@ local function handle_highlight_browsers_left(active_browsers, inactive_browsers
     for _, browser in ipairs(inactive_browsers) do hide_browser(browser) end
 
     if main_source_item then
-        local cam_total_width_on_side = 0 -- As in react
+        local cam_total_width_on_side = 0 
         if total_browsers > 0 and browser_width > 0 then
-             cam_total_width_on_side = browser_width + state.highlight.spacing -- As in react
+             cam_total_width_on_side = browser_width + state.highlight.spacing 
         end
 
-        -- main_x calculation mirroring window_x from react (using main_source_item specific vars)
-        local main_x = state.highlight.spacing + (cam_total_width_on_side * HIGHLIGHT_CROP_RATIO) + state.highlight.x_offset -- As in react
+        local main_x = state.highlight.spacing + (cam_total_width_on_side * HIGHLIGHT_CROP_RATIO) + state.highlight.x_offset 
+        local main_available_width = state.screen_width - (main_x - state.highlight.x_offset) - state.highlight.spacing 
 
-        local main_available_width = state.screen_width - (main_x - state.highlight.x_offset) - state.highlight.spacing -- As in react
-
-        if total_browsers == 0 then -- As in react
+        if total_browsers == 0 then 
             main_available_width = state.screen_width - 2 * state.highlight.spacing
             main_x = state.highlight.spacing + state.highlight.x_offset
         end
@@ -867,8 +862,8 @@ local function handle_highlight_browsers_left(active_browsers, inactive_browsers
         if main_height > state.screen_height - 2 * state.highlight.spacing then
             main_height = state.screen_height - 2 * state.highlight.spacing
             main_width = main_height * ASPECT_RATIO
-            main_x = cam_total_width_on_side + state.highlight.spacing + state.highlight.x_offset -- As in react
-            if total_browsers == 0 then main_x = (state.screen_width - main_width) / 2 + state.highlight.x_offset end -- As in react
+            main_x = cam_total_width_on_side + state.highlight.spacing + state.highlight.x_offset 
+            if total_browsers == 0 then main_x = (state.screen_width - main_width) / 2 + state.highlight.x_offset end 
         end
         if main_width <=0 then main_width = 1 end; if main_height <=0 then main_height = 1/ASPECT_RATIO end
 
@@ -885,7 +880,6 @@ local function handle_highlight_browsers_split(active_browsers, inactive_browser
     local total_browsers = #active_browsers
     if total_browsers == 0 then
         if main_source_item then
-            -- Using "window_width/height" for variable names to mirror react logic structure
             local window_width = state.screen_width - 2 * state.highlight.spacing
             local window_height = window_width / ASPECT_RATIO
             if window_height > state.screen_height - 2 * state.highlight.spacing then
@@ -949,11 +943,10 @@ local function handle_highlight_browsers_split(active_browsers, inactive_browser
         local left_cam_total_width = 0; if cams_left_count>0 and browser_width>0 then left_cam_total_width = (browser_width * HIGHLIGHT_CROP_RATIO) + state.highlight.spacing end
         local right_cam_total_width = 0; if cams_right_count>0 and browser_width>0 then right_cam_total_width = (browser_width * HIGHLIGHT_CROP_RATIO) + state.highlight.spacing end
 
-        -- Using "window_x/width/height" for variable names to mirror react logic structure
         local window_x = left_cam_total_width + state.highlight.x_offset + state.highlight.spacing
         local window_available_width = state.screen_width - left_cam_total_width - right_cam_total_width - (state.highlight.spacing * 2)
 
-        if total_browsers == 0 then -- This case mirrors the react function's internal handling
+        if total_browsers == 0 then 
              window_available_width = state.screen_width - 2 * state.highlight.spacing
              window_x = state.highlight.spacing + state.highlight.x_offset
         end
@@ -984,7 +977,7 @@ local function process_highlight_browsers()
     end
 
     local scene = obs.obs_get_scene_by_name(state.highlight.scene_name)
-    if not scene then return end -- Não precisa de obs_scene_release se scene for nil
+    if not scene then return end
     local scene_items = obs.obs_scene_enum_items(scene)
     if not scene_items then obs.obs_scene_release(scene); return end
 
@@ -1019,17 +1012,15 @@ local function process_highlight_browsers()
         return name_a < name_b
     end)
 
-    -- Fallback para grade se a fonte principal de destaque não for encontrada E o layout de grade estiver habilitado
     if not main_source_item then
         if state.grid.enabled then
             obs.sceneitem_list_release(scene_items)
             obs.obs_scene_release(scene)
-            process_grid_browsers(state.highlight.scene_name) -- MODIFICADO AQUI
-            return -- Sair após o fallback para grade
+            process_grid_browsers(state.highlight.scene_name) 
+            return 
         end
     end
 
-    -- Se não houver câmeras de destaque E nenhuma fonte principal, ocultar navegadores inativos e retornar
     if #active_highlight_browsers == 0 and not main_source_item then
         for _, browser_item in ipairs(inactive_highlight_browsers) do hide_browser(browser_item) end
         obs.sceneitem_list_release(scene_items)
@@ -1048,12 +1039,43 @@ local function process_highlight_browsers()
 end
 
 -- =============================================
--- UI CALLBACK FUNCTIONS
+-- UI CALLBACK FUNCTIONS AND VISIBILITY HELPER
 -- =============================================
+
+local function update_specific_layout_ui_visibility(props_obj, layout_name_str, is_visible)
+    if not props_obj then return end
+
+    local elements_to_toggle = {}
+    if layout_name_str == "grid" then
+        elements_to_toggle = {
+            "grid_scene", "grid_spacing", "grid_margin", 
+            "grid_x_offset", "grid_y_offset", "grid_split_screen"
+        }
+    elseif layout_name_str == "reaction" then
+        elements_to_toggle = {
+            "react_scene", "reaction_content_prefix", "save_reaction_prefix",
+            "react_spacing", "react_x_offset", "react_y_offset", "camera_split"
+        }
+    elseif layout_name_str == "highlight" then
+        elements_to_toggle = {
+            "highlight_scene", "highlight_main_source_prefix", "save_highlight_prefix",
+            "highlight_spacing", "highlight_x_offset", "highlight_y_offset", "highlight_camera_split"
+        }
+    end
+
+    for _, key in ipairs(elements_to_toggle) do
+        local prop_to_toggle = obs.obs_properties_get(props_obj, key)
+        if prop_to_toggle then
+            obs.obs_property_set_visible(prop_to_toggle, is_visible)
+        end
+    end
+end
+
+
 local function on_language_changed(props, prop, settings)
     state.current_language = obs.obs_data_get_string(settings, "language_name")
     state.translations = LANGUAGES[state.current_language] or LANGUAGES["English"]
-    update_ui_texts(props)
+    update_ui_texts(props) 
     return true
 end
 
@@ -1062,13 +1084,7 @@ local function on_grid_enabled_changed(props, property, settings)
     state.ui.grid_checkbox_latest = grid_checkbox_is_on 
 
     update_actual_layout_operational_states(grid_checkbox_is_on, state.ui.reaction_checkbox_latest, state.ui.highlight_checkbox_latest)
-
-    obs.obs_property_set_visible(obs.obs_properties_get(props, "grid_scene"), grid_checkbox_is_on)
-    obs.obs_property_set_visible(obs.obs_properties_get(props, "grid_spacing"), grid_checkbox_is_on)
-    obs.obs_property_set_visible(obs.obs_properties_get(props, "grid_margin"), grid_checkbox_is_on)
-    obs.obs_property_set_visible(obs.obs_properties_get(props, "grid_x_offset"), grid_checkbox_is_on)
-    obs.obs_property_set_visible(obs.obs_properties_get(props, "grid_y_offset"), grid_checkbox_is_on)
-    obs.obs_property_set_visible(obs.obs_properties_get(props, "grid_split_screen"), grid_checkbox_is_on)
+    update_specific_layout_ui_visibility(props, "grid", grid_checkbox_is_on)
 
     refresh_all()
     return true
@@ -1079,14 +1095,7 @@ local function on_reaction_enabled_changed(props, property, settings)
     state.ui.reaction_checkbox_latest = reaction_checkbox_is_on 
 
     update_actual_layout_operational_states(state.ui.grid_checkbox_latest, reaction_checkbox_is_on, state.ui.highlight_checkbox_latest)
-
-    obs.obs_property_set_visible(obs.obs_properties_get(props, "react_scene"), reaction_checkbox_is_on)
-    obs.obs_property_set_visible(obs.obs_properties_get(props, "reaction_content_prefix"), reaction_checkbox_is_on)
-    obs.obs_property_set_visible(obs.obs_properties_get(props, "save_reaction_prefix"), reaction_checkbox_is_on)
-    obs.obs_property_set_visible(obs.obs_properties_get(props, "react_spacing"), reaction_checkbox_is_on)
-    obs.obs_property_set_visible(obs.obs_properties_get(props, "react_x_offset"), reaction_checkbox_is_on)
-    obs.obs_property_set_visible(obs.obs_properties_get(props, "react_y_offset"), reaction_checkbox_is_on)
-    obs.obs_property_set_visible(obs.obs_properties_get(props, "camera_split"), reaction_checkbox_is_on)
+    update_specific_layout_ui_visibility(props, "reaction", reaction_checkbox_is_on)
     
     refresh_all()
     return true
@@ -1097,14 +1106,7 @@ local function on_highlight_enabled_changed(props, property, settings)
     state.ui.highlight_checkbox_latest = highlight_checkbox_is_on 
 
     update_actual_layout_operational_states(state.ui.grid_checkbox_latest, state.ui.reaction_checkbox_latest, highlight_checkbox_is_on)
-
-    obs.obs_property_set_visible(obs.obs_properties_get(props, "highlight_scene"), highlight_checkbox_is_on)
-    obs.obs_property_set_visible(obs.obs_properties_get(props, "highlight_main_source_prefix"), highlight_checkbox_is_on)
-    obs.obs_property_set_visible(obs.obs_properties_get(props, "save_highlight_prefix"), highlight_checkbox_is_on)
-    obs.obs_property_set_visible(obs.obs_properties_get(props, "highlight_spacing"), highlight_checkbox_is_on)
-    obs.obs_property_set_visible(obs.obs_properties_get(props, "highlight_x_offset"), highlight_checkbox_is_on)
-    obs.obs_property_set_visible(obs.obs_properties_get(props, "highlight_y_offset"), highlight_checkbox_is_on)
-    obs.obs_property_set_visible(obs.obs_properties_get(props, "highlight_camera_split"), highlight_checkbox_is_on)
+    update_specific_layout_ui_visibility(props, "highlight", highlight_checkbox_is_on)
     
     refresh_all()
     return true
@@ -1225,9 +1227,9 @@ end
 -- =============================================
 function refresh_all() 
     if not state.script_active then return end
-    process_grid_browsers() -- Processa state.grid.scene_name por padrão, se habilitado
-    process_react_browsers() -- Pode fazer fallback para process_grid_browsers(state.reaction.scene_name)
-    process_highlight_browsers() -- Pode fazer fallback para process_grid_browsers(state.highlight.scene_name)
+    process_grid_browsers() 
+    process_react_browsers() 
+    process_highlight_browsers() 
 end
 
 -- =============================================
@@ -1235,25 +1237,33 @@ end
 -- =============================================
 function script_properties()
     local props = obs.obs_properties_create()
+    global_props_ref = props 
+    state.ui.elements = {} -- Limpa referências antigas
+
     local scenes = obs.obs_frontend_get_scenes()
 
     if scenes then
+        -- Language
         state.ui.elements[1] = obs.obs_properties_add_list(props, "language_name", state.translations[1] or "Language", obs.OBS_COMBO_TYPE_LIST, obs.OBS_COMBO_FORMAT_STRING)
         for _, lang in ipairs(LANGUAGE_NAMES) do
             obs.obs_property_list_add_string(state.ui.elements[1], lang, lang)
         end
         obs.obs_property_set_modified_callback(state.ui.elements[1], on_language_changed)
 
+        -- General Camera Prefix
         state.ui.elements[5] = obs.obs_properties_add_text(props, "general_camera_prefix", state.translations[5] or "General Camera Prefix", obs.OBS_TEXT_DEFAULT)
         obs.obs_property_set_modified_callback(state.ui.elements[5], on_general_camera_prefix_changed)
         obs.obs_properties_add_button(props, "save_general_camera_prefix", "✔ Save General Prefix", on_save_general_camera_prefix_clicked)
 
+        -- Grid Layout Section
         state.ui.elements[2] = obs.obs_properties_add_text(props, "grid_settings_label", state.translations[2] or "== Grid Settings ==", obs.OBS_TEXT_INFO)
         state.ui.elements[3] = obs.obs_properties_add_bool(props, "grid_enabled", state.translations[3] or "Enable Grid Layout")
         obs.obs_property_set_modified_callback(state.ui.elements[3], on_grid_enabled_changed)
+        
         state.ui.elements[4] = obs.obs_properties_add_list(props, "grid_scene", state.translations[4] or "Grid Scene", obs.OBS_COMBO_TYPE_EDITABLE, obs.OBS_COMBO_FORMAT_STRING)
         for _, scene in ipairs(scenes) do obs.obs_property_list_add_string(state.ui.elements[4], obs.obs_source_get_name(scene), obs.obs_source_get_name(scene)) end
         obs.obs_property_set_modified_callback(state.ui.elements[4], on_grid_scene_changed)
+        
         state.ui.elements[6] = obs.obs_properties_add_int_slider(props, "grid_spacing", state.translations[6] or "Grid Spacing", 0, 100, 1)
         obs.obs_property_set_modified_callback(state.ui.elements[6], on_grid_spacing_changed)
         state.ui.elements[7] = obs.obs_properties_add_int_slider(props, "grid_margin", state.translations[7] or "Grid Margin", 0, math.floor(state.screen_height / 2), 1)
@@ -1264,16 +1274,21 @@ function script_properties()
         obs.obs_property_set_modified_callback(state.ui.elements[9], on_grid_y_offset_changed)
         state.ui.elements[10] = obs.obs_properties_add_bool(props, "grid_split_screen", state.translations[10] or "Split Screen for 2 Cameras")
         obs.obs_property_set_modified_callback(state.ui.elements[10], on_grid_split_screen_changed)
+        update_specific_layout_ui_visibility(props, "grid", state.ui.grid_checkbox_latest)
 
+        -- Reaction Layout Section
         state.ui.elements[11] = obs.obs_properties_add_text(props, "react_settings_label", state.translations[11] or "== Reaction Settings ==", obs.OBS_TEXT_INFO)
         state.ui.elements[12] = obs.obs_properties_add_bool(props, "reaction_enabled", state.translations[12] or "Enable Reaction Layout")
         obs.obs_property_set_modified_callback(state.ui.elements[12], on_reaction_enabled_changed)
+
         state.ui.elements[13] = obs.obs_properties_add_list(props, "react_scene", state.translations[13] or "Reaction Scene", obs.OBS_COMBO_TYPE_EDITABLE, obs.OBS_COMBO_FORMAT_STRING)
         for _, scene in ipairs(scenes) do obs.obs_property_list_add_string(state.ui.elements[13], obs.obs_source_get_name(scene), obs.obs_source_get_name(scene)) end
         obs.obs_property_set_modified_callback(state.ui.elements[13], on_react_scene_changed)
+        
         state.ui.elements[15] = obs.obs_properties_add_text(props, "reaction_content_prefix", state.translations[15] or "Reacted Content Prefix", obs.OBS_TEXT_DEFAULT)
         obs.obs_property_set_modified_callback(state.ui.elements[15], on_content_prefix_changed)
         obs.obs_properties_add_button(props, "save_reaction_prefix", "✔ Save Window Prefix", on_save_reaction_prefix_clicked)
+        
         state.ui.elements[16] = obs.obs_properties_add_int_slider(props, "react_spacing", state.translations[16] or "Reaction Spacing", 0, 100, 1)
         obs.obs_property_set_modified_callback(state.ui.elements[16], on_react_spacing_changed)
         state.ui.elements[17] = obs.obs_properties_add_int_slider(props, "react_x_offset", state.translations[17] or "Reaction X Offset", -state.screen_width, state.screen_width, 1)
@@ -1282,16 +1297,21 @@ function script_properties()
         obs.obs_property_set_modified_callback(state.ui.elements[18], on_react_y_offset_changed)
         state.ui.elements[19] = obs.obs_properties_add_bool(props, "camera_split", state.translations[19] or "Distribute cameras between both sides")
         obs.obs_property_set_modified_callback(state.ui.elements[19], on_camera_split_changed)
+        update_specific_layout_ui_visibility(props, "reaction", state.ui.reaction_checkbox_latest)
 
+        -- Highlight Layout Section
         state.ui.elements[20] = obs.obs_properties_add_text(props, "highlight_settings_label", state.translations[20] or "== Highlight Settings ==", obs.OBS_TEXT_INFO)
         state.ui.elements[21] = obs.obs_properties_add_bool(props, "highlight_enabled", state.translations[21] or "Enable Highlight Layout")
         obs.obs_property_set_modified_callback(state.ui.elements[21], on_highlight_enabled_changed)
+
         state.ui.elements[22] = obs.obs_properties_add_list(props, "highlight_scene", state.translations[22] or "Highlight Scene", obs.OBS_COMBO_TYPE_EDITABLE, obs.OBS_COMBO_FORMAT_STRING)
         for _, scene in ipairs(scenes) do obs.obs_property_list_add_string(state.ui.elements[22], obs.obs_source_get_name(scene), obs.obs_source_get_name(scene)) end
         obs.obs_property_set_modified_callback(state.ui.elements[22], on_highlight_scene_changed)
+
         state.ui.elements[24] = obs.obs_properties_add_text(props, "highlight_main_source_prefix", state.translations[24] or "Highlight Main Source Prefix", obs.OBS_TEXT_DEFAULT)
         obs.obs_property_set_modified_callback(state.ui.elements[24], on_highlight_main_prefix_changed)
         obs.obs_properties_add_button(props, "save_highlight_prefix", "✔ Save Main Source Prefix", on_save_highlight_prefix_clicked)
+        
         state.ui.elements[25] = obs.obs_properties_add_int_slider(props, "highlight_spacing", state.translations[25] or "Highlight Spacing", 0, 100, 1)
         obs.obs_property_set_modified_callback(state.ui.elements[25], on_highlight_spacing_changed)
         state.ui.elements[26] = obs.obs_properties_add_int_slider(props, "highlight_x_offset", state.translations[26] or "Highlight X Offset", -state.screen_width, state.screen_width, 1)
@@ -1300,6 +1320,7 @@ function script_properties()
         obs.obs_property_set_modified_callback(state.ui.elements[27], on_highlight_y_offset_changed)
         state.ui.elements[28] = obs.obs_properties_add_bool(props, "highlight_camera_split", state.translations[28] or "Distribute cameras between both sides (Highlight)")
         obs.obs_property_set_modified_callback(state.ui.elements[28], on_highlight_camera_split_changed)
+        update_specific_layout_ui_visibility(props, "highlight", state.ui.highlight_checkbox_latest)
 
         obs.source_list_release(scenes)
     end
@@ -1313,9 +1334,9 @@ function script_load(settings)
     state.translations = LANGUAGES[state.current_language] or LANGUAGES["English"]
 
     state.source_prefix = obs.obs_data_get_string(settings, "general_camera_prefix") or
-                          obs.obs_data_get_string(settings, "grid_prefix") or
-                          obs.obs_data_get_string(settings, "react_prefix") or
-                          obs.obs_data_get_string(settings, "highlight_camera_prefix") or ""
+                          obs.obs_data_get_string(settings, "grid_prefix") or 
+                          obs.obs_data_get_string(settings, "react_prefix") or 
+                          obs.obs_data_get_string(settings, "highlight_camera_prefix") or "" 
     state.reaction.content_prefix = obs.obs_data_get_string(settings, "reaction_content_prefix") or ""
     state.highlight.main_source_prefix = obs.obs_data_get_string(settings, "highlight_main_source_prefix") or ""
 
@@ -1326,39 +1347,44 @@ function script_load(settings)
     update_actual_layout_operational_states(state.ui.grid_checkbox_latest, state.ui.reaction_checkbox_latest, state.ui.highlight_checkbox_latest)
 
     state.grid.scene_name = obs.obs_data_get_string(settings, "grid_scene") or ""
-    state.grid.spacing = obs.obs_data_get_int(settings, "grid_spacing") or 20
-    state.grid.margin = obs.obs_data_get_int(settings, "grid_margin") or 0
-    state.grid.x_offset = obs.obs_data_get_int(settings, "grid_x_offset") or 0
-    state.grid.y_offset = obs.obs_data_get_int(settings, "grid_y_offset") or 0
-    state.grid.split_screen = obs.obs_data_get_bool(settings, "grid_split_screen") or false
+    state.grid.spacing = obs.obs_data_get_int(settings, "grid_spacing") 
+    state.grid.margin = obs.obs_data_get_int(settings, "grid_margin")
+    state.grid.x_offset = obs.obs_data_get_int(settings, "grid_x_offset")
+    state.grid.y_offset = obs.obs_data_get_int(settings, "grid_y_offset")
+    state.grid.split_screen = obs.obs_data_get_bool(settings, "grid_split_screen")
 
     state.reaction.scene_name = obs.obs_data_get_string(settings, "react_scene") or ""
-    state.reaction.spacing = obs.obs_data_get_int(settings, "react_spacing") or 30
-    state.reaction.x_offset = obs.obs_data_get_int(settings, "react_x_offset") or 0
-    state.reaction.y_offset = obs.obs_data_get_int(settings, "react_y_offset") or 0
-    state.reaction.split_cameras = obs.obs_data_get_bool(settings, "camera_split") or false
+    state.reaction.spacing = obs.obs_data_get_int(settings, "react_spacing")
+    state.reaction.x_offset = obs.obs_data_get_int(settings, "react_x_offset")
+    state.reaction.y_offset = obs.obs_data_get_int(settings, "react_y_offset")
+    state.reaction.split_cameras = obs.obs_data_get_bool(settings, "camera_split")
 
     state.highlight.scene_name = obs.obs_data_get_string(settings, "highlight_scene") or ""
-    state.highlight.spacing = obs.obs_data_get_int(settings, "highlight_spacing") or 30
-    state.highlight.x_offset = obs.obs_data_get_int(settings, "highlight_x_offset") or 0
-    state.highlight.y_offset = obs.obs_data_get_int(settings, "highlight_y_offset") or 0
-    state.highlight.split_cameras = obs.obs_data_get_bool(settings, "highlight_camera_split") or false
+    state.highlight.spacing = obs.obs_data_get_int(settings, "highlight_spacing")
+    state.highlight.x_offset = obs.obs_data_get_int(settings, "highlight_x_offset")
+    state.highlight.y_offset = obs.obs_data_get_int(settings, "highlight_y_offset")
+    state.highlight.split_cameras = obs.obs_data_get_bool(settings, "highlight_camera_split")
 
     state.ui.temp_general_camera_prefix = state.source_prefix
     state.ui.temp_content_prefix = state.reaction.content_prefix
     state.ui.temp_highlight_main_prefix = state.highlight.main_source_prefix
-
+    
     obs.timer_add(refresh_all, INTERVAL_MS)
 end
 
 function script_unload()
     state.script_active = false
     obs.timer_remove(refresh_all)
+    global_props_ref = nil 
 end
 
 function script_save(settings)
     obs.obs_data_set_string(settings, "language_name", state.current_language)
     obs.obs_data_set_string(settings, "general_camera_prefix", state.source_prefix)
+
+    obs.obs_data_set_bool(settings, "grid_enabled", state.ui.grid_checkbox_latest)
+    obs.obs_data_set_bool(settings, "reaction_enabled", state.ui.reaction_checkbox_latest)
+    obs.obs_data_set_bool(settings, "highlight_enabled", state.ui.highlight_checkbox_latest)
 
     obs.obs_data_set_string(settings, "grid_scene", state.grid.scene_name)
     obs.obs_data_set_int(settings, "grid_spacing", state.grid.spacing)
@@ -1394,14 +1420,47 @@ function script_description()
     Reaction and Highlight layouts will fallback to Grid layout if their specific camera sources are not found AND Grid layout is enabled.]]
 end
 
+function script_defaults(settings)
+    obs.obs_data_set_default_bool(settings, "grid_enabled", false)
+    obs.obs_data_set_default_bool(settings, "reaction_enabled", false)
+    obs.obs_data_set_default_bool(settings, "highlight_enabled", false)
+
+    obs.obs_data_set_default_string(settings, "language_name", "English")
+    obs.obs_data_set_default_string(settings, "general_camera_prefix", "")
+    
+    obs.obs_data_set_default_string(settings, "grid_scene", "")
+    obs.obs_data_set_default_int(settings, "grid_spacing", 20)
+    obs.obs_data_set_default_int(settings, "grid_margin", 0)
+    obs.obs_data_set_default_int(settings, "grid_x_offset", 0)
+    obs.obs_data_set_default_int(settings, "grid_y_offset", 0)
+    obs.obs_data_set_default_bool(settings, "grid_split_screen", false)
+
+    obs.obs_data_set_default_string(settings, "react_scene", "")
+    obs.obs_data_set_default_string(settings, "reaction_content_prefix", "")
+    obs.obs_data_set_default_int(settings, "react_spacing", 30)
+    obs.obs_data_set_default_int(settings, "react_x_offset", 0)
+    obs.obs_data_set_default_int(settings, "react_y_offset", 0)
+    obs.obs_data_set_default_bool(settings, "camera_split", false)
+
+    obs.obs_data_set_default_string(settings, "highlight_scene", "")
+    obs.obs_data_set_default_string(settings, "highlight_main_source_prefix", "")
+    obs.obs_data_set_default_int(settings, "highlight_spacing", 30)
+    obs.obs_data_set_default_int(settings, "highlight_x_offset", 0)
+    obs.obs_data_set_default_int(settings, "highlight_y_offset", 0)
+    obs.obs_data_set_default_bool(settings, "highlight_camera_split", false)
+end
+
+
 function script_update(settings)
     state.current_language = obs.obs_data_get_string(settings, "language_name") or state.current_language
     state.translations = LANGUAGES[state.current_language] or LANGUAGES["English"]
 
+    -- Atualiza os valores temporários da UI com o que está atualmente nos campos de texto dos settings
     state.ui.temp_general_camera_prefix = obs.obs_data_get_string(settings, "general_camera_prefix")
     state.ui.temp_content_prefix = obs.obs_data_get_string(settings, "reaction_content_prefix")
     state.ui.temp_highlight_main_prefix = obs.obs_data_get_string(settings, "highlight_main_source_prefix")
 
+    -- Carrega outras configurações
     state.grid.scene_name = obs.obs_data_get_string(settings, "grid_scene") or state.grid.scene_name
     state.grid.spacing = obs.obs_data_get_int(settings, "grid_spacing")
     state.grid.margin = obs.obs_data_get_int(settings, "grid_margin")
@@ -1421,21 +1480,23 @@ function script_update(settings)
     state.highlight.y_offset = obs.obs_data_get_int(settings, "highlight_y_offset")
     state.highlight.split_cameras = obs.obs_data_get_bool(settings, "highlight_camera_split")
 
-    state.ui.grid_checkbox_latest = obs.obs_data_get_bool(settings, "grid_enabled")
-    state.ui.reaction_checkbox_latest = obs.obs_data_get_bool(settings, "reaction_enabled")
-    state.ui.highlight_checkbox_latest = obs.obs_data_get_bool(settings, "highlight_enabled")
+    local grid_enabled_from_settings = obs.obs_data_get_bool(settings, "grid_enabled")
+    local reaction_enabled_from_settings = obs.obs_data_get_bool(settings, "reaction_enabled")
+    local highlight_enabled_from_settings = obs.obs_data_get_bool(settings, "highlight_enabled")
 
-    update_actual_layout_operational_states(state.ui.grid_checkbox_latest, state.ui.reaction_checkbox_latest, state.ui.highlight_checkbox_latest)
+    state.ui.grid_checkbox_latest = grid_enabled_from_settings
+    state.ui.reaction_checkbox_latest = reaction_enabled_from_settings
+    state.ui.highlight_checkbox_latest = highlight_enabled_from_settings
     
-    if obs.obs_data_get_string(settings, "general_camera_prefix") ~= state.ui.temp_general_camera_prefix then
-        obs.obs_data_set_string(settings, "general_camera_prefix", state.ui.temp_general_camera_prefix)
-    end
-    if obs.obs_data_get_string(settings, "reaction_content_prefix") ~= state.ui.temp_content_prefix then
-         obs.obs_data_set_string(settings, "reaction_content_prefix", state.ui.temp_content_prefix)
-    end
-    if obs.obs_data_get_string(settings, "highlight_main_source_prefix") ~= state.ui.temp_highlight_main_prefix then
-        obs.obs_data_set_string(settings, "highlight_main_source_prefix", state.ui.temp_highlight_main_prefix)
+    update_actual_layout_operational_states(grid_enabled_from_settings, reaction_enabled_from_settings, highlight_enabled_from_settings)
+    
+    if global_props_ref then
+        update_specific_layout_ui_visibility(global_props_ref, "grid", grid_enabled_from_settings)
+        update_specific_layout_ui_visibility(global_props_ref, "reaction", reaction_enabled_from_settings)
+        update_specific_layout_ui_visibility(global_props_ref, "highlight", highlight_enabled_from_settings)
+        update_ui_texts(global_props_ref)
     end
 
     refresh_all()
 end
+
