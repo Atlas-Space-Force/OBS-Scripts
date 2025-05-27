@@ -11,7 +11,7 @@
   "customCss": {
     "title": "Custom CSS",
     "label": "Enter your custom CSS here:",
-    "description": "This CSS will be applied to the page and saved locally."
+    "description": "This CSS will be applied to the sources."
   },
   "obsConnection": {
     "title": "OBS WebSocket Connection",
