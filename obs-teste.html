@@ -776,13 +776,12 @@
         <div class="settings-group">
           <div class="flex-row" style="align-items: flex-end; gap: 15px">
             <div>
-              <label for="sourceSizing" data-i18n="obsTargetSettings.newSourceSizing.label">Default Source Sizing (for scenes without specific layout):</label>
+              <label for="sourceSizing" data-i18n="obsTargetSettings.newSourceSizing.label">Default Source Sizing:</label>
               <select id="sourceSizing" style="width: 250px">
                 <option value="defaultSize" data-i18n="obsTargetSettings.newSourceSizing.defaultSizeOption">Default (1920x1080 at 0,0)</option>
                 <option value="bestFit" data-i18n="obsTargetSettings.newSourceSizing.bestFitOption">Best Fit (Preserve Aspect)</option>
                 <option value="stretchToFill" data-i18n="obsTargetSettings.newSourceSizing.stretchToFillOption">Stretch to Fill Screen</option>
                 </select>
-              <small data-i18n="obsTargetSettings.newSourceSizing.overrideNote">Specific layouts defined in the "Layouts" section will override this for those scenes.</small>
             </div>
             <div>
               <label for="sourceCodec" data-i18n="obsTargetSettings.codec.label">Codec:</label>
@@ -806,6 +805,7 @@
                 >
               </div>
             </div>
+            <small data-i18n="obsTargetSettings.newSourceSizing.overrideNote">Specific layouts defined in the "Layouts" section will override these for those scenes.</small>
           </div>
         </div>
       </div>

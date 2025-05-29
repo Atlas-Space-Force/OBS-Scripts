@@ -96,12 +96,12 @@
     "autoAddSourcesLabel": "Auto-add new streams as sources",
     "autoRemoveSourcesLabel": "Auto-remove sources on disconnect",
     "newSourceSizing": {
-        "label": "Default Source Sizing (for scenes without specific layout):",
+        "label": "Default Source Sizing:",
         "defaultSizeOption": "Default (1920x1080 at 0,0)",
         "bestFitOption": "Best Fit (Preserve Aspect)",
         "stretchToFillOption": "Stretch to Fill Screen",
         "autoGridOption": "Auto Grid Layout",
-        "overrideNote": "Specific layouts defined in the \"Layouts\" section will override this for those scenes."
+        "overrideNote": "Specific layouts defined in the \"Layouts\" section will override these for those scenes."
     },
     "codec": {
         "label": "Codec:",

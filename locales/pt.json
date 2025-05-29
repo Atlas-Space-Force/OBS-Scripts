@@ -96,12 +96,12 @@
     "autoAddSourcesLabel": "Adicionar automaticamente novos streams como fontes",
     "autoRemoveSourcesLabel": "Remover automaticamente fontes ao desconectar",
     "newSourceSizing": {
-        "label": "Dimensionamento Padrão de Fonte (para cenas sem layout específico):",
+        "label": "Dimensionamento Padrão de Fonte:",
         "defaultSizeOption": "Padrão (1920x1080 em 0,0)",
         "bestFitOption": "Melhor Ajuste (Preservar Proporção)",
         "stretchToFillOption": "Esticar para Preencher Tela",
         "autoGridOption": "Layout de Grade Automático",
-        "overrideNote": "Layouts específicos definidos na seção \"Layouts\" irão sobrescrever esta configuração para aquelas cenas."
+        "overrideNote": "Layouts específicos definidos na seção \"Layouts\" irão sobrescrever estas configurações para aquelas cenas."
     },
     "codec": {
         "label": "Codec:",
