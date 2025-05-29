@@ -30,7 +30,8 @@
     "statusError": "Status: Error",
     "statusErrorPrefixesMissing": "Status: Error - Prefixes missing",
     "statusErrorUrlMissing": "Status: Error - URL missing",
-    "statusErrorTimeout": "Status: Error - Connection timed out"
+    "statusErrorTimeout": "Status: Error - Connection timed out",
+    "statusErrorCameraPrefixMissing": "Status: Error - Camera Prefix Missing"
   },
   "vdoNinjaSettings": {
     "title": "VDO.Ninja Settings",
@@ -76,7 +77,7 @@
   },
   "obsTargetSettings": {
     "title": "OBS Target Settings",
-    "targetSceneLabel": "Target Scene:",
+    "targetSceneLabel": "Target Scene (Default):",
     "selectSceneOption": "Select a scene...",
     "refetchScenesButton": "Re-Fetch Scenes",
     "copySourcesLabel": "Copy sources to other scenes (reference):",
@@ -88,22 +89,48 @@
         "heightLabel": "Height:"
     },
     "highlightScene": {
-        "title": "Highlight Scene:",
-        "selectSceneOption": "Select a scene for highlights..."
+        "title": "Highlight Scene (Legacy - Use Layouts):",
+        "selectSceneOption": "Select a scene for highlights...",
+        "legacyDescription": "This is a legacy setting. Prefer using the new \"Layouts\" section for highlight functionality."
     },
     "autoAddSourcesLabel": "Auto-add new streams as sources",
     "autoRemoveSourcesLabel": "Auto-remove sources on disconnect",
     "newSourceSizing": {
-        "label": "New Source Sizing:",
+        "label": "Default Source Sizing (for scenes without specific layout):",
         "defaultSizeOption": "Default (1920x1080 at 0,0)",
         "bestFitOption": "Best Fit (Preserve Aspect)",
         "stretchToFillOption": "Stretch to Fill Screen",
-        "autoGridOption": "Auto Grid Layout"
+        "autoGridOption": "Auto Grid Layout",
+        "overrideNote": "Specific layouts defined in the \"Layouts\" section will override this for those scenes."
     },
     "codec": {
         "label": "Codec:",
         "noneOption": "none",
         "learnMoreTitle": "Learn more about codec options"
+    }
+  },
+  "sceneLayouts": {
+    "title": "Scene Layouts",
+    "addNewLayoutButton": "Add New Layout",
+    "description": "Define automatic layouts for specific OBS scenes. These will override the default source sizing for the configured scenes.",
+    "sceneLabel": "Scene:",
+    "selectSceneOption": "Select Scene...",
+    "layoutLabel": "Layout:",
+    "selectLayoutOption": "Select Layout...",
+    "layoutTypes": {
+        "grid": "Grid",
+        "reaction": "Reaction",
+        "highlight": "Highlight"
+    },
+    "removeLayoutTooltip": "Remove this layout configuration",
+    "controls": {
+        "margin": "Margin",
+        "spacing": "Spacing",
+        "offsetX": "X Offset",
+        "offsetY": "Y Offset",
+        "gridSplitScreenTwoCameras": "Split screen for 2 cameras (Grid)",
+        "distributeCameras": "Distribute cameras (Reaction/Highlight)",
+        "fallbackGridSettingsHeader": "Fallback Grid Settings (when main content is hidden/unavailable):"
     }
   },
   "activeStreams": {
@@ -144,6 +171,10 @@
     "loadedStreamMappings": "Loaded {{count}} stream mappings.",
     "errorLoadingStreamMappings": "Error loading stream mappings from localStorage: {{message}}",
     "warningStreamMappingElementsNotFound": "Warning: Could not find all expected elements in a stream mapping UI div.",
+    "loadedLayoutConfigs": "Loaded {{count}} scene layout configurations.",
+    "errorLoadingLayoutConfigs": "Error loading scene layout configurations: {{message}}",
+    "savedLayoutConfigs": "Saved {{count}} scene layout configurations.",
+    "errorHidingSource": "Error hiding source item {{sourceName}} in {{sceneName}}: {{message}}",
     "vdoNinja": {
         "disconnected": "Disconnected from VDO.Ninja.",
         "alreadyConnected": "Already connected to VDO.Ninja.",
@@ -164,6 +195,7 @@
     "obs": {
         "disconnecting": "Disconnecting from OBS WebSocket...",
         "errorPrefixesRequired": "Error: Camera, Reaction, and Highlight prefixes are required for OBS connection.",
+        "errorCameraPrefixRequired": "Error: General Camera prefix is required for OBS connection.",
         "errorUrlRequired": "Error: OBS WebSocket URL is required.",
         "attemptingConnection": "Attempting to connect to OBS WebSocket at {{url}}...",
         "connectionTimeout": "OBS WebSocket connection attempt timed out.",
@@ -199,6 +231,8 @@
         "failedToFetchScenes": "Failed to fetch OBS scenes or no scenes returned.",
         "errorFetchingScenes": "Error fetching OBS scenes: {{message}}",
         "cannotHighlightNotConnected": "Cannot highlight: Not connected to OBS.",
+        "highlightLayoutActiveManualDisabled": "Scene '{{sceneName}}' uses the new Highlight Layout. Manual highlight button is disabled for this stream. Use Layouts section.",
+        "highlightLayoutActiveManualLegacy": "Scene '{{sceneName}}' uses the new Highlight Layout. Manual highlight button may have limited effect or is superseded.",
         "stoppingScreenShareForHighlight": "A screen share is active ({{id}}). Stopping it before highlighting.",
         "studioModeSwitchHighlight": "Studio Mode Enabled - Triggering scene switch to Highlight Scene: '{{sceneName}}'.",
         "switchingToHighlightScene": "Triggering scene switch to Highlight Scene: '{{sceneName}}'.",
@@ -232,6 +266,7 @@
         "highlightingClicked": "Highlighting clicked stream {{id}}.",
         "streamSuccessfullyHighlighted": "Stream {{id}} successfully highlighted (renamed to {{newName}}).",
         "errorHighlightingClicked": "Error highlighting {{id}} (from {{sourceName}}): {{message}}",
+        "legacyHighlightUnhighlightOnRemove": "Stream {{id}} was legacy highlighted. Unhighlighting.",
         "cannotAddStreamNotConnected": "Cannot add stream \"{{label}}\" ({{id}}) to OBS: Not connected to OBS.",
         "cannotAddStreamNoTargetSceneName": "Cannot add stream \"{{label}}\" ({{id}}): Target OBS scene name is required but not set (no default and no mapping).",
         "highlightedVersionFound": "Highlighted version '{{sourceName}}' found for stream {{id}}. This will be managed.",
@@ -247,6 +282,11 @@
         "sourceGlobalUpdating": "Source '{{sourceName}}' already exists globally. Updating its settings.",
         "sourceFoundAsItemInScene": "Source '{{sourceName}}' found as item in scene '{{sceneName}}'.",
         "sourceGlobalNotInSceneAdding": "Source '{{sourceName}}' exists globally but not in scene '{{sceneName}}'. Adding it.",
+        "sourceNotInSceneAdding": "Source '{{sourceName}}' not in scene '{{sceneName}}'. Adding it.",
+        "sourceAddedToScene": "Source '{{sourceName}}' added to scene '{{sceneName}}', item ID: {{itemId}}.",
+        "errorCreatingSceneItem": "Error creating scene item for '{{sourceName}}' in '{{sceneName}}': {{message}}",
+        "errorCheckingSceneForItem": "Error checking for '{{sourceName}}' in scene '{{sceneName}}': {{message}}",
+        "errorApplyingInitialTransform": "Error applying initial default transform to '{{sourceName}}' in '{{sceneName}}': {{message}}",
         "attemptingCloneToMain": "Attempting to clone source '{{sourceName}}' to main scene '{{sceneName}}'.",
         "sourceExistsInMainScene": "Source '{{sourceName}}' already exists as an item in main scene '{{sceneName}}'.",
         "cloningToMainScene": "Cloning source '{{sourceName}}' to main scene '{{sceneName}}'.",
@@ -260,6 +300,22 @@
         "errorManagingStream": "Error managing stream '{{sourceName}}' (\"{{label}}\") in OBS: {{message}}",
         "cannotApplyTransformNoScene": "Cannot apply transform for source '{{sourceName}}': Scene name not provided.",
         "errorFetchingItemIdForTransform": "Error fetching scene item ID for transform of '{{sourceName}}' in '{{sceneName}}': {{message}}. Cannot apply transform.",
+        "triggeringLayoutUpdate": "Triggering layout update for scene '{{sceneName}}'...",
+        "noSceneItemsForLayout": "No scene items found in scene '{{sceneName}}' for layout update.",
+        "applyingConfiguredLayout": "Applying '{{layoutType}}' layout to scene '{{sceneName}}'. ({{count}} items)",
+        "unknownLayoutType": "Unknown layout type '{{layoutType}}' for scene '{{sceneName}}'. Applying default sizing.",
+        "noSpecificLayoutApplyingDefault": "No specific layout for scene '{{sceneName}}'. Applying default source sizing ('{{sizing}}').",
+        "errorTriggeringLayoutUpdate": "Error during layout update for scene '{{sceneName}}': {{message}}",
+        "applyingDefaultSizing": "Applying default source sizing ('{{sizing}}') to {{count}} items in scene '{{sceneName}}'.",
+        "errorApplyingDefaultTransformItem": "Error applying default transform to {{sourceName}} in {{sceneName}}: {{message}}",
+        "noSourcesForGridLayout": "No VDO.Ninja camera sources to apply Grid layout in scene '{{sceneName}}'.",
+        "applyingGridLayoutScene": "Applying Grid Layout to {{count}} VDO.Ninja camera sources in scene '{{sceneName}}'.",
+        "applyingGridSplitScreen": "Applying 2-camera split screen grid layout to scene '{{sceneName}}'.",
+        "reactionMainNotFoundFallback": "Main content for Reaction layout in scene '{{sceneName}}' not found/visible. Checking fallback.",
+        "highlightMainNotFoundFallback": "Main content for Highlight layout in scene '{{sceneName}}' not found/visible. Checking fallback.",
+        "applyingFallbackGridSpecific": "Applying fallback Grid layout to scene '{{sceneName}}' using specific settings from {{layoutType}} config.",
+        "noFallbackGridSettingsHidingAll": "No specific fallback Grid settings for {{layoutType}} in scene '{{sceneName}}'. Hiding all VDO sources.",
+        "applyTransformAndGridCalled": "applyTransformAndGrid called for {{sourceName}} in {{sceneName}}. Triggering full layout update for scene.",
         "autoGridEnabledRearranging": "Auto-grid enabled for scene '{{sceneName}}'. Triggering rearrange.",
         "errorApplyingNonGridTransform": "Error applying non-grid transform to '{{sourceName}}' (Item ID: {{itemId}}) in '{{sceneName}}': {{message}}",
         "cannotRearrangeStreams": "Cannot rearrange streams in scene '{{sceneName}}': OBS not connected, scene name missing, or auto-grid not selected.",
@@ -287,10 +343,14 @@
         "codecChangedUpdatingSources": "Codec changed to: {{codec}}. Updating OBS sources...",
         "codecChangedNotConnected": "OBS is not connected. Sources will not be updated with the new codec until reconnection and a new action.",
         "sourceUpdatedWithUrl": "Source '{{sourceName}}' updated with URL: {{url}}",
+        "sourceUpdatedWithUrlAndCss": "Source '{{sourceName}}' updated with URL: {{url}} and custom CSS.",
         "errorUpdatingCodecForSource": "Error updating codec for source '{{sourceName}}': {{message}}",
         "screenShareSourceUpdatedWithUrl": "Screen share source '{{sourceName}}' updated with URL: {{url}}",
+        "screenShareSourceUpdatedWithUrlAndCss": "Screen share source '{{sourceName}}' updated with URL: {{url}} and custom CSS.",
         "errorUpdatingCodecForScreenShare": "Error updating codec for screen share source '{{sourceName}}': {{message}}",
-        "codecUpdateComplete": "Codec update for OBS sources complete."
+        "codecUpdateComplete": "Codec update for OBS sources complete.",
+        "codecCssUpdateComplete": "Codec/CSS update for OBS sources complete.",
+        "inputNameChanged": "OBS Event: Input name changed from '{{oldName}}' to '{{newName}}'. Checking relevant scenes for layout updates."
     }
   }
 }

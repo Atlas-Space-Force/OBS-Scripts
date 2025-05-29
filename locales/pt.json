@@ -30,7 +30,8 @@
     "statusError": "Status: Erro",
     "statusErrorPrefixesMissing": "Status: Erro - Prefixos faltando",
     "statusErrorUrlMissing": "Status: Erro - URL faltando",
-    "statusErrorTimeout": "Status: Erro - Tempo de conexão esgotado"
+    "statusErrorTimeout": "Status: Erro - Tempo de conexão esgotado",
+    "statusErrorCameraPrefixMissing": "Status: Erro - Prefixo da Câmera Faltando"
   },
   "vdoNinjaSettings": {
     "title": "Configurações do VDO.Ninja",
@@ -76,7 +77,7 @@
   },
   "obsTargetSettings": {
     "title": "Configurações de Alvo do OBS",
-    "targetSceneLabel": "Cena Alvo:",
+    "targetSceneLabel": "Cena Alvo (Padrão):",
     "selectSceneOption": "Selecione uma cena...",
     "refetchScenesButton": "Buscar Cenas Novamente",
     "copySourcesLabel": "Copiar fontes para outras cenas (referência):",
@@ -88,22 +89,48 @@
         "heightLabel": "Altura:"
     },
     "highlightScene": {
-        "title": "Cena de Destaque:",
-        "selectSceneOption": "Selecione uma cena de Destaque..."
+        "title": "Cena de Destaque (Legado - Use Layouts):",
+        "selectSceneOption": "Selecione uma cena de Destaque...",
+        "legacyDescription": "Esta é uma configuração legada. Prefira usar a nova seção \"Layouts\" para funcionalidade de destaque."
     },
     "autoAddSourcesLabel": "Adicionar automaticamente novos streams como fontes",
     "autoRemoveSourcesLabel": "Remover automaticamente fontes ao desconectar",
     "newSourceSizing": {
-        "label": "Dimensionamento de Nova Fonte:",
+        "label": "Dimensionamento Padrão de Fonte (para cenas sem layout específico):",
         "defaultSizeOption": "Padrão (1920x1080 em 0,0)",
         "bestFitOption": "Melhor Ajuste (Preservar Proporção)",
         "stretchToFillOption": "Esticar para Preencher Tela",
-        "autoGridOption": "Layout de Grade Automático"
+        "autoGridOption": "Layout de Grade Automático",
+        "overrideNote": "Layouts específicos definidos na seção \"Layouts\" irão sobrescrever esta configuração para aquelas cenas."
     },
     "codec": {
         "label": "Codec:",
         "noneOption": "nenhum",
         "learnMoreTitle": "Saiba mais sobre as opções de codec"
+    }
+  },
+  "sceneLayouts": {
+    "title": "Layouts de Cena",
+    "addNewLayoutButton": "Adicionar Novo Layout",
+    "description": "Defina layouts automáticos para cenas específicas do OBS. Estes irão sobrescrever o dimensionamento padrão de fonte para as cenas configuradas.",
+    "sceneLabel": "Cena:",
+    "selectSceneOption": "Selecione a Cena...",
+    "layoutLabel": "Layout:",
+    "selectLayoutOption": "Selecione o Layout...",
+    "layoutTypes": {
+        "grid": "Grade",
+        "reaction": "Reação",
+        "highlight": "Destaque"
+    },
+    "removeLayoutTooltip": "Remover esta configuração de layout",
+    "controls": {
+        "margin": "Margem",
+        "spacing": "Espaçamento",
+        "offsetX": "Deslocamento X",
+        "offsetY": "Deslocamento Y",
+        "gridSplitScreenTwoCameras": "Tela dividida para 2 câmeras (Grade)",
+        "distributeCameras": "Distribuir câmeras (Reação/Destaque)",
+        "fallbackGridSettingsHeader": "Configurações de Grade de Fallback (quando o conteúdo principal está oculto/indisponível):"
     }
   },
   "activeStreams": {
@@ -144,6 +171,10 @@
     "loadedStreamMappings": "{{count}} mapeamentos de stream carregados.",
     "errorLoadingStreamMappings": "Erro ao carregar mapeamentos de stream do localStorage: {{message}}",
     "warningStreamMappingElementsNotFound": "Aviso: Não foi possível encontrar todos os elementos esperados em uma div da UI de mapeamento de stream.",
+    "loadedLayoutConfigs": "{{count}} configurações de layout de cena carregadas.",
+    "errorLoadingLayoutConfigs": "Erro ao carregar configurações de layout de cena: {{message}}",
+    "savedLayoutConfigs": "{{count}} configurações de layout de cena salvas.",
+    "errorHidingSource": "Erro ao ocultar item de fonte {{sourceName}} em {{sceneName}}: {{message}}",
     "vdoNinja": {
         "disconnected": "Desconectado do VDO.Ninja.",
         "alreadyConnected": "Já conectado ao VDO.Ninja.",
@@ -164,6 +195,7 @@
     "obs": {
         "disconnecting": "Desconectando do OBS WebSocket...",
         "errorPrefixesRequired": "Erro: Prefixos de Câmera, Reação e Destaque são obrigatórios para conexão OBS.",
+        "errorCameraPrefixRequired": "Erro: Prefixo Geral da Câmera é obrigatório para conexão com o OBS.",
         "errorUrlRequired": "Erro: URL WebSocket OBS é obrigatória.",
         "attemptingConnection": "Tentando conectar ao OBS WebSocket em {{url}}...",
         "connectionTimeout": "Tentativa de conexão OBS WebSocket esgotou o tempo.",
@@ -199,6 +231,8 @@
         "failedToFetchScenes": "Falha ao buscar cenas OBS ou nenhuma cena retornada.",
         "errorFetchingScenes": "Erro ao buscar cenas OBS: {{message}}",
         "cannotHighlightNotConnected": "Não é possível destacar: Não conectado ao OBS.",
+        "highlightLayoutActiveManualDisabled": "A cena '{{sceneName}}' usa o novo Layout de Destaque. O botão de destaque manual está desabilitado para este stream. Use a seção Layouts.",
+        "highlightLayoutActiveManualLegacy": "A cena '{{sceneName}}' usa o novo Layout de Destaque. O botão de destaque manual pode ter efeito limitado ou ser substituído.",
         "stoppingScreenShareForHighlight": "Um compartilhamento de tela está ativo ({{id}}). Parando antes de destacar.",
         "studioModeSwitchHighlight": "Modo Estúdio Ativado - Acionando mudança de cena para Cena de Destaque: '{{sceneName}}'.",
         "switchingToHighlightScene": "Acionando mudança de cena para Cena de Destaque: '{{sceneName}}'.",
@@ -232,6 +266,7 @@
         "highlightingClicked": "Destacando stream clicado {{id}}.",
         "streamSuccessfullyHighlighted": "Stream {{id}} destacado com sucesso (renomeado para {{newName}}).",
         "errorHighlightingClicked": "Erro ao destacar {{id}} (de {{sourceName}}): {{message}}",
+        "legacyHighlightUnhighlightOnRemove": "O stream {{id}} era um destaque legado. Removendo o destaque.",
         "cannotAddStreamNotConnected": "Não é possível adicionar stream \"{{label}}\" ({{id}}) ao OBS: Não conectado ao OBS.",
         "cannotAddStreamNoTargetSceneName": "Não é possível adicionar stream \"{{label}}\" ({{id}}): Nome da cena alvo OBS é obrigatório mas não definido (sem padrão e sem mapeamento).",
         "highlightedVersionFound": "Versão destacada '{{sourceName}}' encontrada para stream {{id}}. Será gerenciada.",
@@ -247,6 +282,11 @@
         "sourceGlobalUpdating": "Fonte '{{sourceName}}' já existe globalmente. Atualizando suas configurações.",
         "sourceFoundAsItemInScene": "Fonte '{{sourceName}}' encontrada como item na cena '{{sceneName}}'.",
         "sourceGlobalNotInSceneAdding": "Fonte '{{sourceName}}' existe globalmente mas não na cena '{{sceneName}}'. Adicionando.",
+        "sourceNotInSceneAdding": "Fonte '{{sourceName}}' não está na cena '{{sceneName}}'. Adicionando.",
+        "sourceAddedToScene": "Fonte '{{sourceName}}' adicionada à cena '{{sceneName}}', ID do item: {{itemId}}.",
+        "errorCreatingSceneItem": "Erro ao criar item de cena para '{{sourceName}}' em '{{sceneName}}': {{message}}",
+        "errorCheckingSceneForItem": "Erro ao verificar por '{{sourceName}}' na cena '{{sceneName}}': {{message}}",
+        "errorApplyingInitialTransform": "Erro ao aplicar transformação padrão inicial para '{{sourceName}}' em '{{sceneName}}': {{message}}",
         "attemptingCloneToMain": "Tentando clonar fonte '{{sourceName}}' para cena principal '{{sceneName}}'.",
         "sourceExistsInMainScene": "Fonte '{{sourceName}}' já existe como item na cena principal '{{sceneName}}'.",
         "cloningToMainScene": "Clonando fonte '{{sourceName}}' para cena principal '{{sceneName}}'.",
@@ -260,6 +300,22 @@
         "errorManagingStream": "Erro ao gerenciar stream '{{sourceName}}' (\"{{label}}\") no OBS: {{message}}",
         "cannotApplyTransformNoScene": "Não é possível aplicar transformação para fonte '{{sourceName}}': Nome da cena não fornecido.",
         "errorFetchingItemIdForTransform": "Erro ao buscar ID do item de cena para transformação de '{{sourceName}}' em '{{sceneName}}': {{message}}. Não é possível aplicar transformação.",
+        "triggeringLayoutUpdate": "Acionando atualização de layout para a cena '{{sceneName}}'...",
+        "noSceneItemsForLayout": "Nenhum item de cena encontrado na cena '{{sceneName}}' para atualização de layout.",
+        "applyingConfiguredLayout": "Aplicando layout '{{layoutType}}' à cena '{{sceneName}}'. ({{count}} itens)",
+        "unknownLayoutType": "Tipo de layout '{{layoutType}}' desconhecido para a cena '{{sceneName}}'. Aplicando dimensionamento padrão.",
+        "noSpecificLayoutApplyingDefault": "Nenhum layout específico para a cena '{{sceneName}}'. Aplicando dimensionamento padrão de fonte ('{{sizing}}').",
+        "errorTriggeringLayoutUpdate": "Erro durante a atualização de layout para a cena '{{sceneName}}': {{message}}",
+        "applyingDefaultSizing": "Aplicando dimensionamento padrão de fonte ('{{sizing}}') para {{count}} itens na cena '{{sceneName}}'.",
+        "errorApplyingDefaultTransformItem": "Erro ao aplicar transformação padrão para {{sourceName}} em {{sceneName}}: {{message}}",
+        "noSourcesForGridLayout": "Nenhuma fonte de câmera VDO.Ninja para aplicar layout de Grade na cena '{{sceneName}}'.",
+        "applyingGridLayoutScene": "Aplicando Layout de Grade para {{count}} fontes de câmera VDO.Ninja na cena '{{sceneName}}'.",
+        "applyingGridSplitScreen": "Aplicando layout de grade de tela dividida para 2 câmeras à cena '{{sceneName}}'.",
+        "reactionMainNotFoundFallback": "Conteúdo principal para layout de Reação na cena '{{sceneName}}' não encontrado/visível. Verificando fallback.",
+        "highlightMainNotFoundFallback": "Conteúdo principal para layout de Destaque na cena '{{sceneName}}' não encontrado/visível. Verificando fallback.",
+        "applyingFallbackGridSpecific": "Aplicando layout de Grade de fallback à cena '{{sceneName}}' usando configurações específicas da configuração de {{layoutType}}.",
+        "noFallbackGridSettingsHidingAll": "Nenhuma configuração específica de Grade de fallback para {{layoutType}} na cena '{{sceneName}}'. Ocultando todas as fontes VDO.",
+        "applyTransformAndGridCalled": "applyTransformAndGrid chamado para {{sourceName}} em {{sceneName}}. Acionando atualização completa de layout para a cena.",
         "autoGridEnabledRearranging": "Grade automática ativada para cena '{{sceneName}}'. Acionando reorganização.",
         "errorApplyingNonGridTransform": "Erro ao aplicar transformação não-grade para '{{sourceName}}' (ID do Item: {{itemId}}) em '{{sceneName}}': {{message}}",
         "cannotRearrangeStreams": "Não é possível reorganizar streams na cena '{{sceneName}}': OBS não conectado, nome da cena faltando ou grade automática não selecionada.",
@@ -287,10 +343,14 @@
         "codecChangedUpdatingSources": "Codec alterado para: {{codec}}. Atualizando fontes OBS...",
         "codecChangedNotConnected": "OBS não está conectado. Fontes não serão atualizadas com novo codec até reconexão e nova ação.",
         "sourceUpdatedWithUrl": "Fonte '{{sourceName}}' atualizada com URL: {{url}}",
+        "sourceUpdatedWithUrlAndCss": "Fonte '{{sourceName}}' atualizada com URL: {{url}} e CSS personalizado.",
         "errorUpdatingCodecForSource": "Erro ao atualizar codec para fonte '{{sourceName}}': {{message}}",
         "screenShareSourceUpdatedWithUrl": "Fonte de compart. de tela '{{sourceName}}' atualizada com URL: {{url}}",
+        "screenShareSourceUpdatedWithUrlAndCss": "Fonte de compart. de tela '{{sourceName}}' atualizada com URL: {{url}} e CSS personalizado.",
         "errorUpdatingCodecForScreenShare": "Erro ao atualizar codec para fonte de compart. de tela '{{sourceName}}': {{message}}",
-        "codecUpdateComplete": "Atualização de codec para fontes OBS completa."
+        "codecUpdateComplete": "Atualização de codec para fontes OBS completa.",
+        "codecCssUpdateComplete": "Atualização de Codec/CSS para fontes OBS completa.",
+        "inputNameChanged": "Evento OBS: Nome da entrada alterado de '{{oldName}}' para '{{newName}}'. Verificando cenas relevantes para atualizações de layout."
     }
   }
 }
