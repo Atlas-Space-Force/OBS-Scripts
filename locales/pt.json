@@ -89,9 +89,8 @@
         "heightLabel": "Altura:"
     },
     "highlightScene": {
-        "title": "Cena de Destaque (Legado - Use Layouts):",
-        "selectSceneOption": "Selecione uma cena de Destaque...",
-        "legacyDescription": "Esta é uma configuração legada. Prefira usar a nova seção \"Layouts\" para funcionalidade de destaque."
+        "title": "Cena de Destaque:",
+        "selectSceneOption": "Selecione uma cena de Destaque..."
     },
     "autoAddSourcesLabel": "Adicionar automaticamente novos streams como fontes",
     "autoRemoveSourcesLabel": "Remover automaticamente fontes ao desconectar",
@@ -122,6 +121,7 @@
         "reaction": "Reação",
         "highlight": "Destaque"
     },
+    "noActiveLayouts": "Nenhum layout ativo",
     "removeLayoutTooltip": "Remover esta configuração de layout",
     "controls": {
         "margin": "Margem",

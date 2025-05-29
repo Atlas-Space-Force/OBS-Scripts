@@ -89,9 +89,8 @@
         "heightLabel": "Height:"
     },
     "highlightScene": {
-        "title": "Highlight Scene (Legacy - Use Layouts):",
-        "selectSceneOption": "Select a scene for highlights...",
-        "legacyDescription": "This is a legacy setting. Prefer using the new \"Layouts\" section for highlight functionality."
+        "title": "Highlight Scene:",
+        "selectSceneOption": "Select a scene for highlights..."
     },
     "autoAddSourcesLabel": "Auto-add new streams as sources",
     "autoRemoveSourcesLabel": "Auto-remove sources on disconnect",
@@ -122,6 +121,7 @@
         "reaction": "Reaction",
         "highlight": "Highlight"
     },
+    "noActiveLayouts": "No active layouts",
     "removeLayoutTooltip": "Remove this layout configuration",
     "controls": {
         "margin": "Margin",
