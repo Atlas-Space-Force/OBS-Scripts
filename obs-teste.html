@@ -122,6 +122,10 @@
         opacity: 0;
         overflow: hidden;
       }
+      /* Correction for Issue 1: Allow Scene Layouts collapsible to grow */
+      .container:nth-of-type(6) .collapsible-content:not(.collapsed) {
+        max-height: none; /* Allow it to grow indefinitely */
+      }
       label {
         display: block;
         margin-bottom: 6px;
@@ -397,9 +401,6 @@
       #loadScenesBtn {
         margin-left: 5px;
         vertical-align: top;
-      }
-      .container:nth-child(6)
-        .collapsible-content:not(.collapsed) {
       }
       .prefix-input-label {
         margin-bottom: 4px;
@@ -809,8 +810,7 @@
         </div>
       </div>
     </div>
-    <div class="container">
-      <h2 class="collapsible" data-state="collapse" data-i18n="sceneLayouts.title">Scene Layouts</h2>
+    <div class="container"> <h2 class="collapsible" data-state="collapse" data-i18n="sceneLayouts.title">Scene Layouts</h2>
       <div class="collapsible-content collapsed">
         <div id="layoutConfigContainer">
           <div id="layoutConfigsList" class="layout-config-list">
@@ -1044,7 +1044,7 @@
       vdoNinjaConnectionStatus.id = "vdoNinjaConnectionStatus";
       vdoNinjaConnectionStatus.style.marginLeft = "5px";
       const vdoNinjaSettingsContainer = document.querySelector(
-        "div.container:nth-child(4) .collapsible-content" 
+        "div.container:nth-of-type(3) .collapsible-content" // Corrected to nth-of-type(3) for VDO.Ninja Settings
       );
       const buttonsDiv = document.createElement("div");
       buttonsDiv.style.marginTop = "10px";
@@ -3560,20 +3560,22 @@ async function applyReactionOrHighlightLayoutShared(sceneName, vdoNinjaSceneItem
 
     const positionCameras = async (cameraList, startX, columnWidth) => {
         if (cameraList.length > 0 && columnWidth > 0) {
-            const camAvailableHeightTotal = canvasHeight - (cameraList.length + 1) * spacing;
+            const camAvailableHeightTotal = canvasHeight - (cameraList.length + 1) * spacing; // Total height available for cameras in this column
             let camCellHeight = (cameraList.length > 0) ? Math.max(1, camAvailableHeightTotal / cameraList.length) : 0;
             let camCellOriginalWidthBeforeCrop = camCellHeight * itemAspectRatio;
             let camCellVisibleWidth = camCellOriginalWidthBeforeCrop * cameraCropRatio;
 
-            if (camCellVisibleWidth > columnWidth - spacing || camCellVisibleWidth <= 0) {
-                 camCellVisibleWidth = Math.max(1, columnWidth - spacing);
+            // Correction for Issue 3: Use columnWidth directly, not columnWidth - spacing
+            if (camCellVisibleWidth > columnWidth || camCellVisibleWidth <= 0) {
+                 camCellVisibleWidth = Math.max(1, columnWidth); 
                  if (cameraCropRatio > 0) {
                     camCellOriginalWidthBeforeCrop = camCellVisibleWidth / cameraCropRatio;
                     camCellHeight = camCellOriginalWidthBeforeCrop / itemAspectRatio;
                  } else { camCellHeight = 0; }
             }
             const actualCamerasHeight = cameraList.length * camCellHeight + Math.max(0, cameraList.length - 1) * spacing;
-            let currentCamY = spacing + (canvasHeight - actualCamerasHeight) / 2 + offsetY; 
+            // Correction for Issue 2: Remove initial 'spacing +' for Y centering
+            let currentCamY = (canvasHeight - actualCamerasHeight) / 2 + offsetY; 
 
             for (const camItem of cameraList) {
                 const camSrcInfo = await getInputSettingsSafe(camItem.sourceName, 1920, 1080); 
@@ -3602,7 +3604,11 @@ async function applyReactionOrHighlightLayoutShared(sceneName, vdoNinjaSceneItem
     
     await positionCameras(camsLeft, spacing + offsetX, leftCameraAreaWidth);
     if (distributeCameras && camsRight.length > 0) {
-        await positionCameras(camsRight, canvasWidth - rightCameraAreaWidth - spacing + offsetX, rightCameraAreaWidth);
+        // For the right column, startX should be the left edge of that column.
+        // The main content is positioned at mainContentVisualX with mainContentVisualWidth.
+        // So the right cameras start after the main content + spacing.
+        const startXRight = mainContentVisualX + mainContentVisualWidth + spacing;
+        await positionCameras(camsRight, startXRight, rightCameraAreaWidth);
     }
 
 
