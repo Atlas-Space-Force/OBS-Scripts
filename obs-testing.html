@@ -122,9 +122,8 @@
         opacity: 0;
         overflow: hidden;
       }
-      /* Correction for Issue 1: Allow Scene Layouts collapsible to grow */
       .container:nth-of-type(6) .collapsible-content:not(.collapsed) {
-        max-height: none; /* Allow it to grow indefinitely */
+        max-height: none; 
       }
       label {
         display: block;
@@ -170,6 +169,11 @@
         background-repeat: no-repeat;
         background-position: right 10px center;
         background-size: 12px;
+      }
+      select[multiple] {
+        background-image: none; 
+        min-height: 100px; 
+        padding-right: 10px; 
       }
       button {
         padding: 10px 15px;
@@ -255,13 +259,20 @@
         margin-top: 5px;
         transition: max-height 0.3s ease;
       }
-      .stream-list:empty, .layout-config-list:empty {
+      .stream-list:empty { 
         min-height: 40px;
         display: flex;
         align-items: center;
         justify-content: center;
         color: #888;
         padding: 10px;
+      }
+      .layout-config-list.is-empty {
+        min-height: 0;
+        padding: 0;
+        border: none;
+        background-color: transparent;
+        margin: 0; 
       }
       .stream-item, .layout-config-item {
         padding: 10px 12px;
@@ -395,12 +406,8 @@
         flex-wrap: wrap;
         align-items: center;
       }
-      #obsSceneNameInput {
+      #obsSceneNameInput { 
         display: none !important;
-      }
-      #loadScenesBtn {
-        margin-left: 5px;
-        vertical-align: top;
       }
       .prefix-input-label {
         margin-bottom: 4px;
@@ -502,12 +509,6 @@
         font-size: 0.9em;
         margin-bottom: 0;
       }
-      #obsTargetSettingsFlexContainer > div:first-child {
-        flex-grow: 1;
-      }
-      #obsTargetSettingsFlexContainer > button {
-        flex-shrink: 0;
-      }
       .settings-group {
         margin-top: 15px;
         border-top: 1px solid #3e4147;
@@ -532,7 +533,6 @@
       .layout-config-item .remove-layout-btn {
         margin-left: 10px;
       }
-      /* Styles for dynamic layout controls */
       .layout-specific-controls {
         padding: 10px;
         margin-top: 10px;
@@ -540,53 +540,75 @@
         border-radius: 4px;
         border: 1px solid #383b40;
       }
-      .layout-specific-controls label, .fallback-grid-settings-container label {
+      .layout-specific-controls label { 
         font-size: 0.9em;
         color: #b0b0b0;
         margin-bottom: 4px;
       }
-      .layout-specific-controls input[type="range"], .fallback-grid-settings-container input[type="range"] {
-        width: calc(100% - 100px); /* Adjust for label and value display */
-        margin-bottom: 0px; /* Reduced margin */
+      .layout-specific-controls input[type="range"] { 
+        width: calc(100% - 100px); 
+        margin-bottom: 0px; 
       }
-       .layout-specific-controls input[type="number"], .fallback-grid-settings-container input[type="number"] {
+       .layout-specific-controls input[type="number"] { 
         width: 60px; 
         padding: 6px;
         font-size: 0.9em;
-        margin-bottom: 0px; /* Reduced margin */
+        margin-bottom: 0px; 
       }
-      .layout-specific-controls .slider-container, .fallback-grid-settings-container .slider-container {
+      .layout-specific-controls .slider-container { 
         display: flex;
         align-items: center;
         gap: 10px;
         margin-bottom: 8px;
       }
-      .layout-specific-controls .slider-container input[type="range"],
-      .fallback-grid-settings-container .slider-container input[type="range"] {
+      .layout-specific-controls .slider-container input[type="range"] { 
         flex-grow: 1;
         margin-bottom: 0;
       }
-       .layout-specific-controls .slider-container .slider-label,
-       .fallback-grid-settings-container .slider-container .slider-label {
-        min-width: 80px; /* Adjust as needed */
+       .layout-specific-controls .slider-container .slider-label { 
+        min-width: 80px; 
         flex-shrink: 0;
       }
-      .layout-specific-controls .slider-container span, 
-      .fallback-grid-settings-container .slider-container span { /* Value display for range */
+      .layout-specific-controls .slider-container span { 
         min-width: 35px; 
         text-align: right;
         font-size: 0.9em;
         color: #c0c0c0;
-        display: none; /* Hide if number input is used */
+        display: none; 
       }
-      .layout-specific-controls .checkbox-label, .fallback-grid-settings-container .checkbox-label {
+      .layout-specific-controls .checkbox-label { 
         font-size: 0.9em;
         margin-top: 8px;
       }
-      .fallback-grid-settings-container {
-        margin-top: 15px;
-        padding-top: 10px;
-        border-top: 1px dashed #4a4d54;
+      #sourceCreationScenesContainer {
+        display: flex;
+        flex-direction: column;
+        width: 300px; 
+        flex-grow: 1;
+        max-height: 150px; 
+        overflow-y: auto;
+        border: 1px solid #4a4d54;
+        border-radius: 6px;
+        padding: 10px;
+        background-color: #25272c; 
+      }
+      .checkbox-item-row {
+        display: flex;
+        align-items: center;
+        margin-bottom: 8px;
+      }
+      .checkbox-item-row:last-child {
+        margin-bottom: 0;
+      }
+      .checkbox-item-row input[type="checkbox"] {
+        margin-right: 8px;
+      }
+      .checkbox-item-row label {
+        margin-bottom: 0; 
+        font-weight: normal; 
+        color: #e0e0e0; 
+        cursor: pointer;
+        flex-grow: 1; 
       }
     </style>
     <style id="customUserCss"></style>
@@ -698,38 +720,19 @@
       <h2 class="collapsible" data-state="expand" data-i18n="obsTargetSettings.title">OBS Target Settings</h2>
       <div class="collapsible-content">
         <div class="settings-group">
-          <label for="obsSceneSelect" data-i18n="obsTargetSettings.targetSceneLabel">Target Scene (Default):</label>
-          <div
-            class="flex-row"
-            style="gap: 10px"
-            id="obsTargetSettingsFlexContainer"
-          >
-            <select id="obsSceneSelect" style="width: 300px; flex-grow: 1">
-              <option value="" data-i18n="obsTargetSettings.selectSceneOption">Select a scene...</option>
-            </select>
-            <button id="loadScenesBtn" data-i18n="obsTargetSettings.refetchScenesButton">Re-Fetch Scenes</button>
-          </div>
-        </div>
-        <div
-          id="otherScenesContainer"
-          class="settings-group"
-          style="display: none"
-        >
-          <label data-i18n="obsTargetSettings.copySourcesLabel">Copy sources to other scenes (reference):</label>
-          <div id="otherScenesList" style="margin-top: 5px"></div>
-        </div>
-        <input type="text" id="obsSceneNameInput" style="display: none" /> <div class="settings-group">
-          <label style="font-weight: 600; font-size: 1.05em" data-i18n="obsTargetSettings.screenShareSettings.title">Screen Sharing Settings:</label>
-          <div
-            class="flex-row"
-            style="gap: 15px; align-items: flex-start"
-          >
-            <div>
-              <label for="screenShareSceneSelect" style="font-size: 0.95em" data-i18n="obsTargetSettings.screenShareSettings.targetSceneLabel">Target Scene:</label>
-              <select id="screenShareSceneSelect" style="width: 300px">
-                <option value="" data-i18n="obsTargetSettings.screenShareSettings.sameAsMainOption">Same as main</option>
-              </select>
+            <label data-i18n="obsTargetSettings.sourceCreationScenesLabel">Cenas para Criação de Fontes:</label>
+            <small data-i18n="obsTargetSettings.sourceCreationScenesDesc">Selecione uma ou mais cenas. A primeira marcada será a principal, as outras para cópia.</small>
+            <div class="flex-row" style="gap: 10px; margin-top: 5px; align-items: flex-start;">
+                <div id="sourceCreationScenesContainer">
+                    <span data-i18n="obsTargetSettings.loadingScenes">Carregando cenas...</span>
+                </div>
+                <button id="loadSourceCreationScenesBtn" data-i18n="obsTargetSettings.refetchScenesButton">Re-Fetch Scenes</button>
             </div>
+        </div>
+        <input type="text" id="obsSceneNameInput" style="display: none" />
+        <div class="settings-group">
+          <label style="font-weight: 600; font-size: 1.05em" data-i18n="obsTargetSettings.screenShareSettings.title">Screen Sharing Settings:</label>
+          <div class="flex-row" style="gap: 15px; align-items: flex-start">
             <div class="flex-row" style="gap: 8px">
               <div>
                 <label for="screenShareWidth" style="font-size: 0.95em" data-i18n="obsTargetSettings.screenShareSettings.widthLabel">Width:</label>
@@ -751,12 +754,7 @@
               </div>
             </div>
           </div>
-        </div>
-        <div class="settings-group">
-          <label for="highlightSceneSelect" style="font-weight: 600; font-size: 1.05em" data-i18n="obsTargetSettings.highlightScene.title">Highlight Scene:</label>
-          <select id="highlightSceneSelect" style="width: 300px">
-            <option value="" data-i18n="obsTargetSettings.highlightScene.selectSceneOption">Select a scene for highlights...</option>
-          </select>
+           <small data-i18n="obsTargetSettings.screenShareSettings.resolutionNote">This resolution will be used for screen sharing sources in scenes with a 'Reaction' layout.</small>
         </div>
         <div
           id="autoSourceOptions"
@@ -773,7 +771,7 @@
           </label>
         </div>
         <div class="settings-group">
-          <div class="flex-row" style="align-items: flex-end; gap: 15px">
+          <div class="flex-row" style="align-items: flex-start; gap: 15px">
             <div>
               <label for="sourceSizing" data-i18n="obsTargetSettings.newSourceSizing.label">Default Source Sizing:</label>
               <select id="sourceSizing" style="width: 250px">
@@ -859,27 +857,33 @@
       </div>
     </div>
     <script>
+      // Path to translation files on GitHub
       const loadPath = 'https://raw.githubusercontent.com/MorseTheCode/OBS-Scripts/refs/heads/main/locales/{{lng}}.json';
       let logEntries = [];
       const languageSelector = document.getElementById('languageSelector');
       
-      // Default values for layouts (can be overridden by specific layout configs)
-      const DEFAULT_GRID_MARGIN = 0;
-      const DEFAULT_GRID_SPACING = 20;
+      // Default values for layouts (can be overridden by specific layout settings)
+      const DEFAULT_GRID_MARGIN = 75;
+      const DEFAULT_GRID_SPACING = 30;
       const DEFAULT_GRID_X_OFFSET = 0;
       const DEFAULT_GRID_Y_OFFSET = 0;
       const DEFAULT_GRID_SPLIT_SCREEN = false;
 
-      const DEFAULT_REACTION_HIGHLIGHT_SPACING = 30;
+      const DEFAULT_REACTION_HIGHLIGHT_SPACING = 15;
       const DEFAULT_REACTION_HIGHLIGHT_X_OFFSET = 0;
       const DEFAULT_REACTION_HIGHLIGHT_Y_OFFSET = 0;
       const DEFAULT_REACTION_HIGHLIGHT_DISTRIBUTE_CAMERAS = false;
 
       const CELL_ASPECT_RATIO = 16 / 9;
       const REACTION_CAMERA_CROP_RATIO = 3/4; 
-      const HIGHLIGHT_CAMERA_CROP_RATIO = 3/4;
+      const HIGHLIGHT_CAMERA_CROP_RATIO = 3/4; 
       const REACTION_HIGHLIGHT_ASPECT_RATIO = 16 / 9;
 
+      // Global variable to store initially selected scenes for checkbox population
+      let initialSelectedSourceCreationScenes = [];
+
+
+      // Function to initialize the application
       function initializeApp() {
         let savedLanguage = localStorage.getItem('vdoNinjaObsControlLanguage') || 'en';
         languageSelector.value = savedLanguage;
@@ -906,6 +910,8 @@
             setupLayoutConfigUI(); 
           });
       }
+
+      // Function to update translated content on the page
       function updateContent() {
         document.querySelectorAll('[data-i18n]').forEach(element => {
           const keyAttr = element.getAttribute('data-i18n');
@@ -937,16 +943,17 @@
             opt.textContent = i18next.t('sceneLayouts.selectLayoutOption');
         });
         // Update dynamically created layout controls
-        document.querySelectorAll('.layout-specific-controls [data-i18n-label], .fallback-grid-settings-container [data-i18n-label]').forEach(label => {
+        document.querySelectorAll('.layout-specific-controls [data-i18n-label]').forEach(label => { 
             if (label.dataset.i18nLabel && i18next.exists(label.dataset.i18nLabel)) {
                  label.textContent = i18next.t(label.dataset.i18nLabel);
             }
         });
-         document.querySelectorAll('h3[data-i18n-fallback-header]').forEach(header => {
+         document.querySelectorAll('h3[data-i18n-fallback-header]').forEach(header => { 
             if (header.dataset.i18nFallbackHeader && i18next.exists(header.dataset.i18nFallbackHeader)) {
                  header.textContent = i18next.t(header.dataset.i18nFallbackHeader);
             }
         });
+
         updateObsConnectButtonText();
         updateVdoNinjaButtonState(vdoNinjaConnected);
         updateStreamList();
@@ -955,6 +962,8 @@
         updateSceneDropdowns(); 
         renderLog();
       }
+
+      // Setup tooltips for collapsible sections
       function setupCollapsibleTooltips() {
           document.querySelectorAll(".collapsible").forEach(header => {
               const isCollapsed = header.classList.contains("collapsed");
@@ -963,6 +972,8 @@
               header.setAttribute('aria-label', i18next.t(tooltipKey));
           });
       }
+
+      // Event listener for language selector
       languageSelector.addEventListener('change', (event) => {
         const newLang = event.target.value;
         i18next.changeLanguage(newLang, (err, t) => {
@@ -971,6 +982,8 @@
           updateContent();
         });
       });
+
+      // UI Elements
       const obsWsUrlInput = document.getElementById("obsWsUrl");
       const obsWsPasswordInput = document.getElementById("obsWsPassword");
       const obsConnectBtn = document.getElementById("obsConnectBtn");
@@ -988,17 +1001,18 @@
       const vdoNinjaStreamIdsInput = document.getElementById("vdoNinjaStreamIds");
       const vdoNinjaIframe = document.getElementById("vdoNinjaIframe");
       const obsSceneNameInput = document.getElementById("obsSceneNameInput"); 
-      const obsSceneSelect = document.getElementById("obsSceneSelect"); 
+      const sourceCreationScenesContainer = document.getElementById("sourceCreationScenesContainer"); 
+      const loadSourceCreationScenesBtn = document.getElementById("loadSourceCreationScenesBtn");
       const sourceSizingSelect = document.getElementById("sourceSizing"); 
       const sourceCodecSelect = document.getElementById("sourceCodec");
       const autoAddSourcesCheckbox = document.getElementById("autoAddSources");
       const autoRemoveSourcesCheckbox = document.getElementById("autoRemoveSources");
       const streamListContainer = document.getElementById("streamList");
       const logArea = document.getElementById("logArea");
-      const loadScenesBtn = document.getElementById("loadScenesBtn");
-      const highlightSceneSelect = document.getElementById("highlightSceneSelect"); 
       const customCssInput = document.getElementById("customCssInput");
       const customUserCssStyleTag = document.getElementById("customUserCss");
+
+      // State Variables
       let obs = null;
       let obsConnected = false;
       let vdoNinjaConnected = false;
@@ -1009,10 +1023,11 @@
       let vdoNinjaConnectionCheckTimer = null;
       let screenShareId = null; 
       let highlightedStreamId = null; 
-      let loadedSelectedOtherScenes = []; 
       const layoutConfigsListDiv = document.getElementById('layoutConfigsList');
       const addLayoutConfigBtn = document.getElementById('addLayoutConfigBtn');
       let sceneLayoutConfigs = []; 
+
+      // Setup collapsible sections
       document.querySelectorAll(".collapsible").forEach((header) => {
         const content = header.nextElementSibling;
         const startsExpanded = header.dataset.state === "expand";
@@ -1033,6 +1048,8 @@
           setupCollapsibleTooltips(); 
         });
       });
+
+      // Create and inject VDO.Ninja connect button and status
       const vdoNinjaConnectBtn = document.createElement("button");
       vdoNinjaConnectBtn.id = "vdoNinjaConnectBtn";
       vdoNinjaConnectBtn.style.marginTop = "5px";
@@ -1043,7 +1060,7 @@
       vdoNinjaConnectionStatus.id = "vdoNinjaConnectionStatus";
       vdoNinjaConnectionStatus.style.marginLeft = "5px";
       const vdoNinjaSettingsContainer = document.querySelector(
-        "div.container:nth-of-type(3) .collapsible-content" // Corrected to nth-of-type(3) for VDO.Ninja Settings
+        "div.container:nth-of-type(3) .collapsible-content" 
       );
       const buttonsDiv = document.createElement("div");
       buttonsDiv.style.marginTop = "10px";
@@ -1063,9 +1080,13 @@
           connectToVdoNinja();
         }
       });
+
+      // Sleep function
       function sleep(ms) {
         return new Promise((resolve) => setTimeout(resolve, ms));
       }
+
+      // Log messages function
       function logMessage(fallbackMessage, i18nKey, i18nParams = {}) {
           const timestamp = new Date().toLocaleTimeString();
           logEntries.push({
@@ -1079,6 +1100,8 @@
           }
           renderLog();
       }
+
+      // Render log function
       function renderLog() {
           if (!logArea || (typeof i18next !== 'undefined' && !i18next.isInitialized)) {
              return;
@@ -1089,6 +1112,7 @@
               if (entry.i18nKey && i18next.exists(entry.i18nKey)) {
                   translatedMessage = i18next.t(entry.i18nKey, entry.i18nParams);
               } else if (entry.i18nKey) {
+                 // console.warn(`i18n key not found: ${entry.i18nKey}`); 
               }
               const safeTranslatedMessage = translatedMessage.replace(/</g, "&lt;").replace(/>/g, "&gt;");
               logContent += `[${entry.timestamp}] ${safeTranslatedMessage}\n`;
@@ -1096,32 +1120,55 @@
           logArea.innerHTML = logContent;
           logArea.scrollTop = logArea.scrollHeight;
       }
+
+      // Update layout configs list empty state
+      function updateLayoutConfigsListEmptyState() {
+        if (layoutConfigsListDiv && layoutConfigsListDiv.children.length === 0) {
+            layoutConfigsListDiv.classList.add('is-empty');
+        } else if (layoutConfigsListDiv) {
+            layoutConfigsListDiv.classList.remove('is-empty');
+        }
+      }
+
+      // Generate unique request ID
       function generateRequestId(type) {
         return `${type}-${Date.now()}-${Math.floor(Math.random() * 1000)}`;
       }
+
+      // Generate UUID
       function generateUUID() { 
         return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
             var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
             return v.toString(16);
         });
       }
+
+      // Get VDO.Ninja base URL
       function getVdoNinjaBaseUrl() {
         const customUrl = vdoNinjaBaseUrlInput.value.trim();
         return customUrl || "https://vdo.ninja";
       }
+
+      // Get full camera prefix
       function getFullCameraPrefix() {
         return cameraPrefixInput.value.trim();
       }
+
+      // Get full reaction prefix
       function getFullReactionPrefix() {
         const camPrefix = getFullCameraPrefix();
         const reactSub = reactionSubPrefixInput.value.trim();
         return reactSub ? `${camPrefix}.${reactSub}` : camPrefix; 
       }
+
+      // Get full highlight prefix
       function getFullHighlightPrefix() {
         const camPrefix = getFullCameraPrefix();
         const hlSub = highlightSubPrefixInput.value.trim();
         return hlSub ? `${camPrefix}.${hlSub}` : camPrefix; 
       }
+
+      // Update prefix labels
       function updatePrefixLabels() {
         if (!i18next.isInitialized) return;
         const cameraPrefixVal = getFullCameraPrefix();
@@ -1139,6 +1186,8 @@
             subPrefix: highlightSubPrefixVal || ""
         });
       }
+
+      // Event listeners for prefix inputs
       cameraPrefixInput.addEventListener("input", () => {
         updatePrefixLabels();
         saveSettings();
@@ -1151,17 +1200,23 @@
         updatePrefixLabels();
         saveSettings();
       });
+
+      // Toggle disabled state of VDO.Ninja inputs
       function toggleVdoNinjaInputs(disabled) {
         vdoNinjaBaseUrlInput.disabled = disabled;
         vdoNinjaRoomInput.disabled = disabled;
         vdoNinjaPasswordInput.disabled = disabled;
         vdoNinjaStreamIdsInput.disabled = disabled;
       }
+
+      // Update OBS connect button text
       function updateObsConnectButtonText() {
         if (obsConnectBtn && i18next.isInitialized) {
             obsConnectBtn.textContent = obsConnected ? i18next.t("obsConnection.disconnectButton") : i18next.t("obsConnection.connectButton");
         }
       }
+
+      // Get input settings safely
       async function getInputSettingsSafe(sourceName, defaultWidth = 1920, defaultHeight = 1080) {
           try {
               const settings = await sendRequest("GetInputSettings", { inputName: sourceName });
@@ -1172,9 +1227,12 @@
                   };
               }
           } catch (e) {
+             // logMessage(`Could not get settings for ${sourceName}, using defaults. Error: ${e.message}`, "logMessages.obs.getInputSettingsSafeError", {sourceName, message: e.message});
           }
           return { width: defaultWidth, height: defaultHeight };
       }
+
+      // Hide source item in a scene
       async function hideSourceItem(sceneName, sceneItemId, sourceNameForLog = "Unknown") {
           if (!sceneName || !sceneItemId) return;
           try {
@@ -1183,10 +1241,13 @@
                   sceneItemId: sceneItemId,
                   sceneItemEnabled: false
               });
+              // logMessage(`Hid source item ${sourceNameForLog} in ${sceneName}.`, "logMessages.hidSourceItem", {sourceName: sourceNameForLog, sceneName});
           } catch(e) {
               logMessage(`Error hiding source item ${sourceNameForLog} in ${sceneName}: ${e.message}`, "logMessages.errorHidingSource", {sourceName: sourceNameForLog, sceneName, message: e.message});
           }
       }
+      
+      // Update VDO.Ninja connect button state
       function updateVdoNinjaButtonState(isVdoConnected) {
         vdoNinjaConnected = isVdoConnected;
         if (!i18next.isInitialized) return;
@@ -1206,6 +1267,8 @@
         }
         toggleVdoNinjaInputs(vdoNinjaConnected);
       }
+
+      // Apply custom CSS
       function applyCustomCss(cssString) {
         if (customUserCssStyleTag) {
             customUserCssStyleTag.textContent = cssString;
@@ -1215,13 +1278,13 @@
         saveSettings(); 
         logMessage("Custom CSS input changed. It will be applied directly to OBS source settings on next creation/update.", "logMessages.customCssChangedWillApplyToSource");
       });
+
+      // Save settings to localStorage
       function saveSettings() {
-        const otherSceneCheckboxes = document.querySelectorAll(
-          ".other-scene-checkbox:checked"
-        );
-        const selectedOtherScenes = Array.from(otherSceneCheckboxes).map(
-          (cb) => cb.value
-        );
+        const selectedSourceCreationOptions = [];
+        const checkboxes = document.querySelectorAll('#sourceCreationScenesContainer input[type="checkbox"]:checked');
+        checkboxes.forEach(checkbox => selectedSourceCreationOptions.push(checkbox.value));
+
         const settings = {
           obsWsUrl: obsWsUrlInput.value,
           obsWsPassword: obsWsPasswordInput.value,
@@ -1232,17 +1295,13 @@
           vdoNinjaRoom: vdoNinjaRoomInput.value,
           vdoNinjaPassword: vdoNinjaPasswordInput.value,
           vdoNinjaStreamIds: vdoNinjaStreamIdsInput.value,
-          obsSceneName: obsSceneSelect.value, 
-          selectedOtherScenes: selectedOtherScenes,
+          selectedSourceCreationScenes: selectedSourceCreationOptions, 
           sourceSizing: sourceSizingSelect.value, 
           sourceCodec: sourceCodecSelect.value,
           autoAddSources: autoAddSourcesCheckbox.checked,
           autoRemoveSources: autoRemoveSourcesCheckbox.checked,
           screenShareWidth: document.getElementById("screenShareWidth").value,
           screenShareHeight: document.getElementById("screenShareHeight").value,
-          screenShareScene:
-            document.getElementById("screenShareSceneSelect").value,
-          highlightScene: highlightSceneSelect.value, 
           language: i18next.language,
           customCSS: customCssInput.value
         };
@@ -1251,6 +1310,8 @@
         localStorage.setItem("obsNinjaStreamMappings", JSON.stringify(mappings));
         saveLayoutConfigs(); 
       }
+
+      // Disconnect from VDO.Ninja
       function disconnectFromVdoNinja() {
         vdoNinjaIframe.src = "about:blank";
         if (vdoNinjaConnectionCheckTimer) {
@@ -1262,6 +1323,8 @@
         updateVdoNinjaButtonState(false); 
         logMessage("Disconnected from VDO.Ninja.", "logMessages.vdoNinja.disconnected");
       }
+
+      // Connect to VDO.Ninja
       function connectToVdoNinja() {
         if (vdoNinjaConnected) {
           logMessage("Already connected to VDO.Ninja.", "logMessages.vdoNinja.alreadyConnected");
@@ -1304,6 +1367,8 @@
         toggleVdoNinjaInputs(true); 
         saveSettings();
       }
+
+      // Add new stream mapping to UI
       function addNewStreamMapping(
         streamId = "",
         label = "",
@@ -1387,6 +1452,8 @@
           input.addEventListener("change", saveSettings);
         });
       }
+
+      // Setup stream mapping UI
       function setupStreamMappingUI() {
         const addStreamMappingBtn = document.getElementById(
           "addStreamMappingBtn"
@@ -1396,6 +1463,8 @@
         });
         loadStreamMappings(); 
       }
+
+      // Load stream mappings from localStorage
       function loadStreamMappings() {
         const mappingsJson = localStorage.getItem("obsNinjaStreamMappings");
         if (mappingsJson) {
@@ -1433,6 +1502,8 @@
           }
         }
       }
+
+      // Get stream mappings from UI
       function getStreamMappings() {
         const mappings = [];
         document.querySelectorAll(".stream-mapping").forEach((div) => { 
@@ -1480,19 +1551,26 @@
         });
         return mappings;
       }
+
+      // Setup scene layout config UI
       function setupLayoutConfigUI() {
           if (addLayoutConfigBtn) {
-            addLayoutConfigBtn.addEventListener('click', () => addNewLayoutConfigUI());
+            addLayoutConfigBtn.addEventListener('click', () => {
+                addNewLayoutConfigUI();
+                updateLayoutConfigsListEmptyState(); 
+            });
           }
           loadLayoutConfigs(); 
       }
+
+      // Create slider with number input
       function createSliderWithNumberInput(idPrefix, labelKey, min, max, step, value, configId, propertyName) {
           const container = document.createElement('div');
           container.className = 'slider-container';
 
           const label = document.createElement('label');
           label.htmlFor = `layout-slider-${propertyName}-${configId}`;
-          label.textContent = i18next.t(labelKey) + ":";
+          label.textContent = (i18next.exists(labelKey) ? i18next.t(labelKey) : labelKey) + ":";
           label.dataset.i18nLabel = labelKey;
           label.className = 'slider-label';
 
@@ -1523,7 +1601,7 @@
               slider.value = event.target.value;
               saveLayoutConfigsAndUpdateScene(configId);
           });
-          numberInput.addEventListener('change', (event) => { // Ensure value snaps if out of bounds on blur
+          numberInput.addEventListener('change', (event) => { 
               if (parseFloat(event.target.value) < min) event.target.value = min;
               if (parseFloat(event.target.value) > max) event.target.value = max;
               slider.value = event.target.value;
@@ -1535,13 +1613,45 @@
           container.appendChild(numberInput);
           return container;
       }
+
+      // Save layout configs and update relevant scenes
       function saveLayoutConfigsAndUpdateScene(configId) {
-          saveLayoutConfigs();
-          const sceneSelect = document.getElementById(`layout-scene-${configId}`);
-          if (sceneSelect && sceneSelect.value) {
-              triggerLayoutUpdateForScene(sceneSelect.value);
+          saveLayoutConfigs(); // This updates the global sceneLayoutConfigs array
+          const changedConfig = sceneLayoutConfigs.find(c => c.id === configId);
+
+          if (changedConfig && changedConfig.sceneName) {
+              triggerLayoutUpdateForScene(changedConfig.sceneName); // Update the scene that was directly edited
+
+              // If the changed scene was a GRID scene, check if other Reaction/Highlight scenes
+              // were using it as a fallback and trigger updates for them.
+              if (changedConfig.layoutType === 'grid') {
+                  const changedGridSceneName = changedConfig.sceneName;
+
+                  sceneLayoutConfigs.forEach(otherConfig => {
+                      if (otherConfig.id !== configId && 
+                          (otherConfig.layoutType === 'reaction' || otherConfig.layoutType === 'highlight') && 
+                          otherConfig.sceneName) {
+                          
+                          // Determine if 'otherConfig.sceneName' would use 'changedGridSceneName' for fallback.
+                          // The current fallback logic in applyReactionOrHighlightLayoutShared picks the *first* // available grid scene from sceneLayoutConfigs.
+                          const firstPotentialGridFallback = sceneLayoutConfigs.find(cfg => cfg.layoutType === 'grid' && cfg.sceneName);
+
+                          if (firstPotentialGridFallback && firstPotentialGridFallback.sceneName === changedGridSceneName) {
+                              // If the changed grid scene IS the primary candidate for fallback,
+                              // then trigger an update for this reaction/highlight scene.
+                              // It will re-evaluate if it needs fallback and pick up the new grid settings.
+                              logMessage(`Grid settings for '${changedGridSceneName}' (primary fallback candidate) changed. Triggering update for Reaction/Highlight scene '${otherConfig.sceneName}'.`,
+                                         "logMessages.obs.gridFallbackSourceChanged", 
+                                         { sourceGridScene: changedGridSceneName, dependentScene: otherConfig.sceneName });
+                              triggerLayoutUpdateForScene(otherConfig.sceneName);
+                          }
+                      }
+                  });
+              }
           }
       }
+
+      // Create checkbox
       function createCheckbox(id, labelKey, checked, configId, propertyName) {
           const labelElement = document.createElement('label');
           labelElement.className = 'checkbox-label';
@@ -1553,7 +1663,7 @@
           checkbox.dataset.propertyName = propertyName;
 
           const span = document.createElement('span');
-          span.textContent = i18next.t(labelKey);
+          span.textContent = i18next.exists(labelKey) ? i18next.t(labelKey) : labelKey;
           span.dataset.i18nLabel = labelKey; 
 
           checkbox.addEventListener('change', () => {
@@ -1564,6 +1674,8 @@
           labelElement.appendChild(span);
           return labelElement;
       }
+
+      // Add new layout config to UI
       function addNewLayoutConfigUI(config = {}) {
           const configId = config.id || generateUUID();
           const configDiv = document.createElement('div');
@@ -1599,8 +1711,15 @@
           const sceneSelect = configDiv.querySelector('.layout-scene-select');
           const layoutSelect = configDiv.querySelector('.layout-type-select');
           
-          populateSceneDropdown(obsScenes, sceneSelect, "sceneLayouts.selectSceneOption");
-          if (config.sceneName) sceneSelect.value = config.sceneName;
+          populateSceneDropdownWithOptionsDisabled(obsScenes, sceneSelect, "sceneLayouts.selectSceneOption", configId);
+
+          if (config.sceneName && obsScenes.some(s => s.sceneName === config.sceneName)) {
+            sceneSelect.value = config.sceneName;
+          } else if (config.sceneName) {
+             logMessage(`Saved scene '${config.sceneName}' for layout not found in current OBS scenes.`, "logMessages.layoutSceneNotFound", {sceneName: config.sceneName});
+          }
+
+
           if (config.layoutType) {
             layoutSelect.value = config.layoutType;
             updateLayoutSpecificControls(configId, config.layoutType, controlsContainer, config);
@@ -1623,15 +1742,36 @@
           }
 
           configDiv.querySelector('.remove-layout-btn').addEventListener('click', () => {
+              const sceneOfRemovedLayout = configDiv.querySelector('.layout-scene-select').value; 
               configDiv.remove();
-              saveLayoutConfigs();
-              if (sceneSelect.value) {
-                 triggerLayoutUpdateForScene(sceneSelect.value);
+              saveLayoutConfigs(); 
+              if (sceneOfRemovedLayout) { 
+                 triggerLayoutUpdateForScene(sceneOfRemovedLayout);
               }
+              updateLayoutConfigsListEmptyState(); 
+              updateSceneDropdowns(); 
           });
 
-          sceneSelect.addEventListener('change', () => {
+          sceneSelect.addEventListener('change', (event) => {
+              const newSceneName = event.target.value;
+              const currentConfigId = configId;
+              const isSceneUsedByOther = sceneLayoutConfigs.some(cfg => 
+                  cfg.id !== currentConfigId && cfg.sceneName === newSceneName && newSceneName !== ""
+              );
+
+              if (isSceneUsedByOther) {
+                  logMessage(`Scene '${newSceneName}' is already configured for another layout. Reverting selection.`, "logMessages.sceneAlreadyConfiguredError", {sceneName: newSceneName});
+                  const previousValue = sceneLayoutConfigs.find(c => c.id === currentConfigId)?.sceneName || "";
+                  event.target.value = previousValue; 
+                  if(i18next.isInitialized) {
+                    alert(i18next.t('sceneLayouts.sceneAlreadyConfiguredAlert', {sceneName: newSceneName}));
+                  } else {
+                    alert(`Scene '${newSceneName}' is already in use by another layout configuration.`);
+                  }
+                  return; 
+              }
               saveLayoutConfigsAndUpdateScene(configId);
+              updateSceneDropdowns(); 
           });
           layoutSelect.addEventListener('change', () => {
             updateLayoutSpecificControls(configId, layoutSelect.value, controlsContainer, config); 
@@ -1639,6 +1779,8 @@
           });
           return configId;
       }
+
+      // Update layout specific controls
       function updateLayoutSpecificControls(configId, layoutType, container, currentConfig = {}) {
           container.innerHTML = ''; 
           if (!layoutType) {
@@ -1658,32 +1800,12 @@
               container.appendChild(createSliderWithNumberInput(`rh-offsetx-${configId}`, 'sceneLayouts.controls.offsetX', -1000, 1000, 1, currentConfig.offsetX ?? DEFAULT_REACTION_HIGHLIGHT_X_OFFSET, configId, 'offsetX'));
               container.appendChild(createSliderWithNumberInput(`rh-offsety-${configId}`, 'sceneLayouts.controls.offsetY', -1000, 1000, 1, currentConfig.offsetY ?? DEFAULT_REACTION_HIGHLIGHT_Y_OFFSET, configId, 'offsetY'));
               container.appendChild(createCheckbox(`rh-distribute-${configId}`, 'sceneLayouts.controls.distributeCameras', currentConfig.distributeCameras ?? DEFAULT_REACTION_HIGHLIGHT_DISTRIBUTE_CAMERAS, configId, 'distributeCameras'));
-              
-              // Add Fallback Grid Settings
-              const fallbackContainer = document.createElement('div');
-              fallbackContainer.className = 'fallback-grid-settings-container';
-              const fallbackHeader = document.createElement('h3');
-              fallbackHeader.textContent = i18next.t('sceneLayouts.controls.fallbackGridSettingsHeader');
-              fallbackHeader.dataset.i18nFallbackHeader = 'sceneLayouts.controls.fallbackGridSettingsHeader';
-              fallbackContainer.appendChild(fallbackHeader);
-
-              fallbackContainer.appendChild(createSliderWithNumberInput(`fallback-grid-margin-${configId}`, 'sceneLayouts.controls.margin', 0, 500, 1, currentConfig.fallbackGridMargin ?? DEFAULT_GRID_MARGIN, configId, 'fallbackGridMargin'));
-              fallbackContainer.appendChild(createSliderWithNumberInput(`fallback-grid-spacing-${configId}`, 'sceneLayouts.controls.spacing', 0, 200, 1, currentConfig.fallbackGridSpacing ?? DEFAULT_GRID_SPACING, configId, 'fallbackGridSpacing'));
-              fallbackContainer.appendChild(createSliderWithNumberInput(`fallback-grid-offsetx-${configId}`, 'sceneLayouts.controls.offsetX', -1000, 1000, 1, currentConfig.fallbackGridOffsetX ?? DEFAULT_GRID_X_OFFSET, configId, 'fallbackGridOffsetX'));
-              fallbackContainer.appendChild(createSliderWithNumberInput(`fallback-grid-offsety-${configId}`, 'sceneLayouts.controls.offsetY', -1000, 1000, 1, currentConfig.fallbackGridOffsetY ?? DEFAULT_GRID_Y_OFFSET, configId, 'fallbackGridOffsetY'));
-              fallbackContainer.appendChild(createCheckbox(`fallback-grid-split-${configId}`, 'sceneLayouts.controls.gridSplitScreenTwoCameras', currentConfig.fallbackGridSplitScreenTwoCameras ?? DEFAULT_GRID_SPLIT_SCREEN, configId, 'fallbackGridSplitScreenTwoCameras'));
-              container.appendChild(fallbackContainer);
           }
           
           if (i18next.isInitialized) {
             container.querySelectorAll('[data-i18n-label]').forEach(label => {
                 if(label.dataset.i18nLabel && i18next.exists(label.dataset.i18nLabel)) {
                     label.textContent = i18next.t(label.dataset.i18nLabel) + ":";
-                }
-            });
-            container.querySelectorAll('h3[data-i18n-fallback-header]').forEach(header => {
-                if(header.dataset.i18nFallbackHeader && i18next.exists(header.dataset.i18nFallbackHeader)) {
-                     header.textContent = i18next.t(header.dataset.i18nFallbackHeader);
                 }
             });
              container.querySelectorAll('.checkbox-label span[data-i18n-label]').forEach(span => {
@@ -1693,17 +1815,29 @@
             });
           }
       }
+
+      // Save layout configs
       function saveLayoutConfigs() {
           const configs = [];
+          let sceneNameError = false;
+          const usedSceneNames = new Set();
+
           document.querySelectorAll('.layout-config-item').forEach(div => {
               const configId = div.dataset.layoutConfigId;
               const sceneSelect = div.querySelector(`#layout-scene-${configId}`);
               const layoutSelect = div.querySelector(`#layout-type-${configId}`);
               
               if (sceneSelect && layoutSelect && sceneSelect.value && layoutSelect.value) {
+                  const sceneName = sceneSelect.value;
+                  if (usedSceneNames.has(sceneName)) {
+                      logMessage(`Error saving layouts: Scene '${sceneName}' is configured multiple times. Please ensure each scene has only one layout.`, "logMessages.errorSavingLayoutsDuplicateScene", {sceneName});
+                      sceneNameError = true;
+                  }
+                  usedSceneNames.add(sceneName);
+
                   const currentConfig = {
                       id: configId,
-                      sceneName: sceneSelect.value,
+                      sceneName: sceneName,
                       layoutType: layoutSelect.value
                   };
 
@@ -1711,14 +1845,14 @@
                   if (controlsContainer) {
                       controlsContainer.querySelectorAll('input[type="range"], input[type="number"], input[type="checkbox"]').forEach(input => {
                           const propertyName = input.dataset.propertyName;
-                          if (propertyName) { // Ensure propertyName is defined
+                          if (propertyName) { 
                               if (input.type === 'checkbox') {
                                   currentConfig[propertyName] = input.checked;
                               } else if (input.type === 'number' || input.type === 'range') {
-                                  currentConfig[propertyName] = parseFloat(input.value); // Use parseFloat for potentially non-integer steps
-                                  if (isNaN(currentConfig[propertyName])) { // Handle cases where parsing might fail
-                                      if (input.type === 'range') currentConfig[propertyName] = parseFloat(input.min); // Default to min for range if NaN
-                                      else currentConfig[propertyName] = 0; // Default to 0 for number if NaN
+                                  currentConfig[propertyName] = parseFloat(input.value); 
+                                  if (isNaN(currentConfig[propertyName])) { 
+                                      if (input.type === 'range') currentConfig[propertyName] = parseFloat(input.min); 
+                                      else currentConfig[propertyName] = 0; 
                                   }
                               }
                           }
@@ -1727,16 +1861,27 @@
                   configs.push(currentConfig);
               }
           });
+
+          if (sceneNameError) {
+              console.warn("Duplicate scene names found in layout configurations. Saving anyway, but this might lead to unexpected behavior.");
+          }
+
           sceneLayoutConfigs = configs; 
           localStorage.setItem('obsNinjaSceneLayoutConfigs', JSON.stringify(configs));
-          logMessage(`Saved ${configs.length} scene layout configurations.`, "logMessages.savedLayoutConfigs", {count: configs.length});
+          if (!sceneNameError) {
+            logMessage(`Saved ${configs.length} scene layout configurations.`, "logMessages.savedLayoutConfigs", {count: configs.length});
+          }
       }
+
+      // Load layout configs
       function loadLayoutConfigs() {
           const savedConfigsJson = localStorage.getItem('obsNinjaSceneLayoutConfigs');
+          layoutConfigsListDiv.innerHTML = ''; 
+          sceneLayoutConfigs = []; 
+
           if (savedConfigsJson) {
               try {
                   const savedConfigs = JSON.parse(savedConfigsJson);
-                  layoutConfigsListDiv.innerHTML = ''; 
                   savedConfigs.forEach(config => {
                       addNewLayoutConfigUI(config); 
                   });
@@ -1744,15 +1889,18 @@
                   logMessage(`Loaded ${savedConfigs.length} scene layout configurations.`, "logMessages.loadedLayoutConfigs", {count: savedConfigs.length});
               } catch (e) {
                   logMessage(`Error loading scene layout configurations: ${e.message}`, "logMessages.errorLoadingLayoutConfigs", {message: e.message});
-                  sceneLayoutConfigs = [];
               }
-          } else {
-            sceneLayoutConfigs = [];
           }
+          updateLayoutConfigsListEmptyState(); 
+          updateSceneDropdowns(); 
       }
+
+      // Get layout config for a scene
       function getLayoutConfigForScene(sceneName) {
           return sceneLayoutConfigs.find(config => config.sceneName === sceneName);
       }
+
+      // Load general settings
       function loadSettings() {
         const settingsJson = localStorage.getItem("obsNinjaSettings");
         let savedLanguage = 'en'; 
@@ -1770,7 +1918,9 @@
             vdoNinjaRoomInput.value = settings.vdoNinjaRoom || "";
             vdoNinjaPasswordInput.value = settings.vdoNinjaPassword || "";
             vdoNinjaStreamIdsInput.value = settings.vdoNinjaStreamIds || "";
-            loadedSelectedOtherScenes = settings.selectedOtherScenes || []; 
+            
+            initialSelectedSourceCreationScenes = settings.selectedSourceCreationScenes || []; 
+            
             sourceSizingSelect.value = settings.sourceSizing || "defaultSize";
             sourceCodecSelect.value = settings.sourceCodec || "";
             autoAddSourcesCheckbox.checked =
@@ -1786,9 +1936,6 @@
             if (screenShareHeightInput)
               screenShareHeightInput.value =
                 settings.screenShareHeight || "1080";
-            const screenShareScene = document.getElementById("screenShareSceneSelect");
-            if (screenShareScene) screenShareScene.value = settings.screenShareScene || "";
-            if (highlightSceneSelect) highlightSceneSelect.value = settings.highlightScene || "";
             savedLanguage = settings.language || 'en';
             languageSelector.value = savedLanguage; 
             if (settings.customCSS && customCssInput && customUserCssStyleTag) {
@@ -1815,6 +1962,7 @@
             vdoNinjaBaseUrlInput.value = "https://vdo.ninja";
             sourceSizingSelect.value = "defaultSize";
             sourceCodecSelect.value = "";
+            initialSelectedSourceCreationScenes = [];
           }
         } else {
            if (i18next.isInitialized) {
@@ -1828,51 +1976,13 @@
           vdoNinjaBaseUrlInput.value = "https://vdo.ninja";
           sourceSizingSelect.value = "defaultSize";
           sourceCodecSelect.value = "";
+          initialSelectedSourceCreationScenes = [];
         }
         setupStreamMappingUI(); 
         return savedLanguage; 
       }
-      function updateOtherScenesList() {
-        const mainSceneName = obsSceneSelect.value; 
-        const otherScenesListDiv = document.getElementById("otherScenesList");
-        const container = document.getElementById("otherScenesContainer");
-        otherScenesListDiv.innerHTML = ""; 
-        if (mainSceneName && obsScenes && obsScenes.length > 1) {
-          container.style.display = "block"; 
-          obsScenes.forEach((scene) => {
-            if (scene.sceneName !== mainSceneName) {
-              const checkboxId = `otherScene_${scene.sceneName.replace(
-                /\s+/g,
-                "_"
-              )}`; 
-              const listItem = document.createElement("div");
-              listItem.className = "checkbox-label";
-              listItem.style.marginBottom = "8px";
-              const checkbox = document.createElement("input");
-              checkbox.type = "checkbox";
-              checkbox.id = checkboxId;
-              checkbox.value = scene.sceneName;
-              checkbox.className = "other-scene-checkbox";
-              if (loadedSelectedOtherScenes.includes(scene.sceneName)) {
-                checkbox.checked = true;
-              }
-              checkbox.addEventListener("change", saveSettings); 
-              const label = document.createElement("label");
-              label.htmlFor = checkboxId;
-              label.textContent = scene.sceneName;
-              label.style.marginLeft = "0"; 
-              listItem.appendChild(checkbox);
-              listItem.appendChild(label);
-              otherScenesListDiv.appendChild(listItem);
-            }
-          });
-          if (otherScenesListDiv.childElementCount === 0) {
-            container.style.display = "none";
-          }
-        } else {
-          container.style.display = "none"; 
-        }
-      }
+
+      // Update active streams list
       function updateStreamList() {
         if (!i18next.isInitialized) return; 
         if (Object.keys(activeStreams).length === 0) {
@@ -1887,14 +1997,19 @@
             const streamDiv = document.createElement("div");
             streamDiv.className = "stream-item";
             const targetInfo = getTargetSceneForStream(streamId, stream.label);
-            let targetSceneNameForDisplay = targetInfo.scene;
+            let targetSceneNameForDisplay = targetInfo.scene; 
             let targetSceneTagKey = "activeStreams.mappedSceneTag";
+            
+            const firstSourceCreationScene = getTargetScene(); 
+
             if (!targetSceneNameForDisplay) { 
-                targetSceneNameForDisplay = getTargetScene(); 
+                targetSceneNameForDisplay = firstSourceCreationScene; 
                 targetSceneTagKey = targetSceneNameForDisplay ? "activeStreams.defaultSceneTag" : "activeStreams.notSet";
-            } else if (targetSceneNameForDisplay === getTargetScene()){
+            } else if (targetSceneNameForDisplay === firstSourceCreationScene){
                  targetSceneTagKey = "activeStreams.defaultSceneTag"; 
             }
+
+
             const isHighlighted = highlightedStreamId === streamId; 
             const isCurrentlyScreenSharingThisStream = screenShareId === streamId;
             let streamItemHTML = `
@@ -1983,6 +2098,8 @@
           }
         }
       }
+
+      // Handle highlight click
       async function handleHighlightClick( 
         clickedStreamId,
         clickedStreamLabel,
@@ -1992,11 +2109,7 @@
           logMessage("Cannot highlight: Not connected to OBS.", "logMessages.obs.cannotHighlightNotConnected");
           return;
         }
-        const layoutConfig = getLayoutConfigForScene(clickedTargetInfo.scene);
-        if (layoutConfig && layoutConfig.layoutType === 'highlight') {
-            logMessage(`Scene '${clickedTargetInfo.scene}' uses the new Highlight Layout. Manual highlight button is disabled for this stream. Use Layouts section.`, "logMessages.obs.highlightLayoutActiveManualDisabled", {sceneName: clickedTargetInfo.scene});
-            return;
-        }
+
         if (screenShareId) {
           logMessage(
             `A screen share is active (${screenShareId}). Stopping it before highlighting.`,
@@ -2004,42 +2117,14 @@
           );
           await removeScreenShareFromObs(screenShareId); 
         }
-        const newHighlightScene = highlightSceneSelect.value; 
         await toggleHighlight( 
           clickedStreamId,
           clickedStreamLabel,
           clickedTargetInfo
         ); 
-        if (highlightedStreamId && newHighlightScene) {
-          try {
-            const studio = await sendRequest("GetStudioModeEnabled");
-            if (studio.studioModeEnabled) {
-              logMessage(
-                `Studio Mode Enabled - Triggering scene switch to Highlight Scene: '${newHighlightScene}'.`,
-                "logMessages.obs.studioModeSwitchHighlight", { sceneName: newHighlightScene }
-              );
-              await sendRequest("SetCurrentPreviewScene", {
-                sceneName: newHighlightScene,
-              });
-              await sleep(100); 
-              await sendRequest("TriggerStudioModeTransition");
-            } else {
-              logMessage(
-                `Triggering scene switch to Highlight Scene: '${newHighlightScene}'.`,
-                "logMessages.obs.switchingToHighlightScene", { sceneName: newHighlightScene }
-              );
-              await sendRequest("SetCurrentProgramScene", {
-                sceneName: newHighlightScene,
-              });
-            }
-          } catch (e) {
-            logMessage(
-              `Error switching to highlight scene '${newHighlightScene}': ${e.message}`,
-              "logMessages.obs.errorSwitchingHighlightScene", { sceneName: newHighlightScene, message: e.message }
-            );
-          }
-        }
       }
+
+      // Handle screen share click
       async function handleScreenShareClick(streamId, streamLabel) {
         const clickedStreamIdForScreenShare = streamId;
         const currentActiveScreenShareGlobal = screenShareId; 
@@ -2069,41 +2154,11 @@
               oldHighlightTargetInfo
             ); 
           }
-          const screenShareScene =
-            document.getElementById("screenShareSceneSelect").value ||
-            getTargetScene(); 
           await addScreenShareToObs(clickedStreamIdForScreenShare, streamLabel);
-          if (screenShareId && screenShareScene) {
-            try {
-              const studio = await sendRequest("GetStudioModeEnabled");
-              if (studio.studioModeEnabled) {
-                logMessage(
-                  `Studio Mode Enabled - Triggering scene switch to Screen Share Scene: '${screenShareScene}'.`,
-                  "logMessages.obs.studioModeSwitchScreenShare", { sceneName: screenShareScene }
-                );
-                await sendRequest("SetCurrentPreviewScene", {
-                  sceneName: screenShareScene,
-                });
-                await sleep(100);
-                await sendRequest("TriggerStudioModeTransition");
-              } else {
-                logMessage(
-                  `Triggering scene switch to Screen Share Scene: '${screenShareScene}'.`,
-                  "logMessages.obs.switchingToScreenShareScene", { sceneName: screenShareScene }
-                );
-                await sendRequest("SetCurrentProgramScene", {
-                  sceneName: screenShareScene,
-                });
-              }
-            } catch (e) {
-              logMessage(
-                `Error switching to screen share scene '${screenShareScene}': ${e.message}`,
-                "logMessages.obs.errorSwitchingScreenShareScene", { sceneName: screenShareScene, message: e.message }
-              );
-            }
-          }
         }
       }
+
+      // Add screen share to OBS
       async function addScreenShareToObs(streamId, streamLabel) {
         const previousGlobalScreenShareId = screenShareId; 
         if (!obsConnected || !obs) {
@@ -2125,20 +2180,20 @@
           parseInt(document.getElementById("screenShareWidth").value) || 1920;
         const height =
           parseInt(document.getElementById("screenShareHeight").value) || 1080;
-        const screenShareSceneSelect = document.getElementById(
-          "screenShareSceneSelect"
-        );
-        let targetSceneName =
-          screenShareSceneSelect.value || getTargetScene(); 
-        if (!targetSceneName) {
-          logMessage(
-            "Cannot add screen share: Target OBS scene is required.",
-            "logMessages.obs.cannotAddScreenShareNoTargetScene"
-          );
-          screenShareId = previousGlobalScreenShareId; 
-          updateStreamList();
-          return;
+        
+        const reactionLayoutScenes = sceneLayoutConfigs
+            .filter(cfg => cfg.layoutType === 'reaction' && cfg.sceneName)
+            .map(cfg => cfg.sceneName);
+
+        if (reactionLayoutScenes.length === 0) {
+            logMessage("Cannot add screen share: No scenes are configured with a 'Reaction' layout.", "logMessages.obs.cannotAddScreenShareNoReactionLayoutScene");
+            screenShareId = previousGlobalScreenShareId;
+            updateStreamList();
+            return;
         }
+        
+        const primaryTargetSceneForCreation = reactionLayoutScenes[0]; 
+
         const sourceName = `${getFullReactionPrefix()}_${streamId}:s`; 
         const baseUrl = getVdoNinjaBaseUrl();
         const selectedCodec = sourceCodecSelect.value;
@@ -2167,8 +2222,8 @@
           css: customCssInput.value.trim(), 
         };
         logMessage(
-          `Adding/Updating screen share source '${sourceName}' (URL: ${screenShareUrl}) to scene '${targetSceneName}'`,
-          "logMessages.obs.addingUpdatingScreenShare", { sourceName, url: screenShareUrl, sceneName: targetSceneName }
+          `Adding/Updating screen share source '${sourceName}' (URL: ${screenShareUrl}) to Reaction scenes. Primary creation in '${primaryTargetSceneForCreation}'.`,
+          "logMessages.obs.addingUpdatingScreenShareToReactionScenes", { sourceName, url: screenShareUrl, primaryScene: primaryTargetSceneForCreation, count: reactionLayoutScenes.length }
         );
         try {
           const sourcesResponse = await sendRequest("GetInputList", {}, { suppressNotFound: true });
@@ -2214,9 +2269,9 @@
                 inputSettings: inputSettings, 
               });
             } else {
-              logMessage(`Creating new screen share source '${sourceName}'.`, "logMessages.obs.creatingNewScreenShare", { sourceName });
+              logMessage(`Creating new screen share source '${sourceName}' in scene '${primaryTargetSceneForCreation}'.`, "logMessages.obs.creatingNewScreenShareInScene", { sourceName, sceneName: primaryTargetSceneForCreation });
               await sendRequest("CreateInput", {
-                sceneName: targetSceneName,
+                sceneName: primaryTargetSceneForCreation, 
                 inputName: sourceName,
                 inputKind: "browser_source",
                 inputSettings, 
@@ -2224,63 +2279,23 @@
               });
             }
           }
-          let sceneItemId;
-          try {
-            const itemInfo = await sendRequest(
-              "GetSceneItemId",
-              { sceneName: targetSceneName, sourceName: sourceName },
-              { suppressNotFound: true } 
-            );
-            sceneItemId = itemInfo.sceneItemId;
-            logMessage(
-              `Source '${sourceName}' found in scene '${targetSceneName}', item ID: ${sceneItemId}. Ensuring it's enabled.`,
-              "logMessages.obs.sourceFoundInSceneEnabled", { sourceName, sceneName: targetSceneName, itemId: sceneItemId }
-            );
-            await sendRequest("SetSceneItemEnabled", {
-              sceneName: targetSceneName,
-              sceneItemId: sceneItemId,
-              sceneItemEnabled: true,
-            });
-          } catch (e) {
-            if (
-              e.message.toLowerCase().includes("not found") ||
-              e.message.toLowerCase().includes("600") 
-            ) {
-              logMessage(
-                `Source '${sourceName}' not found as an item in scene '${targetSceneName}'. Creating scene item.`,
-                "logMessages.obs.sourceNotFoundCreatingItem", { sourceName, sceneName: targetSceneName }
-              );
-              const createItemResponse = await sendRequest("CreateSceneItem", {
-                sceneName: targetSceneName,
-                sourceName: sourceName,
-              });
-              sceneItemId = createItemResponse.sceneItemId;
-              logMessage(
-                `Created scene item for '${sourceName}' in '${targetSceneName}', item ID: ${sceneItemId}.`,
-                "logMessages.obs.createdSceneItem", { sourceName, sceneName: targetSceneName, itemId: sceneItemId }
-              );
-            } else {
-              throw e; 
-            }
+          
+          const scenesForLayoutUpdate = new Set();
+          for (const sceneName of reactionLayoutScenes) {
+              const sceneItemId = await ensureSourceInScene(sceneName, sourceName, width, height, true); 
+              if (sceneItemId) {
+                 const transform = calculateTransform("bestFit", width, height, width, height); 
+                 await sendRequest("SetSceneItemTransform", {
+                    sceneName: sceneName,
+                    sceneItemId: sceneItemId,
+                    sceneItemTransform: transform,
+                 });
+                 logMessage(`Ensured and transformed screen share source '${sourceName}' in Reaction scene '${sceneName}'.`, "logMessages.obs.ensuredTransformedScreenShareReaction", { sourceName, sceneName });
+                 scenesForLayoutUpdate.add(sceneName);
+              }
           }
-          if (sceneItemId) {
-            const transform = calculateTransform(
-              "defaultSize", 
-              width, 
-              height,
-              width, 
-              height
-            );
-            await sendRequest("SetSceneItemTransform", {
-              sceneName: targetSceneName,
-              sceneItemId: sceneItemId,
-              sceneItemTransform: transform,
-            });
-            logMessage(
-              `Applied transform to screen share source '${sourceName}' in '${targetSceneName}'.`,
-              "logMessages.obs.appliedTransformScreenShare", { sourceName, sceneName: targetSceneName }
-            );
-          }
+          scenesForLayoutUpdate.forEach(sName => { if(sName) triggerLayoutUpdateForScene(sName); });
+
           logMessage(
             `Successfully configured screen share for stream ${streamId} (${streamLabel}).`,
             "logMessages.obs.successConfigScreenShare", { streamId, label: streamLabel }
@@ -2295,6 +2310,8 @@
           updateStreamList(); 
         }
       }
+      
+      // Toggle highlight for a stream
       async function toggleHighlight( 
         clickedStreamId,
         clickedStreamLabel,
@@ -2307,8 +2324,9 @@
         const targetSceneForLayoutCheck = clickedTargetInfo ? clickedTargetInfo.scene : getTargetScene();
         const layoutConfig = getLayoutConfigForScene(targetSceneForLayoutCheck);
         if (layoutConfig && layoutConfig.layoutType === 'highlight') {
-            logMessage(`Scene '${targetSceneForLayoutCheck}' uses the new Highlight Layout. Manual highlight button may have limited effect or is superseded.`, "logMessages.obs.highlightLayoutActiveManualLegacy", {sceneName: targetSceneForLayoutCheck});
+            logMessage(`Scene '${targetSceneForLayoutCheck}' uses the automated Highlight Layout. Manual highlight changes will apply, but may interact with the automated layout.`, "logMessages.obs.highlightLayoutActiveManualLegacy", {sceneName: targetSceneForLayoutCheck});
         }
+
         const previouslyGlobalHighlightedStreamId = highlightedStreamId;
         const camPrefix = getFullCameraPrefix();
         const hlPrefix = getFullHighlightPrefix(); 
@@ -2323,38 +2341,55 @@
           const oldHighlightedSourceName = `${hlPrefix}_${previouslyGlobalHighlightedStreamId}`;
           const oldOriginalSourceName = `${camPrefix}_${previouslyGlobalHighlightedStreamId}`;
           try {
+            await sendRequest("GetInputSettings", { inputName: oldHighlightedSourceName }, { suppressNotFound: true }); 
             await sendRequest("SetInputName", { inputName: oldHighlightedSourceName, newInputName: oldOriginalSourceName });
             logMessage(`Stream ${previouslyGlobalHighlightedStreamId} unhighlighted (renamed to ${oldOriginalSourceName}).`, "logMessages.obs.streamUnhighlighted", {id: previouslyGlobalHighlightedStreamId, newName: oldOriginalSourceName});
-            if (oldTargetInfo && oldTargetInfo.scene) { 
-                sceneToUpdateAfterToggle = oldTargetInfo.scene; 
-            }
-          } catch (e) { }
+          } catch (e) { 
+            logMessage(`Could not unhighlight (rename) ${oldHighlightedSourceName}, it might not exist or another error: ${e.message}`, "logMessages.obs.unhighlightError", {sourceName: oldHighlightedSourceName, message: e.message});
+          }
+          if (oldTargetInfo && oldTargetInfo.scene) { 
+            sceneToUpdateAfterToggle = oldTargetInfo.scene; 
+          }
         }
         const clickedOriginalSourceName = `${camPrefix}_${clickedStreamId}`;
         const clickedNewHighlightedSourceName = `${hlPrefix}_${clickedStreamId}`;
         if (previouslyGlobalHighlightedStreamId === clickedStreamId) { 
           try {
+            await sendRequest("GetInputSettings", { inputName: clickedNewHighlightedSourceName }, { suppressNotFound: true }); 
             await sendRequest("SetInputName", { inputName: clickedNewHighlightedSourceName, newInputName: clickedOriginalSourceName });
             highlightedStreamId = null; 
             logMessage(`Stream ${clickedStreamId} successfully unhighlighted (renamed to ${clickedOriginalSourceName}).`, "logMessages.obs.streamSuccessfullyUnhighlighted", {id: clickedStreamId, newName: clickedOriginalSourceName});
-          } catch (e) {  highlightedStreamId = null; }
+          } catch (e) {  
+            logMessage(`Could not unhighlight (rename) ${clickedNewHighlightedSourceName}, it might not exist or another error: ${e.message}`, "logMessages.obs.unhighlightError", {sourceName: clickedNewHighlightedSourceName, message: e.message});
+            highlightedStreamId = null; 
+          }
         } else { 
           try {
+            await sendRequest("GetInputSettings", { inputName: clickedOriginalSourceName }, { suppressNotFound: true }); 
             await sendRequest("SetInputName", { inputName: clickedOriginalSourceName, newInputName: clickedNewHighlightedSourceName });
             highlightedStreamId = clickedStreamId; 
             logMessage(`Stream ${clickedStreamId} successfully highlighted (renamed to ${clickedNewHighlightedSourceName}).`, "logMessages.obs.streamSuccessfullyHighlighted", {id: clickedStreamId, newName: clickedNewHighlightedSourceName});
-          } catch (e) {  highlightedStreamId = null;}
+          } catch (e) {  
+            logMessage(`Could not highlight (rename) ${clickedOriginalSourceName}, it might not exist or another error: ${e.message}`, "logMessages.obs.highlightError", {sourceName: clickedOriginalSourceName, message: e.message});
+            if (previouslyGlobalHighlightedStreamId && previouslyGlobalHighlightedStreamId !== clickedStreamId) {
+                 highlightedStreamId = previouslyGlobalHighlightedStreamId; 
+            } else {
+                 highlightedStreamId = null;
+            }
+          }
         }
         if (sceneToUpdateAfterToggle) {
              await triggerLayoutUpdateForScene(sceneToUpdateAfterToggle);
         }
-        const defaultScene = getTargetScene();
+        const defaultScene = getTargetScene(); 
         if (clickedTargetInfo && clickedTargetInfo.mapping?.cloneToMain && defaultScene && defaultScene !== sceneToUpdateAfterToggle) {
             await triggerLayoutUpdateForScene(defaultScene);
         }
         updateStreamList();
         saveSettings(); 
       }
+
+      // Event listener for OBS connect button
       obsConnectBtn.addEventListener("click", () => {
         if (obsConnected && obs) {
           logMessage("Disconnecting from OBS WebSocket...", "logMessages.obs.disconnecting");
@@ -2368,6 +2403,8 @@
           connectToOBS();
         }
       });
+
+      // Get target scene for a stream
       function getTargetSceneForStream(streamId, streamLabel = "") {
         const mappings = getStreamMappings();
         const defaultTargetScene = getTargetScene(); 
@@ -2402,37 +2439,45 @@
         }
         return { scene: defaultTargetScene, mapping: null }; 
       }
+
+      // Update scene dropdowns
       function updateSceneDropdowns() {
         if (!i18next.isInitialized) return;
-        const currentMainSceneValue = obsSceneSelect.value;
-        const currentScreenShareSceneValue = document.getElementById(
-          "screenShareSceneSelect"
-        ).value;
-        const currentHighlightSceneValue = highlightSceneSelect.value; 
-        populateSceneDropdown(obsScenes, obsSceneSelect, "obsTargetSettings.selectSceneOption");
-        if (currentMainSceneValue && obsScenes.some((scene) => scene.sceneName === currentMainSceneValue)) {
-          obsSceneSelect.value = currentMainSceneValue;
+        
+        const sourceCreationContainer = document.getElementById("sourceCreationScenesContainer");
+        if (sourceCreationContainer) {
+             populateSceneCheckboxes(obsScenes, sourceCreationContainer, initialSelectedSourceCreationScenes);
         }
-        populateSceneDropdown(obsScenes, document.getElementById("screenShareSceneSelect"), "obsTargetSettings.screenShareSettings.sameAsMainOption");
-         if (currentScreenShareSceneValue === "" || (currentScreenShareSceneValue && obsScenes.some((scene) => scene.sceneName === currentScreenShareSceneValue))) {
-          document.getElementById("screenShareSceneSelect").value = currentScreenShareSceneValue;
-        }
-        populateSceneDropdown(obsScenes, highlightSceneSelect, "obsTargetSettings.highlightScene.selectSceneOption");
-        if (currentHighlightSceneValue && obsScenes.some((scene) => scene.sceneName === currentHighlightSceneValue)) {
-          highlightSceneSelect.value = currentHighlightSceneValue;
-        }
+
+
         document.querySelectorAll(".mapping-scene-name").forEach(select => {
             const oldValue = select.value;
             populateSceneDropdown(obsScenes, select, "streamIdMappings.selectSceneOption");
             if (oldValue && obsScenes.some(s => s.sceneName === oldValue)) select.value = oldValue; else select.value = "";
         });
-        document.querySelectorAll(".layout-scene-select").forEach(select => {
-            const oldValue = select.value;
-            populateSceneDropdown(obsScenes, select, "sceneLayouts.selectSceneOption");
-            if (oldValue && obsScenes.some(s => s.sceneName === oldValue)) select.value = oldValue; else select.value = "";
+        
+        document.querySelectorAll(".layout-config-item").forEach(layoutItemDiv => {
+            const configId = layoutItemDiv.dataset.layoutConfigId;
+            const sceneSelect = layoutItemDiv.querySelector(`#layout-scene-${configId}`);
+            if (sceneSelect && configId) {
+                const savedConfig = sceneLayoutConfigs.find(c => c.id === configId);
+                const targetSceneNameFromStorage = savedConfig ? savedConfig.sceneName : null;
+                const currentSelectedValueInDropdown = sceneSelect.value;
+
+                populateSceneDropdownWithOptionsDisabled(obsScenes, sceneSelect, "sceneLayouts.selectSceneOption", configId);
+
+                if (targetSceneNameFromStorage && obsScenes.some(s => s.sceneName === targetSceneNameFromStorage) && !sceneSelect.querySelector(`option[value="${targetSceneNameFromStorage}"]`)?.disabled) {
+                    sceneSelect.value = targetSceneNameFromStorage;
+                } else if (currentSelectedValueInDropdown && obsScenes.some(s => s.sceneName === currentSelectedValueInDropdown)  && !sceneSelect.querySelector(`option[value="${currentSelectedValueInDropdown}"]`)?.disabled) {
+                    sceneSelect.value = currentSelectedValueInDropdown;
+                } else {
+                    sceneSelect.value = ""; 
+                }
+            }
         });
-        updateOtherScenesList(); 
       }
+
+      // Connect to OBS
       async function connectToOBS() {
         if (
           cameraPrefixInput.value.trim() === "" 
@@ -2670,6 +2715,8 @@
           obsConnected = false;
         }
       }
+
+      // Generate auth response for OBS
       async function generateAuthResponse(password, salt, challenge) {
         const encoder = new TextEncoder();
         try {
@@ -2715,6 +2762,8 @@
           throw error; 
         }
       }
+
+      // Send request to OBS
       function sendRequest(requestType, requestData = {}, options = {}) {
         return new Promise((resolve, reject) => {
           if (!obsConnected || !obs) {
@@ -2768,30 +2817,48 @@
           }, 5000); 
         });
       }
-      function onObsConnected() {
-        logMessage(
-          "OBS Connection fully established. Fetching initial data...",
-          "logMessages.obs.connectionEstablishedFetchingData"
-        );
-        fetchObsScenes()
-          .then(() => {
+
+      // Called when OBS connection is established
+      async function onObsConnected() {
+        logMessage("OBS Connection fully established. Fetching initial data...", "logMessages.obs.connectionEstablishedFetchingData");
+        try {
+            await fetchObsScenes(); 
+
+            const inputsResponse = await sendRequest("GetInputList", { inputKind: "browser_source" });
+            const hlPrefix = getFullHighlightPrefix();
+            let foundHighlightedIdOnConnect = null;
+
+            if (inputsResponse && inputsResponse.inputs) {
+                for (const input of inputsResponse.inputs) {
+                    if (hlPrefix && input.inputName.startsWith(hlPrefix + "_")) { 
+                        const potentialStreamId = input.inputName.substring((hlPrefix + "_").length);
+                        if (!potentialStreamId.endsWith(':s') && potentialStreamId.length > 0) {
+                            foundHighlightedIdOnConnect = potentialStreamId;
+                            logMessage(`Found pre-existing highlighted source in OBS: '${input.inputName}'. Setting active highlight to stream ID: ${foundHighlightedIdOnConnect}.`, "logMessages.obs.foundPreExistingHighlight", {sourceName: input.inputName, streamId: foundHighlightedIdOnConnect});
+                            break; 
+                        }
+                    }
+                }
+            }
+            
+            highlightedStreamId = foundHighlightedIdOnConnect; 
+            updateStreamList(); 
+
             sceneLayoutConfigs.forEach(config => {
                 if (config.sceneName && config.layoutType) {
                     triggerLayoutUpdateForScene(config.sceneName);
                 }
             });
-            const mainTargetScene = getTargetScene();
-            if (mainTargetScene && !getLayoutConfigForScene(mainTargetScene) && sourceSizingSelect.value === "autoGrid") { // Legacy autoGrid support
+            const mainTargetScene = getTargetScene(); 
+            if (mainTargetScene && !getLayoutConfigForScene(mainTargetScene) && sourceSizingSelect.value === "autoGrid") { 
                  triggerLayoutUpdateForScene(mainTargetScene);
             }
-          })
-          .catch((error) => {
-            logMessage(
-              `Error during post-OBS connection setup (fetching scenes): ${error.message}`,
-              "logMessages.obs.errorPostConnectionSetup", { message: error.message }
-            );
-          });
+          } catch (error) {
+            logMessage(`Error during post-OBS connection setup: ${error.message}`, "logMessages.obs.errorPostConnectionSetup", { message: error.message });
+          }
       }
+
+      // Called when OBS connection is disconnected
       function onObsDisconnected() {
         logMessage("OBS Connection has been closed or lost.", "logMessages.obs.connectionClosedOrLost");
         obsConnected = false;
@@ -2806,8 +2873,9 @@
         updateStreamList(); 
         obsScenes = [];
         updateSceneDropdowns();
-        updateOtherScenesList(); 
       }
+
+      // Fetch OBS scenes
       async function fetchObsScenes() {
         if (!obsConnected || !obs) {
           logMessage("Cannot fetch OBS scenes: Not connected to OBS.", "logMessages.obs.cannotFetchScenesNotConnected");
@@ -2816,20 +2884,10 @@
         logMessage("Fetching OBS scenes...", "logMessages.obs.fetchingScenes");
         try {
           const response = await sendRequest("GetSceneList");
-          const settingsJson = localStorage.getItem("obsNinjaSettings"); 
-          const settings = settingsJson ? JSON.parse(settingsJson) : {};
           if (response && response.scenes) {
             obsScenes = response.scenes; 
             logMessage(`Fetched ${obsScenes.length} scenes from OBS.`, "logMessages.obs.fetchedScenesCount", { count: obsScenes.length });
             updateSceneDropdowns(); 
-            if (settings.obsSceneName && obsScenes.some((s) => s.sceneName === settings.obsSceneName)) {
-              obsSceneSelect.value = settings.obsSceneName;
-            } else if (settings.obsSceneName) {
-              logMessage(
-                `Previously selected main scene "${settings.obsSceneName}" no longer found. Please reselect.`,
-                "logMessages.obs.mainSceneNotFound", { sceneName: settings.obsSceneName }
-              );
-            }
           } else {
             logMessage("Failed to fetch OBS scenes or no scenes returned.", "logMessages.obs.failedToFetchScenes");
             obsScenes = [];
@@ -2841,35 +2899,156 @@
           updateSceneDropdowns();
         }
       }
+
+      // Populate scene checkboxes
+      function populateSceneCheckboxes(scenesData, containerElement, selectedValues = []) {
+          if (!i18next.isInitialized || !containerElement) return;
+
+          containerElement.innerHTML = ''; 
+
+          if (!scenesData || scenesData.length === 0) {
+              const noScenesText = i18next.t("obsTargetSettings.noScenesFound", "Nenhuma cena encontrada");
+              containerElement.innerHTML = `<span data-i18n="obsTargetSettings.noScenesFound">${noScenesText}</span>`;
+              return;
+          }
+
+          scenesData.forEach((scene, index) => {
+              const sceneId = `scene-checkbox-${scene.sceneName.replace(/[^a-zA-Z0-9-_]/g, '')}-${index}`; 
+
+              const rowDiv = document.createElement('div');
+              rowDiv.className = 'checkbox-item-row';
+
+              const checkbox = document.createElement('input');
+              checkbox.type = 'checkbox';
+              checkbox.id = sceneId;
+              checkbox.value = scene.sceneName;
+              checkbox.name = 'sourceCreationScene'; 
+              if (selectedValues.includes(scene.sceneName)) {
+                  checkbox.checked = true;
+              }
+
+              checkbox.addEventListener('change', () => {
+                  saveSettings(); 
+                  updateStreamList(); 
+
+                  const allCheckedCheckboxes = Array.from(containerElement.querySelectorAll('input[type="checkbox"]:checked'));
+                  if (allCheckedCheckboxes.length > 0) {
+                      const primarySceneForLayoutUpdate = allCheckedCheckboxes[0].value;
+                      if (primarySceneForLayoutUpdate && !getLayoutConfigForScene(primarySceneForLayoutUpdate)) {
+                          triggerLayoutUpdateForScene(primarySceneForLayoutUpdate);
+                      }
+                  }
+              });
+
+              const label = document.createElement('label');
+              label.htmlFor = sceneId;
+              label.textContent = scene.sceneName;
+
+              rowDiv.appendChild(checkbox);
+              rowDiv.appendChild(label);
+              containerElement.appendChild(rowDiv);
+          });
+      }
+
+
+      // Populate a scene dropdown (generic)
       function populateSceneDropdown(
         scenesData, 
         selectElement,
-        placeholderKey = "obsTargetSettings.selectSceneOption" 
+        placeholderKey = "obsTargetSettings.selectSceneOption", 
+        isMultiSelect = false, 
+        selectedValues = [] 
       ) {
         if (!i18next.isInitialized || !selectElement) return; 
-        const currentValue = selectElement.value; 
+        
+        if (selectElement.id === "sourceCreationScenesContainer") {
+            return;
+        }
+
+        const currentValues = isMultiSelect ? Array.from(selectElement.selectedOptions).map(opt => opt.value) : [selectElement.value];
         selectElement.innerHTML = ''; 
-        const placeholderOption = document.createElement('option');
-        placeholderOption.value = ""; 
-        placeholderOption.textContent = i18next.t(placeholderKey);
-        selectElement.appendChild(placeholderOption);
+
+        if (placeholderKey && !isMultiSelect) { 
+            const placeholderOption = document.createElement('option');
+            placeholderOption.value = ""; 
+            placeholderOption.textContent = i18next.t(placeholderKey);
+            selectElement.appendChild(placeholderOption);
+        }
+
         if (scenesData && scenesData.length > 0) {
           scenesData.forEach((scene) => {
             const option = document.createElement("option");
             option.value = scene.sceneName;
             option.textContent = scene.sceneName;
+            if (isMultiSelect && selectedValues.includes(scene.sceneName)) { 
+                option.selected = true;
+            }
             selectElement.appendChild(option);
           });
         }
-        if (currentValue && Array.from(selectElement.options).some(opt => opt.value === currentValue)) {
-          selectElement.value = currentValue;
-        } else {
-           selectElement.value = ""; 
+        
+        if (isMultiSelect) {
+             Array.from(selectElement.options).forEach(opt => {
+                if (currentValues.includes(opt.value)) {
+                    opt.selected = true;
+                }
+            });
+        } else { 
+            if (currentValues[0] && Array.from(selectElement.options).some(opt => opt.value === currentValues[0])) {
+              selectElement.value = currentValues[0];
+            } else if (!placeholderKey) { 
+                if (selectElement.options.length > 0) selectElement.value = selectElement.options[0].value;
+            } else {
+               selectElement.value = ""; 
+            }
         }
       }
-      function getTargetScene() { 
-        return obsSceneSelect.value || ""; 
+
+      // Populate scene dropdowns for layout config with disabled options
+      function populateSceneDropdownWithOptionsDisabled(scenesData, selectElement, placeholderKey, currentEditingConfigId) {
+          if (!i18next.isInitialized || !selectElement) return;
+          const currentValue = selectElement.value;
+          selectElement.innerHTML = '';
+
+          const placeholderOption = document.createElement('option');
+          placeholderOption.value = "";
+          placeholderOption.textContent = i18next.t(placeholderKey);
+          selectElement.appendChild(placeholderOption);
+
+          const configuredScenesByOthers = new Set();
+          sceneLayoutConfigs.forEach(cfg => {
+              if (cfg.id !== currentEditingConfigId && cfg.sceneName && cfg.sceneName !== "") {
+                  configuredScenesByOthers.add(cfg.sceneName);
+              }
+          });
+          
+          if (scenesData && scenesData.length > 0) {
+              scenesData.forEach((scene) => {
+                  const option = document.createElement("option");
+                  option.value = scene.sceneName;
+                  option.textContent = scene.sceneName;
+                  if (configuredScenesByOthers.has(scene.sceneName)) {
+                      option.disabled = true;
+                      option.textContent += ` (${i18next.t('sceneLayouts.sceneAlreadyConfiguredTooltip', 'Already in use')})`;
+                  }
+                  selectElement.appendChild(option);
+              });
+          }
+
+          if (currentValue && Array.from(selectElement.options).some(opt => opt.value === currentValue && !opt.disabled)) {
+              selectElement.value = currentValue;
+          } else {
+              selectElement.value = ""; 
+          }
       }
+
+      // Get the primary target scene (first checked checkbox)
+      function getTargetScene() { 
+        const firstCheckedCheckbox = document.querySelector('#sourceCreationScenesContainer input[type="checkbox"]:checked');
+        return firstCheckedCheckbox ? firstCheckedCheckbox.value : "";
+      }
+
+      // Get VDO.Ninja view URL
       function getVdoNinjaViewUrl(streamId, includeCommonParams = true) {
         const room = vdoNinjaRoomInput.value.trim();
         const ninjaPassword = vdoNinjaPasswordInput.value;
@@ -2895,6 +3074,8 @@
         }
         return url;
       }
+
+      // Initialize VDO.Ninja iframe
       function initializeVdoNinjaIframe() {
         const room = vdoNinjaRoomInput.value.trim();
         const streamIdsInput = vdoNinjaStreamIdsInput.value.trim();
@@ -2953,6 +3134,8 @@
           vdoNinjaLastActivityTime = Date.now(); 
         }, 100);
       }
+
+      // VDO.Ninja iframe message listener
       window.addEventListener(
         "message",
         (event) => {
@@ -3048,6 +3231,8 @@
         },
         false
       );
+
+      // Start VDO.Ninja connection monitor
       function startVdoNinjaConnectionMonitor() {
         setInterval(() => {
           if (
@@ -3065,6 +3250,8 @@
           }
         }, 30000); 
       }
+
+      // Add stream to OBS
       async function addStreamToObs(
         streamId,
         streamLabel,
@@ -3079,38 +3266,69 @@
         }
         const resolvedTargetInfo =
           targetInfo || getTargetSceneForStream(streamId, streamLabel);
-        const targetSceneName = resolvedTargetInfo.scene; 
+        
+        const allSelectedSourceCreationScenes = [];
+        document.querySelectorAll('#sourceCreationScenesContainer input[type="checkbox"]:checked').forEach(cb => {
+            allSelectedSourceCreationScenes.push(cb.value);
+        });
+
+        const primaryTargetSceneName = resolvedTargetInfo.scene || (allSelectedSourceCreationScenes.length > 0 ? allSelectedSourceCreationScenes[0] : "");
+        const otherScenesToCopyTo = allSelectedSourceCreationScenes.slice(1);
+
+
         const mappingRule = resolvedTargetInfo.mapping; 
-        if (!targetSceneName) {
+        if (!primaryTargetSceneName) {
           logMessage(
-            `Cannot add stream "${streamLabel}" (${streamId}): Target OBS scene name is required but not set (no default and no mapping).`,
+            `Cannot add stream "${streamLabel}" (${streamId}): Target OBS scene name is required but not set (no default from checkboxes and no mapping).`,
             "logMessages.obs.cannotAddStreamNoTargetSceneName", { label: streamLabel, id: streamId }
           );
           return;
         }
+
         const baseSourceName = `${getFullCameraPrefix()}_${streamId}`;
-        let effectiveSourceName = baseSourceName; 
-        let sourceReallyExistsGlobally = false; 
+        const highlightedSourceName = `${getFullHighlightPrefix()}_${streamId}`;
+        let effectiveSourceName = baseSourceName;
+        let sourceReallyExistsGlobally = false;
+
         try {
             await sendRequest("GetInputSettings", { inputName: baseSourceName }, { suppressNotFound: true });
             sourceReallyExistsGlobally = true;
             effectiveSourceName = baseSourceName;
-            if (activeStreams[streamId]) activeStreams[streamId].sourceCreated = true;
-        } catch (e) {
-            const isNotFound = e.message.toLowerCase().includes("not found") || (e.message.toLowerCase().includes("code") && e.message.toLowerCase().includes("600"));
-            if (!isNotFound) {
-                 logMessage(`Error checking for source '${baseSourceName}': ${e.message}. Will attempt to create.`, "logMessages.obs.errorCheckingBaseSource", {sourceName: baseSourceName, message: e.message});
+            logMessage(`Found existing standard source '${baseSourceName}' for stream ${streamId}.`, "logMessages.obs.foundExistingStandardSource", { sourceName: baseSourceName, streamId });
+        } catch (e_base) {
+            if (highlightedSourceName !== baseSourceName) {
+                try {
+                    await sendRequest("GetInputSettings", { inputName: highlightedSourceName }, { suppressNotFound: true });
+                    sourceReallyExistsGlobally = true;
+                    effectiveSourceName = highlightedSourceName;
+                    if (highlightedStreamId !== streamId) {
+                        logMessage(`Found existing OBS source '${highlightedSourceName}' which matches highlight naming for connecting stream ${streamId}. Updating internal highlight state.`, "logMessages.obs.foundExistingHighlightForConnectingStream", { sourceName: highlightedSourceName, streamId });
+                        highlightedStreamId = streamId; 
+                    }
+                    logMessage(`Found existing highlighted source '${highlightedSourceName}' for stream ${streamId}.`, "logMessages.obs.foundExistingHighlightedSource", { sourceName: highlightedSourceName, streamId });
+                } catch (e_highlight) {
+                    sourceReallyExistsGlobally = false;
+                    logMessage(`Neither standard ('${baseSourceName}') nor highlighted ('${highlightedSourceName}') source found for stream ${streamId}. Will create new.`, "logMessages.obs.noExistingSourceFoundWillCreate", { baseSourceName, highlightedSourceName, streamId });
+                }
+            } else {
+                 sourceReallyExistsGlobally = false;
+                 logMessage(`Standard source '${baseSourceName}' not found for stream ${streamId} (highlight prefix is same). Will create new.`, "logMessages.obs.noExistingStandardSourceSamePrefix", { sourceName: baseSourceName, streamId });
             }
-            sourceReallyExistsGlobally = false;
         }
-        const mainDefaultScene = getTargetScene(); 
-        let shouldCloneThisStreamToMain = false;
+
+        if (activeStreams[streamId]) {
+            activeStreams[streamId].sourceCreated = sourceReallyExistsGlobally;
+        }
+        
+        const firstSourceCreationSceneFromCheckboxes = getTargetScene(); 
+        let shouldCloneThisStreamToMainViaMapping = false;
         if (
           mappingRule &&
-          mappingRule.sceneName !== mainDefaultScene && 
-          mappingRule.cloneToMain 
+          mappingRule.sceneName !== firstSourceCreationSceneFromCheckboxes && 
+          mappingRule.cloneToMain &&
+          firstSourceCreationSceneFromCheckboxes 
         ) {
-          shouldCloneThisStreamToMain = true;
+          shouldCloneThisStreamToMainViaMapping = true;
         }
         let shouldSwitchToThisScene = false;
         if (mappingRule && mappingRule.switchToScene) {
@@ -3140,64 +3358,65 @@
           restart_when_active: false,
           shutdown: false, 
         };
-        logMessage(
-          `Managing source '${effectiveSourceName}' (exists globally: ${sourceReallyExistsGlobally}) for stream "${streamLabel}" in OBS scene '${targetSceneName}'. URL: ${vdoNinjaStreamUrl}`,
-          "logMessages.obs.managingSource", { sourceName: effectiveSourceName, exists: sourceReallyExistsGlobally, label: streamLabel, sceneName: targetSceneName, url: vdoNinjaStreamUrl }
-        );
+        
         try {
           if (!sourceReallyExistsGlobally) {
+            effectiveSourceName = baseSourceName; 
             logMessage(
-              `Source '${baseSourceName}' does not exist globally. Creating it in scene '${targetSceneName}'.`,
-              "logMessages.obs.sourceNotGlobalCreating", { sourceName: baseSourceName, sceneName: targetSceneName }
+              `Source '${effectiveSourceName}' does not exist globally. Creating it in scene '${primaryTargetSceneName}'.`,
+              "logMessages.obs.sourceNotGlobalCreating", { sourceName: effectiveSourceName, sceneName: primaryTargetSceneName }
             );
             await sendRequest("CreateInput", {
-              sceneName: targetSceneName, 
-              inputName: baseSourceName, 
+              sceneName: primaryTargetSceneName, 
+              inputName: effectiveSourceName, 
               inputKind: "browser_source",
               inputSettings, 
               sceneItemEnabled: true, 
             });
-            effectiveSourceName = baseSourceName; 
-            logMessage(`Global source '${effectiveSourceName}' created and added to scene '${targetSceneName}'.`, "logMessages.obs.sourceCreatedAddedToScene", {sourceName: effectiveSourceName, sceneName: targetSceneName});
+            logMessage(`Global source '${effectiveSourceName}' created and added to scene '${primaryTargetSceneName}'.`, "logMessages.obs.sourceCreatedAddedToScene", {sourceName: effectiveSourceName, sceneName: primaryTargetSceneName});
           } else {
             logMessage(
-              `Source '${effectiveSourceName}' already exists globally. Updating its settings.`,
-              "logMessages.obs.sourceGlobalUpdating", { sourceName: effectiveSourceName }
+              `Source '${effectiveSourceName}' already exists globally. Updating its settings. URL: ${vdoNinjaStreamUrl}`,
+              "logMessages.obs.sourceGlobalUpdatingWithUrl", { sourceName: effectiveSourceName, url: vdoNinjaStreamUrl }
             );
             await sendRequest("SetInputSettings", {
               inputName: effectiveSourceName, 
               inputSettings, 
             });
           }
-          await ensureSourceInScene(targetSceneName, effectiveSourceName, canvasWidth, canvasHeight);
+
+          await ensureSourceInScene(primaryTargetSceneName, effectiveSourceName, canvasWidth, canvasHeight);
           if (activeStreams[streamId]) activeStreams[streamId].sourceCreated = true;
-          if (shouldCloneThisStreamToMain && mainDefaultScene && mainDefaultScene !== targetSceneName) {
-            logMessage(`Cloning source '${effectiveSourceName}' to main scene '${mainDefaultScene}'.`, "logMessages.obs.cloningToMainScene", {sourceName: effectiveSourceName, sceneName: mainDefaultScene});
-            await ensureSourceInScene(mainDefaultScene, effectiveSourceName, canvasWidth, canvasHeight);
+
+          if (shouldCloneThisStreamToMainViaMapping && firstSourceCreationSceneFromCheckboxes && firstSourceCreationSceneFromCheckboxes !== primaryTargetSceneName) {
+            logMessage(`Cloning source '${effectiveSourceName}' to main scene (from checkboxes) '${firstSourceCreationSceneFromCheckboxes}' due to mapping rule.`, "logMessages.obs.cloningToMainScene", {sourceName: effectiveSourceName, sceneName: firstSourceCreationSceneFromCheckboxes});
+            await ensureSourceInScene(firstSourceCreationSceneFromCheckboxes, effectiveSourceName, canvasWidth, canvasHeight);
           }
-          const otherSceneCheckboxes = document.querySelectorAll(".other-scene-checkbox:checked");
-          for (const checkbox of otherSceneCheckboxes) {
-            const otherSceneName = checkbox.value;
-            if (otherSceneName && otherSceneName !== targetSceneName && (!shouldCloneThisStreamToMain || otherSceneName !== mainDefaultScene)) {
-               logMessage(`Adding source '${effectiveSourceName}' as item to other scene '${otherSceneName}'.`, "logMessages.obs.addingSourceToOtherScene", {sourceName: effectiveSourceName, sceneName: otherSceneName});
+          
+          for (const otherSceneName of otherScenesToCopyTo) {
+            if (otherSceneName && otherSceneName !== primaryTargetSceneName) { 
+               logMessage(`Adding source '${effectiveSourceName}' as item to other selected scene '${otherSceneName}'.`, "logMessages.obs.addingSourceToOtherScene", {sourceName: effectiveSourceName, sceneName: otherSceneName});
                await ensureSourceInScene(otherSceneName, effectiveSourceName, canvasWidth, canvasHeight);
             }
           }
-          const scenesToUpdateLayout = new Set([targetSceneName]);
-          if (shouldCloneThisStreamToMain && mainDefaultScene) scenesToUpdateLayout.add(mainDefaultScene);
-          otherSceneCheckboxes.forEach(cb => scenesToUpdateLayout.add(cb.value));
+
+          const scenesToUpdateLayout = new Set([primaryTargetSceneName]);
+          if (shouldCloneThisStreamToMainViaMapping && firstSourceCreationSceneFromCheckboxes) scenesToUpdateLayout.add(firstSourceCreationSceneFromCheckboxes);
+          otherScenesToCopyTo.forEach(scene => { if(scene) scenesToUpdateLayout.add(scene); });
+          
           scenesToUpdateLayout.forEach(scene => {
             if (scene) triggerLayoutUpdateForScene(scene);
           });
-          if (shouldSwitchToThisScene) {
-            logMessage(`Switching OBS current program scene to '${targetSceneName}'.`, "logMessages.obs.switchingProgramScene", { sceneName: targetSceneName });
+
+          if (shouldSwitchToThisScene && mappingRule.sceneName) { 
+            logMessage(`Switching OBS current program scene to '${mappingRule.sceneName}' due to mapping rule.`, "logMessages.obs.switchingProgramScene", { sceneName: mappingRule.sceneName });
             const studio = await sendRequest("GetStudioModeEnabled");
             if (studio.studioModeEnabled) {
-              await sendRequest("SetCurrentPreviewScene", { sceneName: targetSceneName });
+              await sendRequest("SetCurrentPreviewScene", { sceneName: mappingRule.sceneName });
               await sleep(100); 
               await sendRequest("TriggerStudioModeTransition");
             } else {
-              await sendRequest("SetCurrentProgramScene", { sceneName: targetSceneName });
+              await sendRequest("SetCurrentProgramScene", { sceneName: mappingRule.sceneName });
             }
           }
           logMessage(
@@ -3214,7 +3433,9 @@
           updateStreamList(); 
         }
       }
-      async function ensureSourceInScene(sceneName, sourceName, canvasWidth, canvasHeight) {
+
+      // Ensure source is in scene
+      async function ensureSourceInScene(sceneName, sourceName, canvasWidth, canvasHeight, isScreenShare = false) {
           if (!sceneName || !sourceName) return null;
           let sceneItemId = null;
           try {
@@ -3241,8 +3462,8 @@
           }
           if (sceneItemId) {
              try {
-                // Apply default transform initially, specific layout will override if configured
-                const defaultTransform = calculateTransform(sourceSizingSelect.value, canvasWidth, canvasHeight, canvasWidth, canvasHeight); 
+                const sizing = isScreenShare ? "bestFit" : sourceSizingSelect.value;
+                const defaultTransform = calculateTransform(sizing, canvasWidth, canvasHeight, canvasWidth, canvasHeight); 
                 await sendRequest("SetSceneItemTransform", { sceneName, sceneItemId, sceneItemTransform: defaultTransform });
              } catch (transformError) {
                  logMessage(`Error applying initial default transform to '${sourceName}' in '${sceneName}': ${transformError.message}`, "logMessages.obs.errorApplyingInitialTransform", {sourceName, sceneName, message: transformError.message});
@@ -3250,6 +3471,8 @@
           }
           return sceneItemId;
       }
+
+      // Apply transform and grid (now triggers full layout update)
       async function applyTransformAndGrid( 
         sceneName,
         sourceName, 
@@ -3260,6 +3483,8 @@
         logMessage(`applyTransformAndGrid called for ${sourceName} in ${sceneName}. Triggering full layout update for scene.`, "logMessages.obs.applyTransformAndGridCalled", {sourceName, sceneName});
         await triggerLayoutUpdateForScene(sceneName);
       }
+
+      // Trigger layout update for a scene
       async function triggerLayoutUpdateForScene(sceneName) {
         if (!obsConnected || !obs || !sceneName) {
             return;
@@ -3333,21 +3558,21 @@
             }
         } catch (error) {
             let errorMessage = error.message || "Unknown error during layout update";
-             if (error.description) errorMessage = error.description;
+             if (error.description) errorMessage = error.description; 
             logMessage(`Error during layout update for scene '${sceneName}': ${errorMessage}`, "logMessages.obs.errorTriggeringLayoutUpdate", {sceneName, message: errorMessage});
             console.error("Full layout error object:", error);
         }
       }
+
+      // Apply default sizing to scene items
       async function applyDefaultSizingToSceneItems(sceneName, sceneItems, canvasWidth, canvasHeight) {
         logMessage(`Applying default source sizing ('${sourceSizingSelect.value}') to ${sceneItems.length} items in scene '${sceneName}'.`, "logMessages.obs.applyingDefaultSizing", {sizing: sourceSizingSelect.value, count: sceneItems.length, sceneName});
         for (const item of sceneItems) {
             try {
-                const inputSettingsResponse = await sendRequest("GetInputSettings", { inputName: item.sourceName });
-                let sourceW = canvasWidth, sourceH = canvasHeight; 
-                if (inputSettingsResponse && inputSettingsResponse.inputSettings) {
-                    sourceW = inputSettingsResponse.inputSettings.width || canvasWidth;
-                    sourceH = inputSettingsResponse.inputSettings.height || canvasHeight;
-                }
+                const inputSettingsResponse = await getInputSettingsSafe(item.sourceName, canvasWidth, canvasHeight); 
+                let sourceW = inputSettingsResponse.width; 
+                let sourceH = inputSettingsResponse.height;
+                
                 const transform = calculateTransform(sourceSizingSelect.value, sourceW, sourceH, canvasWidth, canvasHeight);
                 await sendRequest("SetSceneItemTransform", { sceneName, sceneItemId: item.sceneItemId, sceneItemTransform: transform });
                  await sendRequest("SetSceneItemEnabled", { sceneName, sceneItemId: item.sceneItemId, sceneItemEnabled: true });
@@ -3356,13 +3581,14 @@
             }
         }
       }
+
+      // Apply grid layout to scene
       async function applyGridLayoutToScene(sceneName, vdoNinjaSceneItems, canvasWidth, canvasHeight, layoutConfig) {
         const generalCamPrefix = getFullCameraPrefix();
         const cameraItems = vdoNinjaSceneItems.filter(item => item.sourceName.startsWith(generalCamPrefix) && !item.sourceName.endsWith(':s')); 
 
         if (cameraItems.length === 0) {
             logMessage(`No VDO.Ninja camera sources to apply Grid layout in scene '${sceneName}'.`, "logMessages.obs.noSourcesForGridLayout", {sceneName});
-             // Hide other VDO.Ninja items if no cameras are present for grid
             for (const item of vdoNinjaSceneItems) {
                 if (!cameraItems.find(ci => ci.sceneItemId === item.sceneItemId)) {
                     await hideSourceItem(sceneName, item.sceneItemId, item.sourceName);
@@ -3417,7 +3643,7 @@
                     positionY: offsetY,
                     scaleX: finalScaleX, 
                     scaleY: finalScaleY,
-                    width: itemWidth, height: itemHeight, // These are visual bounds, scale handles the source
+                    width: itemWidth, height: itemHeight, 
                     sourceWidth: camSrcInfo.width, sourceHeight: camSrcInfo.height,
                     cropLeft: cropLeft, cropRight: cropRight,
                     cropTop: cropTop, cropBottom: cropBottom,
@@ -3454,179 +3680,267 @@
             }
         }
       }
-async function applyReactionOrHighlightLayoutShared(sceneName, vdoNinjaSceneItems, canvasWidth, canvasHeight, layoutConfig, isReactionLayout) {
-    const generalCamPrefix = getFullCameraPrefix();
-    const mainContentPrefix = isReactionLayout ? getFullReactionPrefix() : getFullHighlightPrefix();
-    const mainContentSuffix = isReactionLayout ? ':s' : ''; // Reaction main is screen share, Highlight main is camera
 
-    const mainContentSources = vdoNinjaSceneItems.filter(item => 
-        item.sourceName.startsWith(mainContentPrefix) && 
-        (isReactionLayout ? item.sourceName.endsWith(mainContentSuffix) : !item.sourceName.endsWith(':s'))
-    );
-    const sideCameraSources = vdoNinjaSceneItems.filter(item => 
-        item.sourceName.startsWith(generalCamPrefix) && 
-        !mainContentSources.find(mcs => mcs.sourceName === item.sourceName) && // Not a main content source
-        !item.sourceName.endsWith(':s') // Side cameras are not screen shares
-    );
-    
-    const mainContentSourceFoundAndVisible = mainContentSources.length > 0 && mainContentSources[0].sceneItemEnabled !== false;
+      // Apply reaction or highlight layout (shared logic)
+      async function applyReactionOrHighlightLayoutShared(sceneName, vdoNinjaSceneItems, canvasWidth, canvasHeight, layoutConfig, isReactionLayout) {
+        const generalCamPrefix = getFullCameraPrefix();
+        const mainContentPrefix = isReactionLayout ? getFullReactionPrefix() : getFullHighlightPrefix();
+        const mainContentSuffix = isReactionLayout ? ':s' : ''; 
 
-    if (!mainContentSourceFoundAndVisible) {
-        logMessage(`Main content for ${isReactionLayout ? 'Reaction' : 'Highlight'} layout in scene '${sceneName}' not found/visible. Checking fallback.`, 
-                   isReactionLayout ? "logMessages.obs.reactionMainNotFoundFallback" : "logMessages.obs.highlightMainNotFoundFallback", { sceneName });
-        
-        const hasFallbackGridSettings = layoutConfig && (
-            typeof layoutConfig.fallbackGridMargin === 'number' || typeof layoutConfig.fallbackGridSpacing === 'number' ||
-            typeof layoutConfig.fallbackGridOffsetX === 'number' || typeof layoutConfig.fallbackGridOffsetY === 'number' ||
-            typeof layoutConfig.fallbackGridSplitScreenTwoCameras === 'boolean'
+        const mainContentSources = vdoNinjaSceneItems.filter(item => 
+            item.sourceName.startsWith(mainContentPrefix) && 
+            (isReactionLayout ? item.sourceName.endsWith(mainContentSuffix) : !item.sourceName.endsWith(':s'))
         );
+        const sideCameraSources = vdoNinjaSceneItems.filter(item => 
+            item.sourceName.startsWith(generalCamPrefix) && 
+            !mainContentSources.find(mcs => mcs.sourceName === item.sourceName) && 
+            !item.sourceName.endsWith(':s') 
+        );
+        
+        let mainContentItem = null;
+        if (mainContentSources.length > 0) {
+            try {
+                if (isReactionLayout && screenShareId) {
+                    const currentScreenShareSourceName = `${mainContentPrefix}_${screenShareId}${mainContentSuffix}`;
+                    const activeScreenShareItem = mainContentSources.find(mcs => mcs.sourceName === currentScreenShareSourceName);
+                    if (activeScreenShareItem) {
+                         const itemDetails = await sendRequest("GetSceneItemEnabled", { sceneName, sceneItemId: activeScreenShareItem.sceneItemId });
+                         if (itemDetails.sceneItemEnabled) mainContentItem = activeScreenShareItem;
+                    }
+                }
+                if (!mainContentItem && mainContentSources[0]) { 
+                    // Fallback to the first mainContentSource if specific (screenShare) isn't active/visible
+                    // This handles the case where a highlight source might be present but not the *active* one (e.g. if multiple highlight sources exist)
+                    const itemDetails = await sendRequest("GetSceneItemEnabled", { sceneName, sceneItemId: mainContentSources[0].sceneItemId });
+                    if (itemDetails.sceneItemEnabled) {
+                        mainContentItem = mainContentSources[0];
+                    }
+                }
+            } catch (e) {
+                logMessage(`Error checking if main content is enabled: ${e.message}`, "logMessages.obs.errorCheckingMainContentEnabled", {sourceName: mainContentSources[0]?.sourceName || 'unknown', message: e.message});
+            }
+        }
 
-        if (hasFallbackGridSettings) {
-            logMessage(`Applying fallback Grid layout to scene '${sceneName}' using specific settings from ${isReactionLayout ? 'Reaction' : 'Highlight'} config.`, 
-                       "logMessages.obs.applyingFallbackGridSpecific", { sceneName });
+
+        if (!mainContentItem) { 
+            logMessage(`Main content for ${isReactionLayout ? 'Reaction' : 'Highlight'} layout in scene '${sceneName}' not found/visible. Applying fallback grid of cameras.`, 
+                       isReactionLayout ? "logMessages.obs.reactionMainNotFoundFallbackGrid" : "logMessages.obs.highlightMainNotFoundFallbackGrid", { sceneName });
+            
+            let fallbackGridMargin = DEFAULT_GRID_MARGIN;
+            let fallbackGridSpacing = DEFAULT_GRID_SPACING;
+            let fallbackGridOffsetX = DEFAULT_GRID_X_OFFSET;
+            let fallbackGridOffsetY = DEFAULT_GRID_Y_OFFSET;
+            let fallbackGridSplitScreenTwoCameras = DEFAULT_GRID_SPLIT_SCREEN;
+
+            const firstGridSceneConfig = sceneLayoutConfigs.find(cfg => cfg.layoutType === 'grid' && cfg.sceneName);
+
+            if (firstGridSceneConfig) {
+                logMessage(`Using grid settings from the first configured 'Grid' layout scene ('${firstGridSceneConfig.sceneName}') as fallback for '${sceneName}'.`, "logMessages.obs.usingGridSceneFallbackSettings", { sceneName: firstGridSceneConfig.sceneName, targetScene: sceneName });
+                fallbackGridMargin = firstGridSceneConfig.margin ?? DEFAULT_GRID_MARGIN;
+                fallbackGridSpacing = firstGridSceneConfig.spacing ?? DEFAULT_GRID_SPACING;
+                fallbackGridOffsetX = firstGridSceneConfig.offsetX ?? DEFAULT_GRID_X_OFFSET;
+                fallbackGridOffsetY = firstGridSceneConfig.offsetY ?? DEFAULT_GRID_Y_OFFSET;
+                fallbackGridSplitScreenTwoCameras = firstGridSceneConfig.splitScreenTwoCameras ?? DEFAULT_GRID_SPLIT_SCREEN;
+            } else {
+                logMessage(`No 'Grid' layout scene found. Using default grid settings as fallback for '${sceneName}'.`, "logMessages.obs.usingDefaultGridFallbackSettings", {targetScene: sceneName});
+            }
+
             const fallbackGridConfig = {
-                margin: layoutConfig.fallbackGridMargin ?? DEFAULT_GRID_MARGIN,
-                spacing: layoutConfig.fallbackGridSpacing ?? DEFAULT_GRID_SPACING,
-                offsetX: layoutConfig.fallbackGridOffsetX ?? DEFAULT_GRID_X_OFFSET,
-                offsetY: layoutConfig.fallbackGridOffsetY ?? DEFAULT_GRID_Y_OFFSET,
-                splitScreenTwoCameras: layoutConfig.fallbackGridSplitScreenTwoCameras ?? DEFAULT_GRID_SPLIT_SCREEN,
+                margin: fallbackGridMargin,
+                spacing: fallbackGridSpacing,
+                offsetX: fallbackGridOffsetX,
+                offsetY: fallbackGridOffsetY,
+                splitScreenTwoCameras: fallbackGridSplitScreenTwoCameras,
             };
+            
             const cameraItemsForFallbackGrid = vdoNinjaSceneItems.filter(item =>
                 item.sourceName.startsWith(generalCamPrefix) && !item.sourceName.endsWith(':s')
             );
-            await applyGridLayoutToScene(sceneName, cameraItemsForFallbackGrid, canvasWidth, canvasHeight, fallbackGridConfig);
+
+            if (cameraItemsForFallbackGrid.length > 0) {
+                 logMessage(`Applying fallback Grid layout to ${cameraItemsForFallbackGrid.length} camera sources in scene '${sceneName}'.`, "logMessages.obs.applyingFallbackGridToCameras", { count: cameraItemsForFallbackGrid.length, sceneName });
+                 await applyGridLayoutToScene(sceneName, cameraItemsForFallbackGrid, canvasWidth, canvasHeight, fallbackGridConfig);
+            } else {
+                 logMessage(`No camera items to display in fallback grid for scene '${sceneName}'. All VDO sources in this scene will be hidden.`, "logMessages.obs.noCamerasForFallbackGridHidingAll", {sceneName});
+            }
+
             const cameraItemIdsForFallback = new Set(cameraItemsForFallbackGrid.map(it => it.sceneItemId));
-            for (const item of vdoNinjaSceneItems) { // Hide items not part of the fallback grid
+            for (const item of vdoNinjaSceneItems) {
                 if (!cameraItemIdsForFallback.has(item.sceneItemId)) {
                     await hideSourceItem(sceneName, item.sceneItemId, item.sourceName);
                 }
             }
+            return; 
+        }
+
+        const mainSourceItem = mainContentItem; 
+        const spacing = layoutConfig.spacing ?? DEFAULT_REACTION_HIGHLIGHT_SPACING;
+        const offsetX = layoutConfig.offsetX ?? DEFAULT_REACTION_HIGHLIGHT_X_OFFSET;
+        const offsetY = layoutConfig.offsetY ?? DEFAULT_REACTION_HIGHLIGHT_Y_OFFSET;
+        const distributeCameras = layoutConfig.distributeCameras ?? DEFAULT_REACTION_HIGHLIGHT_DISTRIBUTE_CAMERAS;
+        const cameraCropRatio = isReactionLayout ? REACTION_CAMERA_CROP_RATIO : HIGHLIGHT_CAMERA_CROP_RATIO;
+        const itemAspectRatio = REACTION_HIGHLIGHT_ASPECT_RATIO; // Aspect ratio for the main content
+
+        let camsLeft = [], camsRight = [];
+        if (distributeCameras && sideCameraSources.length > 0) {
+            const half = Math.ceil(sideCameraSources.length / 2);
+            camsLeft = sideCameraSources.slice(0, half);
+            camsRight = sideCameraSources.slice(half);
         } else {
-            logMessage(`No specific fallback Grid settings for ${isReactionLayout ? 'Reaction' : 'Highlight'} in scene '${sceneName}'. Hiding all VDO sources.`, 
-                       "logMessages.obs.noFallbackGridSettingsHidingAll", { sceneName });
-            for (const item of vdoNinjaSceneItems) {
+            camsLeft = [...sideCameraSources]; // All cameras on the left if not distributing or only one side needed
+        }
+
+        // Determine width for camera columns (fixed percentage for now, could be configurable)
+        let leftCameraAreaWidth = camsLeft.length > 0 ? canvasWidth * 0.15 : 0;
+        let rightCameraAreaWidth = camsRight.length > 0 ? canvasWidth * 0.15 : 0;
+
+        // MODIFICATION STARTS HERE: Calculate main content width based on remaining space
+        let baseScaleWidthForMainContent = canvasWidth;
+        baseScaleWidthForMainContent -= spacing;
+        baseScaleWidthForMainContent -= spacing;
+        if (leftCameraAreaWidth > 0) {
+            baseScaleWidthForMainContent -= leftCameraAreaWidth;
+            baseScaleWidthForMainContent -= spacing; // Subtract spacing between left column and main content
+        }
+        if (rightCameraAreaWidth > 0) {
+            baseScaleWidthForMainContent -= rightCameraAreaWidth;
+            baseScaleWidthForMainContent -= spacing; // Subtract spacing between main content and right column
+        }
+        
+        let mainContentVisualWidth = Math.max(1, baseScaleWidthForMainContent);
+        let mainContentVisualHeight = mainContentVisualWidth / itemAspectRatio;
+
+        // Adjust if height exceeds available canvas height (considering top/bottom edge spacing)
+        const availableHeightForScaling = canvasHeight - (2 * spacing);
+        if (mainContentVisualHeight > availableHeightForScaling) {
+            mainContentVisualHeight = Math.max(1, availableHeightForScaling);
+            mainContentVisualWidth = mainContentVisualHeight * itemAspectRatio;
+        }
+        // MODIFICATION ENDS HERE for scaling calculation
+
+        // Calculate X position for the main content, including offsetX
+        const mainContentVisualX = spacing + 
+                                   (leftCameraAreaWidth > 0 ? (leftCameraAreaWidth + spacing) : 0) + 
+                                   offsetX;
+        // Calculate Y position for the main content, centered and including offsetY
+        const mainContentVisualY = (canvasHeight - mainContentVisualHeight) / 2 + offsetY;
+
+
+        if (mainSourceItem) {
+            const mainSrcInfo = await getInputSettingsSafe(mainSourceItem.sourceName, canvasWidth, canvasHeight);
+            const transformMain = {
+                alignment: 5, boundsType: "OBS_BOUNDS_NONE", // Using NONE and explicit scale
+                positionX: mainContentVisualX, 
+                positionY: mainContentVisualY,
+                scaleX: mainSrcInfo.width === 0 ? 0 : mainContentVisualWidth / mainSrcInfo.width,
+                scaleY: mainSrcInfo.height === 0 ? 0 : mainContentVisualHeight / mainSrcInfo.height,
+                width: mainContentVisualWidth, // Visual width on canvas
+                height: mainContentVisualHeight, // Visual height on canvas
+                sourceWidth: mainSrcInfo.width, 
+                sourceHeight: mainSrcInfo.height,
+                cropLeft: 0, cropRight: 0, cropTop: 0, cropBottom: 0,
+            };
+            await sendRequest("SetSceneItemEnabled", {sceneName, sceneItemId: mainSourceItem.sceneItemId, sceneItemEnabled: true});
+            await sendRequest("SetSceneItemTransform", { sceneName, sceneItemId: mainSourceItem.sceneItemId, sceneItemTransform: transformMain });
+        }
+
+        const positionCameras = async (cameraList, startXForColumn, columnTotalWidth) => {
+            if (cameraList.length > 0 && columnTotalWidth > 0) {
+                const camAvailableHeightTotal = canvasHeight - (cameraList.length + 1) * spacing; 
+                let camCellHeight = (cameraList.length > 0) ? Math.max(1, camAvailableHeightTotal / cameraList.length) : 0;
+                
+                // Calculate width based on height and aspect ratio, then apply crop
+                let camCellOriginalWidthUncropped = camCellHeight * itemAspectRatio; // Camera's original aspect ratio assumed same as main for now
+                let camCellVisibleWidthAfterCrop = camCellOriginalWidthUncropped * cameraCropRatio;
+
+                // If visible width after crop is too wide for the column, or invalid, adjust.
+                // Prioritize fitting into columnTotalWidth.
+                if (camCellVisibleWidthAfterCrop > columnTotalWidth || camCellVisibleWidthAfterCrop <= 0) {
+                     camCellVisibleWidthAfterCrop = Math.max(1, columnTotalWidth); 
+                     if (cameraCropRatio > 0) { // Recalculate original width and height based on fitting visible width
+                        camCellOriginalWidthUncropped = camCellVisibleWidthAfterCrop / cameraCropRatio;
+                        camCellHeight = camCellOriginalWidthUncropped / itemAspectRatio;
+                     } else { // No crop, so original width is visible width
+                        camCellOriginalWidthUncropped = camCellVisibleWidthAfterCrop;
+                        camCellHeight = camCellOriginalWidthUncropped / itemAspectRatio;
+                     }
+                }
+                
+                const actualCamerasBlockHeight = cameraList.length * camCellHeight + Math.max(0, cameraList.length - 1) * spacing;
+                let currentCamY = (canvasHeight - actualCamerasBlockHeight) / 2 + offsetY; 
+
+                for (const camItem of cameraList) {
+                    const camSrcInfo = await getInputSettingsSafe(camItem.sourceName, 1920, 1080); 
+                    
+                    let cropLeftPixels = 0;
+                    let cropRightPixels = 0;
+                    let effectiveCamWidthForScale = camSrcInfo.width;
+
+                    if (cameraCropRatio < 1.0 && cameraCropRatio > 0) { // Only apply crop if ratio is valid and less than 1
+                        const totalHorizontalCrop = camSrcInfo.width * (1 - cameraCropRatio);
+                        cropLeftPixels = Math.round(totalHorizontalCrop / 2);
+                        cropRightPixels = Math.round(totalHorizontalCrop / 2);
+                        effectiveCamWidthForScale = camSrcInfo.width - cropLeftPixels - cropRightPixels;
+                    }
+
+
+                    const transformCam = {
+                        alignment: 5, boundsType: "OBS_BOUNDS_NONE",
+                        positionX: startXForColumn + offsetX, // Apply offsetX to camera columns too
+                        positionY: currentCamY, // offsetY is already in currentCamY
+                        scaleX: effectiveCamWidthForScale <= 0 ? 0 : camCellVisibleWidthAfterCrop / effectiveCamWidthForScale,
+                        scaleY: camSrcInfo.height <= 0 ? 0 : camCellHeight / camSrcInfo.height, 
+                        width: camCellVisibleWidthAfterCrop,  // Visual width on canvas
+                        height: camCellHeight, // Visual height on canvas
+                        sourceWidth: camSrcInfo.width, 
+                        sourceHeight: camSrcInfo.height,
+                        cropLeft: cropLeftPixels, 
+                        cropRight: cropRightPixels,
+                        cropTop: 0, cropBottom: 0,
+                    };
+                    await sendRequest("SetSceneItemEnabled", {sceneName, sceneItemId: camItem.sceneItemId, sceneItemEnabled: true});
+                    await sendRequest("SetSceneItemTransform", { sceneName, sceneItemId: camItem.sceneItemId, sceneItemTransform: transformCam });
+                    currentCamY += camCellHeight + spacing;
+                }
+            }
+        };
+        
+        // Position left cameras
+        const startXLeftColumn = spacing; // Relative to canvas edge before offsetX
+        await positionCameras(camsLeft, startXLeftColumn, leftCameraAreaWidth);
+
+        // Position right cameras (if any)
+        if (distributeCameras && camsRight.length > 0) {
+            // Start X for right column is after main content and its preceding space
+            const startXRightColumn = spacing + /*left edge*/
+                                      (leftCameraAreaWidth > 0 ? (leftCameraAreaWidth + spacing) : 0) + /*left col area*/
+                                      mainContentVisualWidth + spacing; /*main content and space after it*/
+            await positionCameras(camsRight, startXRightColumn, rightCameraAreaWidth);
+        }
+
+
+        const layoutItemIds = new Set();
+        if(mainSourceItem) layoutItemIds.add(mainSourceItem.sceneItemId);
+        sideCameraSources.forEach(cam => layoutItemIds.add(cam.sceneItemId));
+
+        for (const item of vdoNinjaSceneItems) {
+            if (!layoutItemIds.has(item.sceneItemId)) {
                 await hideSourceItem(sceneName, item.sceneItemId, item.sourceName);
             }
         }
-        return; // Fallback applied or sources hidden
-    }
+      }
 
-    const mainSourceItem = mainContentSources[0];
-    const spacing = layoutConfig.spacing ?? DEFAULT_REACTION_HIGHLIGHT_SPACING;
-    const offsetX = layoutConfig.offsetX ?? DEFAULT_REACTION_HIGHLIGHT_X_OFFSET;
-    const offsetY = layoutConfig.offsetY ?? DEFAULT_REACTION_HIGHLIGHT_Y_OFFSET;
-    const distributeCameras = layoutConfig.distributeCameras ?? DEFAULT_REACTION_HIGHLIGHT_DISTRIBUTE_CAMERAS;
-    const cameraCropRatio = isReactionLayout ? REACTION_CAMERA_CROP_RATIO : HIGHLIGHT_CAMERA_CROP_RATIO;
-    const itemAspectRatio = REACTION_HIGHLIGHT_ASPECT_RATIO;
+      // Apply reaction layout to scene
+      async function applyReactionLayoutToScene(sceneName, vdoNinjaSceneItems, canvasWidth, canvasHeight, layoutConfig) {
+        await applyReactionOrHighlightLayoutShared(sceneName, vdoNinjaSceneItems, canvasWidth, canvasHeight, layoutConfig, true);
+      }
 
-    let camsLeft = [], camsRight = [];
-    if (distributeCameras && sideCameraSources.length > 0) {
-        const half = Math.ceil(sideCameraSources.length / 2);
-        camsLeft = sideCameraSources.slice(0, half);
-        camsRight = sideCameraSources.slice(half);
-    } else {
-        camsLeft = [...sideCameraSources];
-    }
+      // Apply highlight layout to scene
+      async function applyHighlightLayoutToScene(sceneName, vdoNinjaSceneItems, canvasWidth, canvasHeight, layoutConfig) {
+        await applyReactionOrHighlightLayoutShared(sceneName, vdoNinjaSceneItems, canvasWidth, canvasHeight, layoutConfig, false);
+      }
 
-    let leftCameraAreaWidth = camsLeft.length > 0 ? canvasWidth * 0.25 : 0;
-    let rightCameraAreaWidth = camsRight.length > 0 ? canvasWidth * 0.25 : 0;
-
-    const mainContentVisualX = spacing + leftCameraAreaWidth + (leftCameraAreaWidth > 0 ? spacing : 0) + offsetX;
-    const mainContentAvailableVisualWidth = canvasWidth - mainContentVisualX - (rightCameraAreaWidth > 0 ? rightCameraAreaWidth + spacing : 0) - spacing;
-    let mainContentVisualWidth = Math.max(1, mainContentAvailableVisualWidth);
-    let mainContentVisualHeight = mainContentVisualWidth / itemAspectRatio;
-
-    if (mainContentVisualHeight > canvasHeight - 2 * spacing) {
-        mainContentVisualHeight = Math.max(1, canvasHeight - 2 * spacing);
-        mainContentVisualWidth = mainContentVisualHeight * itemAspectRatio;
-    }
-    const mainContentVisualY = (canvasHeight - mainContentVisualHeight) / 2 + offsetY;
-
-    if (mainSourceItem) {
-        const mainSrcInfo = await getInputSettingsSafe(mainSourceItem.sourceName, canvasWidth, canvasHeight);
-        const transformMain = {
-            alignment: 5, boundsType: "OBS_BOUNDS_NONE",
-            positionX: mainContentVisualX, positionY: mainContentVisualY,
-            scaleX: mainSrcInfo.width === 0 ? 0 : mainContentVisualWidth / mainSrcInfo.width,
-            scaleY: mainSrcInfo.height === 0 ? 0 : mainContentVisualHeight / mainSrcInfo.height,
-            width: mainContentVisualWidth, height: mainContentVisualHeight,
-            sourceWidth: mainSrcInfo.width, sourceHeight: mainSrcInfo.height,
-            cropLeft: 0, cropRight: 0, cropTop: 0, cropBottom: 0,
-        };
-        await sendRequest("SetSceneItemEnabled", {sceneName, sceneItemId: mainSourceItem.sceneItemId, sceneItemEnabled: true});
-        await sendRequest("SetSceneItemTransform", { sceneName, sceneItemId: mainSourceItem.sceneItemId, sceneItemTransform: transformMain });
-    }
-
-    const positionCameras = async (cameraList, startX, columnWidth) => {
-        if (cameraList.length > 0 && columnWidth > 0) {
-            const camAvailableHeightTotal = canvasHeight - (cameraList.length + 1) * spacing; // Total height available for cameras in this column
-            let camCellHeight = (cameraList.length > 0) ? Math.max(1, camAvailableHeightTotal / cameraList.length) : 0;
-            let camCellOriginalWidthBeforeCrop = camCellHeight * itemAspectRatio;
-            let camCellVisibleWidth = camCellOriginalWidthBeforeCrop * cameraCropRatio;
-
-            // Correction for Issue 3: Use columnWidth directly, not columnWidth - spacing
-            if (camCellVisibleWidth > columnWidth || camCellVisibleWidth <= 0) {
-                 camCellVisibleWidth = Math.max(1, columnWidth); 
-                 if (cameraCropRatio > 0) {
-                    camCellOriginalWidthBeforeCrop = camCellVisibleWidth / cameraCropRatio;
-                    camCellHeight = camCellOriginalWidthBeforeCrop / itemAspectRatio;
-                 } else { camCellHeight = 0; }
-            }
-            const actualCamerasHeight = cameraList.length * camCellHeight + Math.max(0, cameraList.length - 1) * spacing;
-            // Correction for Issue 2: Remove initial 'spacing +' for Y centering
-            let currentCamY = (canvasHeight - actualCamerasHeight) / 2 + offsetY; 
-
-            for (const camItem of cameraList) {
-                const camSrcInfo = await getInputSettingsSafe(camItem.sourceName, 1920, 1080); 
-                const cropAmount = camSrcInfo.width * (1 - cameraCropRatio);
-                const cropLeftPixels = Math.round(cropAmount / 2);
-                const cropRightPixels = Math.round(cropAmount / 2);
-                const effectiveCamWidthForScale = camSrcInfo.width - cropLeftPixels - cropRightPixels;
-
-                const transformCam = {
-                    alignment: 5, boundsType: "OBS_BOUNDS_NONE",
-                    positionX: startX, 
-                    positionY: currentCamY,
-                    scaleX: effectiveCamWidthForScale <= 0 ? 0 : camCellVisibleWidth / effectiveCamWidthForScale,
-                    scaleY: camSrcInfo.height <= 0 ? 0 : camCellHeight / camSrcInfo.height, 
-                    width: camCellVisibleWidth, height: camCellHeight,      
-                    sourceWidth: camSrcInfo.width, sourceHeight: camSrcInfo.height,
-                    cropLeft: cropLeftPixels, cropRight: cropRightPixels,
-                    cropTop: 0, cropBottom: 0,
-                };
-                await sendRequest("SetSceneItemEnabled", {sceneName, sceneItemId: camItem.sceneItemId, sceneItemEnabled: true});
-                await sendRequest("SetSceneItemTransform", { sceneName, sceneItemId: camItem.sceneItemId, sceneItemTransform: transformCam });
-                currentCamY += camCellHeight + spacing;
-            }
-        }
-    };
-    
-    await positionCameras(camsLeft, spacing + offsetX, leftCameraAreaWidth);
-    if (distributeCameras && camsRight.length > 0) {
-        // For the right column, startX should be the left edge of that column.
-        // The main content is positioned at mainContentVisualX with mainContentVisualWidth.
-        // So the right cameras start after the main content + spacing.
-        const startXRight = mainContentVisualX + mainContentVisualWidth + spacing;
-        await positionCameras(camsRight, startXRight, rightCameraAreaWidth);
-    }
-
-
-    const layoutItemIds = new Set();
-    if(mainSourceItem) layoutItemIds.add(mainSourceItem.sceneItemId);
-    sideCameraSources.forEach(cam => layoutItemIds.add(cam.sceneItemId));
-
-    for (const item of vdoNinjaSceneItems) {
-        if (!layoutItemIds.has(item.sceneItemId)) {
-            await hideSourceItem(sceneName, item.sceneItemId, item.sourceName);
-        }
-    }
-}
-async function applyReactionLayoutToScene(sceneName, vdoNinjaSceneItems, canvasWidth, canvasHeight, layoutConfig) {
-    await applyReactionOrHighlightLayoutShared(sceneName, vdoNinjaSceneItems, canvasWidth, canvasHeight, layoutConfig, true);
-}
-async function applyHighlightLayoutToScene(sceneName, vdoNinjaSceneItems, canvasWidth, canvasHeight, layoutConfig) {
-    await applyReactionOrHighlightLayoutShared(sceneName, vdoNinjaSceneItems, canvasWidth, canvasHeight, layoutConfig, false);
-}
+      // Calculate grid positions
       function calculateGridPositions( 
         totalSources, canvasWidth, canvasHeight, margin, spacing, cellAspectRatio, xOffset, yOffset
       ) {
@@ -3670,6 +3984,8 @@ async function applyHighlightLayoutToScene(sceneName, vdoNinjaSceneItems, canvas
         }
         return positions;
       }
+
+      // Calculate transform for a scene item
       function calculateTransform(
         sizingMode, sourceWidth, sourceHeight, canvasWidth, canvasHeight, gridPosition = null 
       ) {
@@ -3732,6 +4048,8 @@ async function applyHighlightLayoutToScene(sceneName, vdoNinjaSceneItems, canvas
         }
         return transform;
       }
+
+      // Remove stream from OBS
       async function removeStreamFromObs(streamId) {
         if (!obsConnected || !obs) {
           logMessage(
@@ -3754,12 +4072,12 @@ async function applyHighlightLayoutToScene(sceneName, vdoNinjaSceneItems, canvas
           await toggleHighlight(streamId, currentLabel, targetInfo); 
         }
         const scenesToClean = new Set();
-        if (targetInfo && targetInfo.scene) scenesToClean.add(targetInfo.scene); 
-        const globalMainScene = getTargetScene(); 
-        if (globalMainScene) scenesToClean.add(globalMainScene);
-        document.querySelectorAll(".other-scene-checkbox:checked").forEach((checkbox) => {
-            if (checkbox.value) scenesToClean.add(checkbox.value);
+        document.querySelectorAll('#sourceCreationScenesContainer input[type="checkbox"]:checked').forEach(cb => {
+            if (cb.value) scenesToClean.add(cb.value);
         });
+
+        if (targetInfo && targetInfo.scene) scenesToClean.add(targetInfo.scene); 
+
         let itemRemovedThisRun = false;
         for (const sceneName of scenesToClean) {
           if (!sceneName) continue; 
@@ -3782,6 +4100,8 @@ async function applyHighlightLayoutToScene(sceneName, vdoNinjaSceneItems, canvas
         if (screenShareId !== streamId) updateStreamList(); 
         saveSettings(); 
       }
+
+      // Remove screen share from OBS
       async function removeScreenShareFromObs(streamIdToRemove) {
         if (!obsConnected || !obs) {
           logMessage("Cannot remove screen share: Not connected to OBS.", "logMessages.obs.cannotRemoveScreenShareNotConnected");
@@ -3802,21 +4122,35 @@ async function applyHighlightLayoutToScene(sceneName, vdoNinjaSceneItems, canvas
         let itemRemovedFromAnyScene = false;
         const scenesWithItem = new Set();
         try {
+          const reactionLayoutScenes = sceneLayoutConfigs
+            .filter(cfg => cfg.layoutType === 'reaction' && cfg.sceneName)
+            .map(cfg => cfg.sceneName);
+
+          for (const sceneName of reactionLayoutScenes) {
+            if (await tryRemoveFromScene(sourceName, sceneName)) {
+                itemRemovedFromAnyScene = true;
+                scenesWithItem.add(sceneName);
+            }
+          }
+          
           const scenesResponse = await sendRequest("GetSceneList");
           if (scenesResponse && scenesResponse.scenes) {
             for (const scene of scenesResponse.scenes) {
-              if (await tryRemoveFromScene(sourceName, scene.sceneName)) {
-                itemRemovedFromAnyScene = true;
-                scenesWithItem.add(scene.sceneName);
+              if (!scenesWithItem.has(scene.sceneName)) { 
+                  if (await tryRemoveFromScene(sourceName, scene.sceneName)) {
+                    itemRemovedFromAnyScene = true;
+                    scenesWithItem.add(scene.sceneName);
+                  }
               }
             }
           }
+
           try {
             await sendRequest("GetInputSettings", { inputName: sourceName }, { suppressNotFound: true });
             logMessage(`Removing global input '${sourceName}' from OBS.`, "logMessages.obs.removingGlobalInput", { sourceName });
             await sendRequest("RemoveInput", { inputName: sourceName });
             logMessage(`Successfully removed input '${sourceName}'.`, "logMessages.obs.successfullyRemovedInput", { sourceName });
-          } catch (e) {  }
+          } catch (e) {  /* Suppress if input not found, already removed */ }
         } catch (error) {
           logMessage(
             `Error during screen share removal process for '${sourceName}': ${error.message}`,
@@ -3828,6 +4162,8 @@ async function applyHighlightLayoutToScene(sceneName, vdoNinjaSceneItems, canvas
           scenesWithItem.forEach(sceneName => triggerLayoutUpdateForScene(sceneName));
         }
       }
+
+      // Try to remove source from scene
       async function tryRemoveFromScene(sourceName, sceneName) {
         if (!sceneName) return false;
         try {
@@ -3846,6 +4182,8 @@ async function applyHighlightLayoutToScene(sceneName, vdoNinjaSceneItems, canvas
           return false; 
         }
       }
+
+      // Load jsSHA library (fallback)
       function loadJsShaLibrary() {
         return new Promise((resolve, reject) => {
           if (typeof jsSHA !== "undefined") {
@@ -3865,6 +4203,8 @@ async function applyHighlightLayoutToScene(sceneName, vdoNinjaSceneItems, canvas
           document.head.appendChild(script);
         });
       }
+
+      // Setup blur for secure fields
       function setupSecureFieldsBlur() {
         const secureFields = document.querySelectorAll(
           "#vdoNinjaRoom, #vdoNinjaStreamIds"
@@ -3882,21 +4222,14 @@ async function applyHighlightLayoutToScene(sceneName, vdoNinjaSceneItems, canvas
           }
         });
       }
-      const otherScenesContainer = document.getElementById("otherScenesContainer");
-      const otherScenesListDiv = document.getElementById("otherScenesList");
-      const screenShareSceneSelect = document.getElementById("screenShareSceneSelect");
-      obsSceneSelect.addEventListener("change", () => {
-        saveSettings();
-        updateOtherScenesList(); 
-        updateStreamList(); 
-        triggerLayoutUpdateForScene(obsSceneSelect.value); 
-      });
+      
+      loadSourceCreationScenesBtn.addEventListener("click", fetchObsScenes);
+
+
       [
         obsWsUrlInput, obsWsPasswordInput,
         vdoNinjaBaseUrlInput, vdoNinjaRoomInput, vdoNinjaPasswordInput, vdoNinjaStreamIdsInput,
         autoAddSourcesCheckbox, autoRemoveSourcesCheckbox,
-        highlightSceneSelect, 
-        screenShareSceneSelect,
         document.getElementById("screenShareWidth"), document.getElementById("screenShareHeight"),
         sourceSizingSelect, 
         sourceCodecSelect
@@ -3905,12 +4238,12 @@ async function applyHighlightLayoutToScene(sceneName, vdoNinjaSceneItems, canvas
       });
       sourceSizingSelect.addEventListener("change", () => {
         saveSettings();
-        const defaultScene = getTargetScene();
+        const defaultScene = getTargetScene(); 
         if (defaultScene && !getLayoutConfigForScene(defaultScene)) {
             triggerLayoutUpdateForScene(defaultScene);
         }
-        obsScenes.forEach(scene => {
-            if (scene.sceneName !== defaultScene && !getLayoutConfigForScene(scene.sceneName)) {
+        obsScenes.forEach(scene => { 
+            if (!getLayoutConfigForScene(scene.sceneName)) {
                 triggerLayoutUpdateForScene(scene.sceneName);
             }
         });
@@ -3944,7 +4277,7 @@ async function applyHighlightLayoutToScene(sceneName, vdoNinjaSceneItems, canvas
                 await sendRequest("SetInputSettings", { inputName: effectiveSourceName, inputSettings: updatedSettings });
                 logMessage(`Source '${effectiveSourceName}' updated with URL: ${newViewUrl} and custom CSS.`, "logMessages.obs.sourceUpdatedWithUrlAndCss", { sourceName: effectiveSourceName, url: newViewUrl });
               }
-            } catch (error) {  }
+            } catch (error) { /* Suppress if source not found or other error during update */ }
           }
         }
         if (screenShareId) {
@@ -3962,12 +4295,14 @@ async function applyHighlightLayoutToScene(sceneName, vdoNinjaSceneItems, canvas
               await sendRequest("SetInputSettings", { inputName: screenShareSourceName, inputSettings: updatedScreenShareSettings });
               logMessage(`Screen share source '${screenShareSourceName}' updated with URL: ${newScreenShareUrl} and custom CSS.`, "logMessages.obs.screenShareSourceUpdatedWithUrlAndCss", { sourceName: screenShareSourceName, url: newScreenShareUrl });
             }
-          } catch (error) {  }
+          } catch (error) { /* Suppress if source not found or other error */ }
         }
         logMessage("Codec/CSS update for OBS sources complete.", "logMessages.obs.codecCssUpdateComplete");
       });
-      loadScenesBtn.addEventListener("click", fetchObsScenes);
-      document.addEventListener("DOMContentLoaded", () => { initializeApp(); });
+      document.addEventListener("DOMContentLoaded", () => { 
+        initializeApp(); 
+        updateLayoutConfigsListEmptyState(); 
+      });
     </script>
   </body>
 </html>
