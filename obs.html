@@ -1477,7 +1477,7 @@
         }
       }
 
-      function updateStreamList() {
+      async function updateStreamList() {
         if (!i18next.isInitialized) return; 
         if (Object.keys(activeStreams).length === 0) {
           streamListContainer.innerHTML =
@@ -1492,7 +1492,7 @@
             const streamDiv = document.createElement("div");
             streamDiv.className = "stream-item";
 
-            const targetInfo = getTargetSceneForStream(streamId, stream.label);
+            const targetInfo = await getTargetSceneForStream(streamId, stream.label);
             const targetSceneName = targetInfo.scene;
             const isDefaultScene = targetSceneName === getTargetScene(); 
 
@@ -2132,7 +2132,7 @@
         }
       });
 
-      function getTargetSceneForStream(streamId, streamLabel = "") {
+      async function getTargetSceneForStream(streamId, streamLabel = "") {
         const mappings = getStreamMappings();
         const defaultTargetScene = getTargetScene(); 
 
@@ -2165,6 +2165,11 @@
             return { scene: mapping.sceneName, mapping: mapping }; 
           }
         }
+
+        if(!!streamLabel && !streamLabel.endsWith(streamId)){
+          return { scene : `${getFullCameraPrefix()}_${streamLabel}`, mappings: null}
+        }
+
         return { scene: defaultTargetScene, mapping: null }; 
       }
 
@@ -2935,7 +2940,7 @@
 
       window.addEventListener(
         "message",
-        (event) => {
+        async(event) => {
           const expectedOriginBase = getVdoNinjaBaseUrl();
           let parsedExpectedOrigin;
           try {
@@ -2992,8 +2997,8 @@
               updateStreamList(); 
 
               if (autoAddSourcesCheckbox.checked) {
-                logMessage(`Auto-adding stream ${streamId} to OBS.`, "logMessages.vdoNinja.autoAddingStream", { id: streamId });
-                const targetInfo = getTargetSceneForStream(streamId, label);
+                const targetInfo = await getTargetSceneForStream(streamId, label);
+                logMessage(`Auto-adding stream ${streamId} to OBS to scene ${targetInfo.sceneName}`, "logMessages.vdoNinja.autoAddingStream", { id: streamId });
                 addStreamToObs(streamId, label, targetInfo);
               }
             } else if (
@@ -3054,6 +3059,38 @@
         }, 30000); 
       }
 
+      async function addSceneToObs(sceneName) {
+        if (!obsConnected || !obs) {
+          logMessage(
+            `Cannot add scene "${sceneName}" (${streamId}) to OBS: Not connected to OBS.`,
+            "", { label: sceneName, id: streamId }
+          );
+          return;
+        }
+        
+        try {
+          const sceneUUID = await sendRequest(
+            "CreateScene",
+            { sceneName }
+          );
+
+          await sendRequest(
+            "CreateSceneItem",
+            { sceneName, sourceName:"overlay" },
+            { suppressNotFound: true } 
+          );
+
+          return sceneName
+        } catch (e) {
+          if(e.message.toLowerCase().includes("already exists")){
+            return sceneName
+          }else {
+            return null
+          }
+        }
+          
+      }
+
       async function addStreamToObs(
         streamId,
         streamLabel,
@@ -3067,10 +3104,14 @@
           return;
         }
 
-        const resolvedTargetInfo =
-          targetInfo || getTargetSceneForStream(streamId, streamLabel);
+        const resolvedTargetInfo = targetInfo ?? await getTargetSceneForStream(streamId, streamLabel);
+        
         const targetSceneName = resolvedTargetInfo.scene;
         const mappingRule = resolvedTargetInfo.mapping; 
+
+        await fetchObsScenes()
+        const allScenesNames = obsScenes.map(s => s.sceneName)
+        logMessage(`${'-'.repeat(50)}\n${JSON.stringify(targetInfo)}\n${targetSceneName}\n${'-'.repeat(50)}`)
 
         if (!targetSceneName) {
           logMessage(
@@ -3078,6 +3119,10 @@
             "logMessages.obs.cannotAddStreamNoTargetSceneName", { label: streamLabel, id: streamId }
           );
           return;
+        }
+
+        if(!allScenesNames.includes(targetSceneName)){
+          addSceneToObs(targetSceneName)
         }
 
         const baseSourceName = `${getFullCameraPrefix()}_${streamId}`;
@@ -3238,6 +3283,22 @@
                 { suppressNotFound: true }
               );
               initialSceneItemId = itemInfo.sceneItemId;
+              
+              const { sceneItems } = await sendRequest( "GetSceneItemList", { sceneName: targetSceneName } );
+              const lastIndex = sceneItems.length;
+              logMessage(
+              `Moving source '${overlaySceneId}' to index ${lastIndex} of scene ${targetSceneName}.`,
+              // "logMessages.obs.sourceCreatedAddedToScene", { sourceName: effectiveSourceName, sceneName: targetSceneName }
+              );
+              setTimeout(() => {
+                sendRequest("SetSceneItemIndex", {
+                  sceneName: targetSceneName,
+                  sceneItemId: initialSceneItemId,
+                  sceneItemIndex: lastIndex
+                }),
+                500
+              })
+
             } catch (e) {
             }
           } else {
@@ -3754,6 +3815,23 @@
         return transform;
       }
 
+      async function removeSceneFromObs(sceneName) {
+        if (!obsConnected || !obs) {
+          logMessage(
+            `Cannot remove scene ${sceneName} from OBS: Not connected to OBS.`
+          );
+          return;
+        }
+        
+        try {
+          const sceneUUID = await sendRequest(
+            "RemoveScene",
+            { sceneName }
+          );
+          return true
+        } catch (e) {}
+      }
+
       async function removeStreamFromObs(streamId) {
         if (!obsConnected || !obs) {
           logMessage(
@@ -3771,17 +3849,18 @@
 
         const baseSourceName = `${getFullCameraPrefix()}_${streamId}`;
         const highlightedSourceName = `${getFullHighlightPrefix()}_${streamId}`;
-        logMessage(
-          `User or auto-triggered removal of stream '${streamId}' from OBS. Base source: '${baseSourceName}', Highlighted: '${highlightedSourceName}'.`,
-          "logMessages.obs.triggeredRemoval", { id: streamId, baseName: baseSourceName, highlightName: highlightedSourceName }
-        );
-
+        
         const streamInfo = activeStreams[streamId];
         const currentLabel = streamInfo
           ? streamInfo.label
-          : i18next.t("vdoNinja.defaultStreamLabel", {id: streamId}); 
-        const targetInfo = getTargetSceneForStream(streamId, currentLabel);
+          : i18next.t("vdoNinja.defaultStreamLabel", {id: streamId});
+        const targetInfo = await getTargetSceneForStream(streamId, currentLabel);
 
+        logMessage(
+          `User or auto-triggered removal of stream '${currentLabel}' (${streamId}) from OBS scene '${targetInfo.scene}'. Base source: '${baseSourceName}', Highlighted: '${highlightedSourceName}'.`,
+          // "logMessages.obs.triggeredRemoval", { id: streamId, baseName: baseSourceName, highlightName: highlightedSourceName }
+        );
+        
         if (highlightedStreamId === streamId) {
           logMessage(
             `Stream ${streamId} is currently highlighted. Unhighlighting before removal.`,
@@ -3844,6 +3923,13 @@
             );
             setTimeout(() => rearrangeAllStreamsInScene(sceneName), 250); 
           }
+        }
+
+        if((!!globalMainScene && !!targetInfo && !!targetInfo.scene) && globalMainScene !== targetInfo.scene){
+          logMessage(`Scene Cleaner: Triggering auto removal of scene '${targetInfo.scene}' after stream removal.`);
+          await removeSceneFromObs(targetInfo.scene)
+          await fetchObsScenes()
+
         }
 
         if (screenShareId !== streamId) {
